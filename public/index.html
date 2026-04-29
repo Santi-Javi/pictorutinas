@@ -1,1 +1,483 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PictoRutinas</title>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+:root {
+  --azul: #3B82F6; --verde: #10B981; --amarillo: #F59E0B;
+  --rojo: #EF4444; --violeta: #8B5CF6; --naranja: #F97316;
+  --gris-fondo: #F5F4F1; --gris-borde: #E5E3DF;
+  --gris-texto: #6B6860; --negro: #1C1B18; --blanco: #FFFFFF;
+  --radio: 12px; --radio-lg: 18px;
+}
+body { font-family: 'Nunito', sans-serif; background: var(--gris-fondo); color: var(--negro); min-height: 100vh; }
 
+/* HEADER */
+.header { background: var(--blanco); border-bottom: 1px solid var(--gris-borde); padding: 0 1.5rem; display: flex; align-items: center; gap: 12px; height: 60px; position: sticky; top: 0; z-index: 100; }
+.logo { font-size: 22px; font-weight: 800; color: var(--negro); }
+.logo span { color: var(--azul); }
+.header-sub { font-size: 13px; color: var(--gris-texto); }
+
+/* TABS */
+.tabs { display: flex; gap: 4px; padding: 1rem 1.5rem 0; background: var(--blanco); border-bottom: 1px solid var(--gris-borde); }
+.tab { padding: 10px 20px; border-radius: var(--radio) var(--radio) 0 0; font-size: 14px; font-weight: 600; cursor: pointer; color: var(--gris-texto); border: none; background: transparent; transition: all 0.15s; }
+.tab.active { background: var(--gris-fondo); color: var(--negro); border-bottom: 2px solid var(--azul); }
+
+/* CONTENIDO */
+.content { max-width: 800px; margin: 0 auto; padding: 1.5rem; }
+.panel { display: none; }
+.panel.active { display: block; }
+
+/* CARDS */
+.card { background: var(--blanco); border: 1px solid var(--gris-borde); border-radius: var(--radio-lg); padding: 1.5rem; margin-bottom: 1rem; }
+.card-title { font-size: 12px; font-weight: 700; color: var(--gris-texto); text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 1rem; }
+
+/* LEYENDA */
+.leyenda { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 1.25rem; }
+.leyenda-item { display: flex; align-items: center; gap: 6px; font-size: 12px; color: var(--gris-texto); }
+.leyenda-dot { width: 12px; height: 12px; border-radius: 50%; }
+
+/* UPLOAD */
+.upload-zone { border: 2px dashed var(--gris-borde); border-radius: var(--radio); padding: 2.5rem 1rem; text-align: center; cursor: pointer; transition: all 0.15s; position: relative; }
+.upload-zone:hover { border-color: var(--azul); background: #EFF6FF; }
+.upload-zone input[type=file] { position: absolute; inset: 0; opacity: 0; cursor: pointer; }
+.upload-icon { font-size: 36px; margin-bottom: 8px; }
+.upload-text { font-size: 14px; color: var(--gris-texto); }
+.upload-sub { font-size: 12px; color: var(--gris-texto); margin-top: 4px; }
+.preview-img { max-width: 200px; border-radius: var(--radio); margin: 1rem auto; display: block; }
+
+/* BOTONES */
+.btn { font-family: 'Nunito', sans-serif; font-size: 14px; font-weight: 700; padding: 10px 20px; border-radius: var(--radio); border: 1.5px solid var(--gris-borde); background: var(--blanco); color: var(--negro); cursor: pointer; transition: all 0.15s; }
+.btn:hover { background: var(--gris-fondo); }
+.btn:disabled { opacity: 0.4; cursor: not-allowed; }
+.btn-primary { background: var(--azul); color: var(--blanco); border-color: var(--azul); }
+.btn-primary:hover { background: #2563EB; }
+.btn-full { width: 100%; font-size: 16px; padding: 14px; }
+
+/* INPUT */
+.input-row { display: flex; gap: 8px; }
+input[type=text] { flex: 1; font-family: 'Nunito', sans-serif; font-size: 15px; padding: 10px 14px; border-radius: var(--radio); border: 1.5px solid var(--gris-borde); color: var(--negro); background: var(--gris-fondo); outline: none; }
+input[type=text]:focus { border-color: var(--azul); background: var(--blanco); }
+
+/* RUTINAS RAPIDAS */
+.chips { display: flex; flex-wrap: wrap; gap: 8px; margin: 0.75rem 0 1.25rem; }
+.chip { padding: 6px 14px; border-radius: 100px; font-size: 13px; font-weight: 600; border: 1.5px solid var(--gris-borde); background: var(--blanco); cursor: pointer; transition: all 0.15s; }
+.chip:hover { border-color: var(--azul); color: var(--azul); }
+
+/* PICTOGRAMAS GRID */
+.picto-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(110px, 1fr)); gap: 12px; }
+.picto-card { text-align: center; cursor: pointer; }
+.picto-img-wrap { width: 100%; aspect-ratio: 1; border-radius: var(--radio); border: 3px solid var(--azul); overflow: hidden; margin-bottom: 6px; display: flex; align-items: center; justify-content: center; background: var(--gris-fondo); position: relative; }
+.picto-img-wrap img { width: 100%; height: 100%; object-fit: cover; }
+.picto-img-wrap .emoji-placeholder { font-size: 40px; }
+.picto-nombre { font-size: 12px; font-weight: 700; color: var(--negro); }
+.picto-cat { font-size: 10px; color: var(--gris-texto); margin-top: 2px; }
+.picto-card:hover .picto-img-wrap { opacity: 0.85; }
+
+/* RUTINA STRIP */
+.rutina-strip { display: flex; align-items: flex-start; gap: 6px; overflow-x: auto; padding: 0.5rem 0 1rem; }
+.rutina-step { display: flex; flex-direction: column; align-items: center; min-width: 100px; }
+.rutina-num { font-size: 11px; font-weight: 700; color: var(--gris-texto); margin-bottom: 4px; }
+.rutina-picto { width: 90px; height: 90px; border-radius: var(--radio); border: 3px solid var(--azul); display: flex; align-items: center; justify-content: center; background: var(--gris-fondo); overflow: hidden; }
+.rutina-picto img { width: 100%; height: 100%; object-fit: cover; }
+.rutina-picto .emoji { font-size: 36px; }
+.rutina-nombre { font-size: 11px; font-weight: 700; color: var(--negro); margin-top: 6px; text-align: center; max-width: 90px; line-height: 1.3; }
+.rutina-arrow { color: var(--gris-texto); font-size: 20px; padding-top: 40px; flex-shrink: 0; }
+
+/* RESULTADO PICTO */
+.resultado-picto { display: flex; align-items: center; gap: 1.5rem; flex-wrap: wrap; }
+.resultado-img-wrap { width: 160px; height: 160px; border-radius: var(--radio); border: 4px solid var(--azul); overflow: hidden; flex-shrink: 0; }
+.resultado-img-wrap img { width: 100%; height: 100%; object-fit: cover; }
+.resultado-info { flex: 1; min-width: 200px; }
+.resultado-nombre { font-size: 24px; font-weight: 800; margin-bottom: 8px; }
+.resultado-badge { display: inline-flex; align-items: center; gap: 6px; padding: 4px 12px; border-radius: 100px; font-size: 12px; font-weight: 700; color: var(--blanco); margin-bottom: 12px; }
+.resultado-desc { font-size: 13px; color: var(--gris-texto); line-height: 1.5; }
+
+/* LOADING */
+.loading { display: flex; align-items: center; gap: 10px; font-size: 14px; color: var(--gris-texto); margin: 1rem 0; }
+.spinner { width: 18px; height: 18px; border: 2px solid var(--gris-borde); border-top-color: var(--azul); border-radius: 50%; animation: spin 0.7s linear infinite; flex-shrink: 0; }
+@keyframes spin { to { transform: rotate(360deg); } }
+
+/* ERROR */
+.error { font-size: 13px; color: var(--rojo); background: #FEF2F2; border: 1px solid #FECACA; border-radius: var(--radio); padding: 10px 14px; margin: 1rem 0; display: none; }
+.error.visible { display: block; }
+
+/* ACCIONES */
+.acciones { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 1rem; }
+
+/* VACIO */
+.vacio { text-align: center; padding: 3rem 1rem; color: var(--gris-texto); }
+.vacio-icon { font-size: 48px; margin-bottom: 12px; }
+.vacio-txt { font-size: 15px; font-weight: 600; margin-bottom: 6px; }
+.vacio-sub { font-size: 13px; }
+
+@media print {
+  .header, .tabs, .upload-zone, .btn, .acciones, .input-row, .chips, .card-title { display: none !important; }
+  .rutina-strip { overflow: visible; }
+}
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="logo">Picto<span>Rutinas</span></div>
+  <div class="header-sub">Pictogramas y rutinas para TEA</div>
+</div>
+
+<div class="tabs">
+  <button class="tab active" onclick="setTab('biblioteca')">Mis pictogramas</button>
+  <button class="tab" onclick="setTab('generar')">Generar pictograma</button>
+  <button class="tab" onclick="setTab('rutina')">Armar rutina</button>
+</div>
+
+<div class="content">
+
+  <!-- PANEL BIBLIOTECA -->
+  <div class="panel active" id="panel-biblioteca">
+    <div class="card">
+      <div class="card-title">Leyenda de colores</div>
+      <div class="leyenda">
+        <div class="leyenda-item"><div class="leyenda-dot" style="background:#3B82F6"></div>Higiene</div>
+        <div class="leyenda-item"><div class="leyenda-dot" style="background:#10B981"></div>Comida</div>
+        <div class="leyenda-item"><div class="leyenda-dot" style="background:#F59E0B"></div>Escuela</div>
+        <div class="leyenda-item"><div class="leyenda-dot" style="background:#EF4444"></div>Descanso</div>
+        <div class="leyenda-item"><div class="leyenda-dot" style="background:#8B5CF6"></div>Juego</div>
+        <div class="leyenda-item"><div class="leyenda-dot" style="background:#F97316"></div>Ropa</div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-title">Biblioteca de pictogramas (<span id="count-pictos">0</span>)</div>
+      <div class="picto-grid" id="picto-grid">
+        <div class="vacio" style="grid-column:1/-1">
+          <div class="vacio-icon">🖼️</div>
+          <div class="vacio-txt">Tu biblioteca está vacía</div>
+          <div class="vacio-sub">Generá tu primer pictograma desde la pestaña "Generar pictograma"</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- PANEL GENERAR -->
+  <div class="panel" id="panel-generar">
+    <div class="card">
+      <div class="card-title">Subí una foto</div>
+      <div class="upload-zone" id="upload-zone">
+        <input type="file" id="file-input" accept="image/*" capture="environment" onchange="previsualizarImagen(this)">
+        <div class="upload-icon">📷</div>
+        <div class="upload-text">Tocá para sacar una foto o elegir una imagen</div>
+        <div class="upload-sub">JPG, PNG — el sistema detecta qué es automáticamente</div>
+      </div>
+      <img id="preview" class="preview-img" style="display:none">
+      <div class="loading" id="loading-picto" style="display:none">
+        <div class="spinner"></div>
+        <span id="loading-txt">Analizando la imagen...</span>
+      </div>
+      <div class="error" id="error-picto"></div>
+      <div id="resultado-container" style="display:none; margin-top:1rem;">
+        <div class="resultado-picto">
+          <div class="resultado-img-wrap" id="resultado-img-wrap">
+            <img id="resultado-img" src="" alt="pictograma generado">
+          </div>
+          <div class="resultado-info">
+            <div class="resultado-nombre" id="resultado-nombre"></div>
+            <div class="resultado-badge" id="resultado-badge"></div>
+            <div class="resultado-desc" id="resultado-desc"></div>
+          </div>
+        </div>
+        <div class="acciones">
+          <button class="btn btn-primary" onclick="guardarPictograma()">Guardar en biblioteca</button>
+          <button class="btn" onclick="resetGenerar()">Generar otro</button>
+        </div>
+      </div>
+      <div style="margin-top:1rem; display:none;" id="btn-generar-wrap">
+        <button class="btn btn-primary btn-full" id="btn-generar" onclick="generarPictograma()">Generar pictograma</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- PANEL RUTINA -->
+  <div class="panel" id="panel-rutina">
+    <div class="card">
+      <div class="card-title">Rutinas guardadas</div>
+      <div class="chips" id="rutinas-guardadas">
+        <div style="font-size:13px; color:var(--gris-texto)">Todavía no guardaste ninguna rutina.</div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-title">Crear rutina</div>
+      <div class="input-row">
+        <input type="text" id="rutina-input" placeholder="Escribí la rutina... ej: llegada del jardín">
+        <button class="btn btn-primary" id="btn-rutina" onclick="generarRutina()">Generar ↗</button>
+      </div>
+      <div style="margin-top:10px; font-size:12px; color:var(--gris-texto);">Sugerencias:</div>
+      <div class="chips" style="margin-top:6px;">
+        <div class="chip" onclick="usarSugerencia('llegada del jardín')">Llegada del jardín</div>
+        <div class="chip" onclick="usarSugerencia('antes de dormir')">Antes de dormir</div>
+        <div class="chip" onclick="usarSugerencia('desayuno')">Desayuno</div>
+        <div class="chip" onclick="usarSugerencia('baño de la mañana')">Baño mañana</div>
+        <div class="chip" onclick="usarSugerencia('preparar la mochila')">Preparar mochila</div>
+        <div class="chip" onclick="usarSugerencia('merienda')">Merienda</div>
+      </div>
+      <div class="loading" id="loading-rutina" style="display:none">
+        <div class="spinner"></div>
+        Generando la rutina...
+      </div>
+      <div class="error" id="error-rutina"></div>
+    </div>
+
+    <div class="card" id="rutina-resultado" style="display:none;">
+      <div class="card-title" id="rutina-titulo"></div>
+      <div class="rutina-strip" id="rutina-strip"></div>
+      <div class="acciones">
+        <button class="btn btn-primary" onclick="guardarRutina()">Guardar rutina</button>
+        <button class="btn" onclick="imprimirRutina()">Imprimir</button>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+// ── ESTADO ──
+let biblioteca = JSON.parse(localStorage.getItem('pr_biblioteca') || '[]');
+let rutinasGuardadas = JSON.parse(localStorage.getItem('pr_rutinas') || '[]');
+let imagenBase64 = null;
+let ultimoPicto = null;
+let ultimaRutina = null;
+
+const COLORES = {
+  higiene: '#3B82F6', comida: '#10B981', escuela: '#F59E0B',
+  descanso: '#EF4444', juego: '#8B5CF6', ropa: '#F97316'
+};
+const LABELS = {
+  higiene: 'Higiene', comida: 'Comida', escuela: 'Escuela',
+  descanso: 'Descanso', juego: 'Juego', ropa: 'Ropa'
+};
+
+// ── TABS ──
+function setTab(tab) {
+  document.querySelectorAll('.tab').forEach((t, i) => {
+    const tabs = ['biblioteca', 'generar', 'rutina'];
+    t.classList.toggle('active', tabs[i] === tab);
+  });
+  document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+  document.getElementById('panel-' + tab).classList.add('active');
+  if (tab === 'biblioteca') renderBiblioteca();
+  if (tab === 'rutina') renderRutinasGuardadas();
+}
+
+// ── BIBLIOTECA ──
+function renderBiblioteca() {
+  const grid = document.getElementById('picto-grid');
+  document.getElementById('count-pictos').textContent = biblioteca.length;
+  if (biblioteca.length === 0) {
+    grid.innerHTML = '<div class="vacio" style="grid-column:1/-1"><div class="vacio-icon">🖼️</div><div class="vacio-txt">Tu biblioteca está vacía</div><div class="vacio-sub">Generá tu primer pictograma desde "Generar pictograma"</div></div>';
+    return;
+  }
+  grid.innerHTML = biblioteca.map((p, i) => `
+    <div class="picto-card" title="${p.descripcion}">
+      <div class="picto-img-wrap" style="border-color:${p.color}">
+        ${p.imageUrl ? `<img src="${p.imageUrl}" alt="${p.nombre}" loading="lazy">` : `<div class="emoji-placeholder">${p.emoji || '🖼️'}</div>`}
+      </div>
+      <div class="picto-nombre">${p.nombre}</div>
+      <div class="picto-cat">${LABELS[p.categoria] || p.categoria}</div>
+    </div>
+  `).join('');
+}
+
+// ── GENERAR PICTOGRAMA ──
+function previsualizarImagen(input) {
+  const file = input.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = e => {
+    imagenBase64 = e.target.result;
+    const preview = document.getElementById('preview');
+    preview.src = imagenBase64;
+    preview.style.display = 'block';
+    document.getElementById('btn-generar-wrap').style.display = 'block';
+    document.getElementById('resultado-container').style.display = 'none';
+  };
+  reader.readAsDataURL(file);
+}
+
+async function generarPictograma() {
+  if (!imagenBase64) return;
+  const btn = document.getElementById('btn-generar');
+  const loading = document.getElementById('loading-picto');
+  const error = document.getElementById('error-picto');
+  const loadingTxt = document.getElementById('loading-txt');
+  error.classList.remove('visible');
+  btn.disabled = true;
+  loading.style.display = 'flex';
+  loadingTxt.textContent = 'Analizando la imagen...';
+  setTimeout(() => { loadingTxt.textContent = 'Generando el pictograma...'; }, 3000);
+
+  try {
+    const res = await fetch('/api/generar-picto', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ imagen: imagenBase64 })
+    });
+    const data = await res.json();
+    if (!res.ok || data.error) throw new Error(data.error || 'Error del servidor');
+
+    ultimoPicto = data;
+    const wrap = document.getElementById('resultado-img-wrap');
+    wrap.style.borderColor = data.color;
+    document.getElementById('resultado-img').src = data.imageUrl;
+    document.getElementById('resultado-nombre').textContent = data.nombre;
+    const badge = document.getElementById('resultado-badge');
+    badge.textContent = LABELS[data.categoria] || data.categoria;
+    badge.style.background = data.color;
+    document.getElementById('resultado-desc').textContent = data.descripcion;
+    document.getElementById('resultado-container').style.display = 'block';
+    document.getElementById('btn-generar-wrap').style.display = 'none';
+
+  } catch (e) {
+    error.textContent = 'Error: ' + e.message;
+    error.classList.add('visible');
+  }
+  btn.disabled = false;
+  loading.style.display = 'none';
+}
+
+function guardarPictograma() {
+  if (!ultimoPicto) return;
+  biblioteca.unshift({ ...ultimoPicto, id: Date.now() });
+  localStorage.setItem('pr_biblioteca', JSON.stringify(biblioteca));
+  resetGenerar();
+  setTab('biblioteca');
+}
+
+function resetGenerar() {
+  imagenBase64 = null;
+  ultimoPicto = null;
+  document.getElementById('preview').style.display = 'none';
+  document.getElementById('resultado-container').style.display = 'none';
+  document.getElementById('btn-generar-wrap').style.display = 'none';
+  document.getElementById('error-picto').classList.remove('visible');
+  document.getElementById('file-input').value = '';
+}
+
+// ── RUTINAS ──
+function usarSugerencia(txt) {
+  document.getElementById('rutina-input').value = txt;
+}
+
+async function generarRutina() {
+  const rutina = document.getElementById('rutina-input').value.trim();
+  if (!rutina) return;
+  const btn = document.getElementById('btn-rutina');
+  const loading = document.getElementById('loading-rutina');
+  const error = document.getElementById('error-rutina');
+  error.classList.remove('visible');
+  btn.disabled = true;
+  loading.style.display = 'flex';
+  document.getElementById('rutina-resultado').style.display = 'none';
+
+  try {
+    const res = await fetch('/api/generar-rutina', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ rutina })
+    });
+    const data = await res.json();
+    if (!res.ok || data.error) throw new Error(data.error || 'Error del servidor');
+
+    ultimaRutina = data;
+    document.getElementById('rutina-titulo').textContent = data.titulo;
+
+    // buscar en biblioteca si hay pictograma guardado que coincida
+    const strip = document.getElementById('rutina-strip');
+    strip.innerHTML = data.pasos.map((paso, i) => {
+      const pictoGuardado = biblioteca.find(p =>
+        p.nombre.toLowerCase().includes(paso.nombre.toLowerCase()) ||
+        paso.nombre.toLowerCase().includes(p.nombre.toLowerCase())
+      );
+      const tieneImg = pictoGuardado && pictoGuardado.imageUrl;
+      const contenido = tieneImg
+        ? `<img src="${pictoGuardado.imageUrl}" alt="${paso.nombre}">`
+        : `<div class="emoji">${paso.emoji}</div>`;
+      const flecha = i < data.pasos.length - 1 ? '<div class="rutina-arrow">›</div>' : '';
+      return `
+        <div class="rutina-step">
+          <div class="rutina-num">Paso ${paso.numero}</div>
+          <div class="rutina-picto" style="border-color:${paso.color}">${contenido}</div>
+          <div class="rutina-nombre">${paso.nombre}</div>
+        </div>
+        ${flecha}`;
+    }).join('');
+
+    document.getElementById('rutina-resultado').style.display = 'block';
+
+  } catch (e) {
+    error.textContent = 'Error: ' + e.message;
+    error.classList.add('visible');
+  }
+  btn.disabled = false;
+  loading.style.display = 'none';
+}
+
+function guardarRutina() {
+  if (!ultimaRutina) return;
+  const existe = rutinasGuardadas.find(r => r.titulo === ultimaRutina.titulo);
+  if (!existe) {
+    rutinasGuardadas.unshift({ ...ultimaRutina, id: Date.now() });
+    localStorage.setItem('pr_rutinas', JSON.stringify(rutinasGuardadas));
+  }
+  renderRutinasGuardadas();
+  alert('Rutina guardada.');
+}
+
+function renderRutinasGuardadas() {
+  const cont = document.getElementById('rutinas-guardadas');
+  if (rutinasGuardadas.length === 0) {
+    cont.innerHTML = '<div style="font-size:13px; color:var(--gris-texto)">Todavía no guardaste ninguna rutina.</div>';
+    return;
+  }
+  cont.innerHTML = rutinasGuardadas.map(r =>
+    `<div class="chip" onclick="cargarRutina('${r.id}')">${r.titulo}</div>`
+  ).join('');
+}
+
+function cargarRutina(id) {
+  const rutina = rutinasGuardadas.find(r => r.id == id);
+  if (!rutina) return;
+  ultimaRutina = rutina;
+  document.getElementById('rutina-titulo').textContent = rutina.titulo;
+  const strip = document.getElementById('rutina-strip');
+  strip.innerHTML = rutina.pasos.map((paso, i) => {
+    const pictoGuardado = biblioteca.find(p =>
+      p.nombre.toLowerCase().includes(paso.nombre.toLowerCase()) ||
+      paso.nombre.toLowerCase().includes(p.nombre.toLowerCase())
+    );
+    const tieneImg = pictoGuardado && pictoGuardado.imageUrl;
+    const contenido = tieneImg
+      ? `<img src="${pictoGuardado.imageUrl}" alt="${paso.nombre}">`
+      : `<div class="emoji">${paso.emoji}</div>`;
+    const flecha = i < rutina.pasos.length - 1 ? '<div class="rutina-arrow">›</div>' : '';
+    return `
+      <div class="rutina-step">
+        <div class="rutina-num">Paso ${paso.numero}</div>
+        <div class="rutina-picto" style="border-color:${paso.color}">${contenido}</div>
+        <div class="rutina-nombre">${paso.nombre}</div>
+      </div>
+      ${flecha}`;
+  }).join('');
+  document.getElementById('rutina-resultado').style.display = 'block';
+  document.getElementById('rutina-resultado').scrollIntoView({ behavior: 'smooth' });
+}
+
+function imprimirRutina() { window.print(); }
+
+// ── INIT ──
+renderBiblioteca();
+renderRutinasGuardadas();
+</script>
+</body>
+</html>
