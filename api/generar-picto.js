@@ -9,27 +9,34 @@ export default async function handler(req, res) {
   if (!imagen) return res.status(400).json({ error: 'Falta la imagen' });
 
   const CATEGORIAS = {
-    higiene: { color: '#3B82F6', label: 'Higiene', keywords: ['baño', 'ducha', 'dientes', 'manos', 'jabón', 'cepillo', 'peine', 'toalla', 'inodoro', 'lavabo'] },
-    comida: { color: '#10B981', label: 'Comida', keywords: ['comida', 'comer', 'bebida', 'tomar', 'desayuno', 'almuerzo', 'merienda', 'cena', 'vaso', 'plato', 'cubiertos', 'fruta', 'pan'] },
-    escuela: { color: '#F59E0B', label: 'Escuela', keywords: ['jardín', 'escuela', 'mochila', 'libro', 'lápiz', 'cuaderno', 'clase', 'tarea', 'colegio'] },
-    descanso: { color: '#EF4444', label: 'Descanso', keywords: ['dormir', 'cama', 'siesta', 'descanso', 'almohada', 'pijama', 'noche'] },
-    juego: { color: '#8B5CF6', label: 'Juego', keywords: ['jugar', 'juguete', 'pelota', 'juego', 'dibujar', 'pintar', 'música', 'tiempo libre', 'parque'] },
-    ropa: { color: '#F97316', label: 'Ropa', keywords: ['ropa', 'vestir', 'zapato', 'camisa', 'pantalón', 'medias', 'abrigo', 'remera'] }
+    higiene: { color: '#3B82F6', label: 'Higiene', keywords: ['baño', 'ducha', 'dientes', 'manos', 'jabón', 'cepillo', 'peine', 'toalla', 'inodoro', 'lavabo', 'pasta', 'dental', 'shampoo', 'champú'] },
+    comida: { color: '#10B981', label: 'Comida', keywords: ['comida', 'comer', 'bebida', 'tomar', 'desayuno', 'almuerzo', 'merienda', 'cena', 'vaso', 'taza', 'plato', 'cubiertos', 'fruta', 'pan', 'mate', 'leche', 'jugo'] },
+    escuela: { color: '#F59E0B', label: 'Escuela', keywords: ['jardín', 'escuela', 'mochila', 'libro', 'lápiz', 'cuaderno', 'clase', 'tarea', 'colegio', 'cartuchera', 'tijera', 'regla'] },
+    descanso: { color: '#EF4444', label: 'Descanso', keywords: ['dormir', 'cama', 'siesta', 'descanso', 'almohada', 'pijama', 'noche', 'sábana', 'colchón'] },
+    juego: { color: '#8B5CF6', label: 'Juego', keywords: ['jugar', 'juguete', 'pelota', 'juego', 'dibujar', 'pintar', 'música', 'tiempo libre', 'parque', 'auto', 'muñeca', 'lego', 'tablet', 'spiderman', 'superhéroe'] },
+    ropa: { color: '#F97316', label: 'Ropa', keywords: ['ropa', 'vestir', 'zapato', 'camisa', 'pantalón', 'medias', 'abrigo', 'remera', 'zapatilla', 'buzo', 'campera'] }
   };
 
   try {
-    // Paso 1: analizar la imagen con GPT-4o Vision
+    // Paso 1: análisis visual MUY detallado con GPT-4o
     const visionRes = await fetch('https://api.openai.com/v1/chat/completions', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${process.env.OPENAI_API_KEY}` },
       body: JSON.stringify({
         model: 'gpt-4o',
-        max_tokens: 200,
+        max_tokens: 400,
         messages: [{
           role: 'user',
           content: [
-            { type: 'image_url', image_url: { url: imagen, detail: 'low' } },
-            { type: 'text', text: 'Describí brevemente qué objeto o acción se ve en esta imagen en español. Sé muy específico y concreto. Máximo 20 palabras. Solo la descripción, sin explicaciones.' }
+            { type: 'image_url', image_url: { url: imagen, detail: 'high' } },
+            { type: 'text', text: `Analizá esta imagen con el máximo detalle visual posible. Describí:
+1. QUÉ objeto o cosa es exactamente
+2. COLORES exactos que tiene (primario, secundario, detalles)
+3. FORMA y características visuales distintivas
+4. MATERIALES o texturas visibles
+5. Cualquier texto, marca, dibujo o decoración visible en el objeto
+
+Respondé en español, en formato de lista. Sé muy específico con los colores y detalles. Esta descripción se usará para recrear el objeto como ilustración.` }
           ]
         }]
       })
@@ -37,11 +44,24 @@ export default async function handler(req, res) {
 
     const visionData = await visionRes.json();
     if (!visionRes.ok) throw new Error(visionData?.error?.message || 'Error Vision API');
-    const descripcion = visionData.choices[0].message.content.trim();
+    const descripcionDetallada = visionData.choices[0].message.content.trim();
 
-    // Paso 2: detectar categoría automáticamente
-    const descLower = descripcion.toLowerCase();
-    let categoria = 'juego'; // default
+    // Paso 2: nombre corto para el pictograma
+    const nombreRes = await fetch('https://api.openai.com/v1/chat/completions', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${process.env.OPENAI_API_KEY}` },
+      body: JSON.stringify({
+        model: 'gpt-4o-mini',
+        max_tokens: 20,
+        messages: [{ role: 'user', content: `Basándote en esta descripción, dame un nombre muy corto (1-3 palabras máximo) en español para identificar este objeto como pictograma. Solo el nombre, sin puntuación ni explicaciones:\n\n${descripcionDetallada}` }]
+      })
+    });
+    const nombreData = await nombreRes.json();
+    const nombre = nombreData.choices[0].message.content.trim();
+
+    // Paso 3: detectar categoría
+    const descLower = descripcionDetallada.toLowerCase();
+    let categoria = 'juego';
     let maxMatches = 0;
     for (const [key, val] of Object.entries(CATEGORIAS)) {
       const matches = val.keywords.filter(k => descLower.includes(k)).length;
@@ -49,33 +69,46 @@ export default async function handler(req, res) {
     }
     const catInfo = CATEGORIAS[categoria];
 
-    // Paso 3: generar nombre corto para el pictograma
-    const nombreRes = await fetch('https://api.openai.com/v1/chat/completions', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${process.env.OPENAI_API_KEY}` },
-      body: JSON.stringify({
-        model: 'gpt-4o-mini',
-        max_tokens: 20,
-        messages: [{ role: 'user', content: `Dame un nombre muy corto (1-3 palabras máximo) en español para un pictograma que muestra: "${descripcion}". Solo el nombre, sin puntuación.` }]
-      })
-    });
-    const nombreData = await nombreRes.json();
-    const nombre = nombreData.choices[0].message.content.trim();
+    // Paso 4: generar pictograma con DALL-E 3 usando descripción ultra-detallada
+    const prompt = `Create a clean pictogram illustration for autism communication that looks EXACTLY like this real object:
 
-    // Paso 4: generar imagen con DALL-E 3
-    const prompt = `A clean, realistic illustration for an autism communication pictogram showing: ${descripcion}. Simple composition, white background, bright and clear colors, child-friendly style, no text, no people faces, just the object or action clearly depicted. High contrast, flat illustration style.`;
+${descripcionDetallada}
+
+CRITICAL REQUIREMENTS:
+- The illustration must match the exact colors, shape and distinctive features described above
+- Style: clean flat illustration, like a high-quality sticker
+- Pure white background
+- The object must be centered and fill most of the frame
+- Keep all distinctive visual features: colors, decorations, text/logos if present
+- Child-friendly, clear, no shadows, no gradients
+- No people, no faces, no text added by you
+- The result should be immediately recognizable as THIS specific object`;
 
     const dalleRes = await fetch('https://api.openai.com/v1/images/generations', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${process.env.OPENAI_API_KEY}` },
-      body: JSON.stringify({ model: 'dall-e-3', prompt, n: 1, size: '1024x1024', quality: 'standard', response_format: 'url' })
+      body: JSON.stringify({
+        model: 'dall-e-3',
+        prompt,
+        n: 1,
+        size: '1024x1024',
+        quality: 'hd',
+        response_format: 'url'
+      })
     });
 
     const dalleData = await dalleRes.json();
     if (!dalleRes.ok) throw new Error(dalleData?.error?.message || 'Error DALL-E');
     const imageUrl = dalleData.data[0].url;
 
-    return res.status(200).json({ nombre, descripcion, categoria, color: catInfo.color, colorLabel: catInfo.label, imageUrl });
+    return res.status(200).json({
+      nombre,
+      descripcion: descripcionDetallada,
+      categoria,
+      color: catInfo.color,
+      colorLabel: catInfo.label,
+      imageUrl
+    });
 
   } catch (e) {
     return res.status(500).json({ error: e.message });
