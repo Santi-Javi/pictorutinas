@@ -3,6 +3,6 @@
   "routes": [
     { "src": "/api/generar-picto", "dest": "/api/generar-picto.js" },
     { "src": "/api/generar-rutina", "dest": "/api/generar-rutina.js" },
-    { "src": "/(.*)", "dest": "/public/$1" }
+    { "src": "/(.*)", "dest": "/public/index.html" }
   ]
 }
