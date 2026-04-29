@@ -72,6 +72,7 @@ label.field{display:block;font-size:12px;font-weight:700;color:var(--gris-texto)
 .upload-btn:hover{border-color:var(--azul)}
 .upload-btn input{position:absolute;inset:0;opacity:0;cursor:pointer}
 .ub-icon{font-size:28px}.ub-txt{font-size:12px;font-weight:700;color:var(--negro)}.ub-sub{font-size:10px;color:var(--gris-texto)}
+/* PASO A PASO */
 .paso-overlay{position:fixed;inset:0;background:#1a1a2e;z-index:500;display:none;flex-direction:column;align-items:center;justify-content:center}
 .paso-overlay.active{display:flex}
 .paso-progress{position:absolute;top:0;left:0;right:0;height:5px;background:rgba(255,255,255,.15)}
@@ -89,6 +90,7 @@ label.field{display:block;font-size:12px;font-weight:700;color:var(--gris-texto)
 .paso-btn.siguiente{background:var(--azul);border-color:var(--azul);font-size:16px;padding:14px 36px}
 .paso-btn.finalizar{background:var(--verde);border-color:var(--verde)}
 .paso-voz-btn{background:rgba(255,255,255,.15);border:none;color:white;width:44px;height:44px;border-radius:50%;cursor:pointer;font-size:20px;display:flex;align-items:center;justify-content:center}
+/* TIMER */
 .timer-overlay{position:fixed;inset:0;background:linear-gradient(135deg,#1a1a2e,#16213e,#0f3460);z-index:600;display:none;flex-direction:column;align-items:center;justify-content:center}
 .timer-overlay.active{display:flex}
 .coco-timer{font-size:80px;margin-bottom:1rem;animation:respirar 4s ease-in-out infinite}
@@ -107,6 +109,7 @@ label.field{display:block;font-size:12px;font-weight:700;color:var(--gris-texto)
 .timer-cerrar{position:absolute;top:16px;right:16px;background:rgba(255,255,255,.15);border:none;color:white;width:38px;height:38px;border-radius:50%;cursor:pointer;font-size:18px;display:flex;align-items:center;justify-content:center}
 .timer-fab{position:fixed;bottom:80px;right:16px;width:52px;height:52px;border-radius:50%;background:var(--violeta);border:none;color:white;font-size:22px;cursor:pointer;z-index:300;box-shadow:0 4px 16px rgba(139,92,246,.5);display:flex;align-items:center;justify-content:center;transition:transform .15s}
 .timer-fab:hover{transform:scale(1.1)}
+/* LOGROS */
 .logros-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:12px}
 .logro-card{background:var(--blanco);border:1.5px solid var(--gris-borde);border-radius:var(--radio-lg);padding:1rem;text-align:center}
 .logro-card.ganado{border-color:var(--amarillo);background:#FFFBEB}
@@ -114,6 +117,7 @@ label.field{display:block;font-size:12px;font-weight:700;color:var(--gris-texto)
 .logro-nombre{font-size:12px;font-weight:700;color:var(--negro);margin-bottom:4px}
 .logro-desc{font-size:10px;color:var(--gris-texto);line-height:1.4}
 .logro-badge{font-size:10px;font-weight:700;color:var(--amarillo);margin-top:6px}
+/* STATS */
 .stat-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:1rem}
 .stat-card{background:var(--gris-fondo);border-radius:var(--radio);padding:12px;text-align:center}
 .stat-num{font-size:24px;font-weight:800;color:var(--azul)}
@@ -128,6 +132,38 @@ label.field{display:block;font-size:12px;font-weight:700;color:var(--gris-texto)
 .toast{position:fixed;bottom:120px;left:50%;transform:translateX(-50%) translateY(20px);background:var(--negro);color:white;padding:10px 20px;border-radius:100px;font-size:13px;font-weight:700;z-index:700;opacity:0;transition:all .3s;pointer-events:none;white-space:nowrap}
 .toast.visible{opacity:1;transform:translateX(-50%) translateY(0)}
 @media print{.header,.tabs,.acciones,.input-row,.chips,.card-title,.timer-fab{display:none!important}.rutina-strip{overflow:visible}}
+
+/* CONFETI */
+.confeti-container{position:fixed;inset:0;pointer-events:none;z-index:800;overflow:hidden}
+.confeti-particle{position:absolute;width:10px;height:10px;border-radius:2px;animation:caer linear forwards}
+@keyframes caer{0%{transform:translateY(-20px) rotate(0deg);opacity:1}100%{transform:translateY(110vh) rotate(720deg);opacity:0}}
+
+/* PALETA SELECTOR */
+.paleta-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:8px;margin-top:8px}
+.paleta-opt{height:36px;border-radius:var(--radio);border:3px solid transparent;cursor:pointer;transition:all .15s}
+.paleta-opt.activa{border-color:var(--negro)}
+.paleta-opt:hover{transform:scale(1.05)}
+
+/* COCO COMIENDO */
+.coco-escena{display:flex;flex-direction:column;align-items:center;gap:8px;margin-bottom:1rem}
+.coco-principal{font-size:80px;animation:respirar 4s ease-in-out infinite;position:relative}
+.alimentos-fila{display:flex;gap:6px;flex-wrap:wrap;justify-content:center;min-height:40px;max-width:280px}
+.alimento{font-size:28px;animation:aparecer .4s ease-out;opacity:1}
+@keyframes aparecer{from{transform:scale(0) rotate(-20deg);opacity:0}to{transform:scale(1) rotate(0deg);opacity:1}}
+.bocado{animation:morder .3s ease-in-out}
+@keyframes morder{0%,100%{transform:scale(1)}50%{transform:scale(1.3) rotate(10deg)}}
+
+/* LOGRO ANIMADO */
+.logro-card{transition:transform .2s;cursor:default}
+.logro-card.ganado{animation:logro-pop .5s ease-out}
+@keyframes logro-pop{0%{transform:scale(1)}40%{transform:scale(1.15)}70%{transform:scale(0.95)}100%{transform:scale(1)}}
+
+/* TEMAS */
+body.tema-azul{--azul:#2563EB;--verde:#0891B2;--gris-fondo:#EFF6FF;--gris-borde:#BFDBFE}
+body.tema-verde{--azul:#059669;--verde:#16A34A;--gris-fondo:#ECFDF5;--gris-borde:#A7F3D0}
+body.tema-violeta{--azul:#7C3AED;--verde:#9333EA;--gris-fondo:#F5F3FF;--gris-borde:#DDD6FE}
+body.tema-oscuro{--azul:#60A5FA;--verde:#34D399;--gris-fondo:#111827;--gris-borde:#374151;--negro:#F9FAFB;--blanco:#1F2937;--gris-texto:#9CA3AF}
+body.tema-calido{--azul:#EA580C;--verde:#D97706;--gris-fondo:#FFF7ED;--gris-borde:#FED7AA}
 </style>
 </head>
 <body>
@@ -147,6 +183,7 @@ label.field{display:block;font-size:12px;font-weight:700;color:var(--gris-texto)
 
 <div class="content">
 
+<!-- BIBLIOTECA -->
 <div class="panel active" id="panel-biblioteca">
   <div class="card">
     <div class="card-title">Leyenda de colores</div>
@@ -167,6 +204,7 @@ label.field{display:block;font-size:12px;font-weight:700;color:var(--gris-texto)
   </div>
 </div>
 
+<!-- GENERAR -->
 <div class="panel" id="panel-generar">
   <div class="card">
     <div class="card-title">Subí una foto</div>
@@ -197,6 +235,7 @@ label.field{display:block;font-size:12px;font-weight:700;color:var(--gris-texto)
   </div>
 </div>
 
+<!-- RUTINAS -->
 <div class="panel" id="panel-rutina">
   <div class="card">
     <div class="card-title">Rutinas guardadas</div>
@@ -237,19 +276,23 @@ label.field{display:block;font-size:12px;font-weight:700;color:var(--gris-texto)
   </div>
 </div>
 
+<!-- LOGROS -->
 <div class="panel" id="panel-logros">
   <div class="card"><div class="card-title">Tus logros</div><div class="logros-grid" id="logros-grid"></div></div>
 </div>
 
+<!-- REGULACION -->
 <div class="panel" id="panel-regulacion">
   <div class="card"><div class="card-title">Resumen de regulación</div><div class="stat-grid" id="stat-regulacion"></div></div>
   <div class="card"><div class="card-title">Historial</div><div id="regulacion-historial"><div class="vacio"><div class="vacio-icon">🕐</div><div class="vacio-txt">Sin registros aún</div><div class="vacio-sub">Usá el timer de regulación para registrar los momentos</div></div></div></div>
 </div>
 
-</div>
+</div><!-- /content -->
 
+<!-- TIMER FAB -->
 <button class="timer-fab" onclick="abrirTimer()" title="Timer de regulación">🕐</button>
 
+<!-- PASO A PASO -->
 <div class="paso-overlay" id="paso-overlay">
   <div class="paso-progress"><div class="paso-progress-bar" id="paso-progress-bar"></div></div>
   <div class="paso-top">
@@ -266,9 +309,13 @@ label.field{display:block;font-size:12px;font-weight:700;color:var(--gris-texto)
   </div>
 </div>
 
+<!-- TIMER OVERLAY -->
 <div class="timer-overlay" id="timer-overlay">
   <button class="timer-cerrar" onclick="cerrarTimer()">✕</button>
-  <div class="coco-timer">🐭</div>
+    <div class="coco-escena">
+    <div class="coco-principal" id="coco-emoji">🐭</div>
+    <div class="alimentos-fila" id="alimentos-fila"></div>
+  </div>
   <div id="timer-setup">
     <div class="timer-frase">Elegí cuánto tiempo necesitás para calmarte</div>
     <div class="timer-opts">
@@ -292,6 +339,7 @@ label.field{display:block;font-size:12px;font-weight:700;color:var(--gris-texto)
   </div>
 </div>
 
+<!-- PERFIL MODAL -->
 <div id="perfil-modal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:400;align-items:flex-end;justify-content:center;">
   <div style="background:var(--blanco);border-radius:var(--radio-lg) var(--radio-lg) 0 0;padding:1.5rem;width:100%;max-width:480px;max-height:85vh;overflow-y:auto;">
     <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1.25rem;">
@@ -318,7 +366,16 @@ label.field{display:block;font-size:12px;font-weight:700;color:var(--gris-texto)
       <span style="font-size:28px;cursor:pointer;" onclick="setEmoji('🐼')">🐼</span>
       <span style="font-size:28px;cursor:pointer;" onclick="setEmoji('🦋')">🦋</span>
     </div>
-    <div class="stat-grid" id="stat-perfil"></div>
+    
+    <label class="field">Tema de colores</label>
+    <div class="paleta-grid">
+      <div class="paleta-opt" style="background:linear-gradient(135deg,#3B82F6,#10B981)" onclick="setTema('')" title="Claro"></div>
+      <div class="paleta-opt" style="background:linear-gradient(135deg,#2563EB,#0891B2)" onclick="setTema('tema-azul')" title="Azul"></div>
+      <div class="paleta-opt" style="background:linear-gradient(135deg,#059669,#16A34A)" onclick="setTema('tema-verde')" title="Verde"></div>
+      <div class="paleta-opt" style="background:linear-gradient(135deg,#7C3AED,#9333EA)" onclick="setTema('tema-violeta')" title="Violeta"></div>
+      <div class="paleta-opt" style="background:linear-gradient(135deg,#EA580C,#D97706)" onclick="setTema('tema-calido')" title="Cálido"></div>
+    </div>
+<div class="stat-grid" id="stat-perfil"></div>
     <button class="btn btn-primary btn-full" onclick="guardarPerfil()" style="margin-top:.5rem;">Guardar perfil</button>
   </div>
 </div>
@@ -334,11 +391,15 @@ var logros=JSON.parse(localStorage.getItem("pr_logros")||"[]");
 var imagenBase64=null,ultimoPicto=null,ultimaRutina=null;
 var pasoActual=0,pasosActuales=[];
 var timerMinutos=1,timerTotal=60,timerRestante=60,timerInterval=null;
+
 var COLORES={higiene:"#3B82F6",comida:"#10B981",escuela:"#F59E0B",descanso:"#EF4444",juego:"#8B5CF6",ropa:"#F97316"};
 var LABELS={higiene:"Higiene",comida:"Comida",escuela:"Escuela",descanso:"Descanso",juego:"Juego",ropa:"Ropa"};
 
 function setTab(tab){
-  document.querySelectorAll(".tab").forEach(function(t,i){var tabs=["biblioteca","generar","rutina","logros","regulacion"];t.classList.toggle("active",tabs[i]===tab)});
+  document.querySelectorAll(".tab").forEach(function(t,i){
+    var tabs=["biblioteca","generar","rutina","logros","regulacion"];
+    t.classList.toggle("active",tabs[i]===tab);
+  });
   document.querySelectorAll(".panel").forEach(function(p){p.classList.remove("active")});
   document.getElementById("panel-"+tab).classList.add("active");
   if(tab==="biblioteca")renderBiblioteca();
@@ -347,28 +408,51 @@ function setTab(tab){
   if(tab==="regulacion")renderRegulacion();
 }
 
-function showToast(msg){var t=document.getElementById("toast");t.textContent=msg;t.classList.add("visible");setTimeout(function(){t.classList.remove("visible")},2500)}
+function showToast(msg){
+  var t=document.getElementById("toast");
+  t.textContent=msg;t.classList.add("visible");
+  setTimeout(function(){t.classList.remove("visible")},2500);
+}
 
 function renderBiblioteca(){
   var grid=document.getElementById("picto-grid");
   document.getElementById("count-pictos").textContent=biblioteca.length;
   if(!biblioteca.length){grid.innerHTML='<div class="vacio" style="grid-column:1/-1"><div class="vacio-icon">🖼️</div><div class="vacio-txt">Tu biblioteca está vacía</div><div class="vacio-sub">Generá tu primer pictograma desde "Generar picto"</div></div>';return}
-  grid.innerHTML=biblioteca.map(function(p){return'<div class="picto-card"><div class="picto-img-wrap" style="border-color:'+p.color+';position:relative;">'+(p.imageUrl?'<img src="'+p.imageUrl+'" alt="'+p.nombre+'" loading="lazy">':'<div class="emoji-big">'+(p.emoji||"🖼️")+"</div>")+'<button class="picto-del" onclick="borrarPicto('+p.id+')">✕</button></div><div class="picto-nombre">'+p.nombre+'</div><div class="picto-cat">'+(LABELS[p.categoria]||p.categoria)+"</div></div>"}).join("");
+  grid.innerHTML=biblioteca.map(function(p){
+    return'<div class="picto-card"><div class="picto-img-wrap" style="border-color:'+p.color+';position:relative;">'+
+      (p.imageUrl?'<img src="'+p.imageUrl+'" alt="'+p.nombre+'" loading="lazy">':'<div class="emoji-big">'+( p.emoji||"🖼️")+'</div>')+
+      '<button class="picto-del" onclick="borrarPicto('+p.id+')">✕</button></div><div class="picto-nombre">'+p.nombre+'</div><div class="picto-cat">'+( LABELS[p.categoria]||p.categoria)+'</div></div>';
+  }).join("");
 }
 
-function borrarPicto(id){if(!confirm("¿Borrar este pictograma?"))return;biblioteca=biblioteca.filter(function(p){return p.id!==id});localStorage.setItem("pr_biblioteca",JSON.stringify(biblioteca));renderBiblioteca();showToast("Pictograma eliminado")}
+function borrarPicto(id){
+  if(!confirm("¿Borrar este pictograma?"))return;
+  biblioteca=biblioteca.filter(function(p){return p.id!==id});
+  localStorage.setItem("pr_biblioteca",JSON.stringify(biblioteca));
+  renderBiblioteca();showToast("Pictograma eliminado");
+}
 
 function previsualizarImagen(input){
   var file=input.files[0];if(!file)return;
   var reader=new FileReader();
-  reader.onload=function(e){imagenBase64=e.target.result;var preview=document.getElementById("preview");preview.src=imagenBase64;preview.style.display="block";document.getElementById("btn-generar-wrap").style.display="block";document.getElementById("resultado-container").style.display="none"};
+  reader.onload=function(e){
+    imagenBase64=e.target.result;
+    var preview=document.getElementById("preview");
+    preview.src=imagenBase64;preview.style.display="block";
+    document.getElementById("btn-generar-wrap").style.display="block";
+    document.getElementById("resultado-container").style.display="none";
+  };
   reader.readAsDataURL(file);
 }
 
 async function generarPictograma(){
   if(!imagenBase64)return;
-  var btn=document.getElementById("btn-generar"),loading=document.getElementById("loading-picto"),error=document.getElementById("error-picto"),txt=document.getElementById("loading-txt");
-  error.classList.remove("visible");btn.disabled=true;loading.style.display="flex";txt.textContent="Analizando la imagen...";
+  var btn=document.getElementById("btn-generar");
+  var loading=document.getElementById("loading-picto");
+  var error=document.getElementById("error-picto");
+  var txt=document.getElementById("loading-txt");
+  error.classList.remove("visible");btn.disabled=true;loading.style.display="flex";
+  txt.textContent="Analizando la imagen...";
   setTimeout(function(){txt.textContent="Generando el pictograma..."},4000);
   try{
     var res=await fetch("/api/generar-picto",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({imagen:imagenBase64})});
@@ -378,7 +462,8 @@ async function generarPictograma(){
     document.getElementById("resultado-img-wrap").style.borderColor=data.color;
     document.getElementById("resultado-img").src=data.imageUrl;
     document.getElementById("resultado-nombre").textContent=data.nombre;
-    var badge=document.getElementById("resultado-badge");badge.textContent=LABELS[data.categoria]||data.categoria;badge.style.background=data.color;
+    var badge=document.getElementById("resultado-badge");
+    badge.textContent=LABELS[data.categoria]||data.categoria;badge.style.background=data.color;
     document.getElementById("resultado-desc").textContent=data.descripcion;
     document.getElementById("resultado-container").style.display="block";
     document.getElementById("btn-generar-wrap").style.display="none";
@@ -396,20 +481,33 @@ function guardarPictograma(){
   resetGenerar();setTab("biblioteca");showToast("✅ Pictograma guardado");
 }
 
-function resetGenerar(){imagenBase64=null;ultimoPicto=null;document.getElementById("preview").style.display="none";document.getElementById("resultado-container").style.display="none";document.getElementById("btn-generar-wrap").style.display="none";document.getElementById("error-picto").classList.remove("visible");document.querySelectorAll("#panel-generar input[type=file]").forEach(function(i){i.value=""})}
+function resetGenerar(){
+  imagenBase64=null;ultimoPicto=null;
+  var p=document.getElementById("preview");p.style.display="none";
+  document.getElementById("resultado-container").style.display="none";
+  document.getElementById("btn-generar-wrap").style.display="none";
+  document.getElementById("error-picto").classList.remove("visible");
+  document.querySelectorAll("#panel-generar input[type=file]").forEach(function(i){i.value=""});
+}
 
 function usarSugerencia(txt){document.getElementById("rutina-input").value=txt}
 
 async function generarRutina(){
   var rutina=document.getElementById("rutina-input").value.trim();if(!rutina)return;
-  var btn=document.getElementById("btn-rutina"),loading=document.getElementById("loading-rutina"),error=document.getElementById("error-rutina");
-  error.classList.remove("visible");btn.disabled=true;loading.style.display="flex";document.getElementById("rutina-resultado").style.display="none";
+  var btn=document.getElementById("btn-rutina");
+  var loading=document.getElementById("loading-rutina");
+  var error=document.getElementById("error-rutina");
+  error.classList.remove("visible");btn.disabled=true;loading.style.display="flex";
+  document.getElementById("rutina-resultado").style.display="none";
   try{
     var res=await fetch("/api/generar-rutina",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({rutina:rutina})});
     var data=await res.json();
     if(!res.ok||data.error)throw new Error(data.error||"Error del servidor");
-    ultimaRutina=data;document.getElementById("rutina-titulo").textContent=data.titulo;renderStrip(data.pasos);
-    document.getElementById("rutina-resultado").style.display="block";document.getElementById("rutina-resultado").scrollIntoView({behavior:"smooth",block:"nearest"});
+    ultimaRutina=data;
+    document.getElementById("rutina-titulo").textContent=data.titulo;
+    renderStrip(data.pasos);
+    document.getElementById("rutina-resultado").style.display="block";
+    document.getElementById("rutina-resultado").scrollIntoView({behavior:"smooth",block:"nearest"});
   }catch(e){error.textContent="Error: "+e.message;error.classList.add("visible")}
   btn.disabled=false;loading.style.display="none";
 }
@@ -417,17 +515,20 @@ async function generarRutina(){
 function renderStrip(pasos){
   var strip=document.getElementById("rutina-strip");
   strip.innerHTML=pasos.map(function(paso,i){
-    var pg=biblioteca.find(function(p){return p.nombre.toLowerCase().includes(paso.nombre.toLowerCase())||paso.nombre.toLowerCase().includes(p.nombre.toLowerCase())});
-    var ti=pg&&pg.imageUrl;
-    var c=ti?'<img src="'+pg.imageUrl+'" alt="'+paso.nombre+'">':"<div class=\"emoji\">"+paso.emoji+"</div>";
-    var f=i<pasos.length-1?'<div class="rutina-arrow">›</div>':"";
-    return'<div class="rutina-step"><div class="rutina-num">Paso '+paso.numero+'</div><div class="rutina-picto" style="border-color:'+paso.color+'">'+c+'</div><div class="rutina-nombre">'+paso.nombre+"</div></div>"+f;
+    var pictoGuardado=biblioteca.find(function(p){
+      return p.nombre.toLowerCase().includes(paso.nombre.toLowerCase())||paso.nombre.toLowerCase().includes(p.nombre.toLowerCase());
+    });
+    var tieneImg=pictoGuardado&&pictoGuardado.imageUrl;
+    var contenido=tieneImg?'<img src="'+pictoGuardado.imageUrl+'" alt="'+paso.nombre+'">':'<div class="emoji">'+paso.emoji+"</div>";
+    var flecha=i<pasos.length-1?'<div class="rutina-arrow">›</div>':"";
+    return'<div class="rutina-step"><div class="rutina-num">Paso '+paso.numero+'</div><div class="rutina-picto" style="border-color:'+paso.color+'">'+contenido+'</div><div class="rutina-nombre">'+paso.nombre+'</div></div>'+flecha;
   }).join("");
 }
 
 function guardarRutina(){
   if(!ultimaRutina)return;
-  if(!rutinasGuardadas.find(function(r){return r.titulo===ultimaRutina.titulo})){rutinasGuardadas.unshift(Object.assign({},ultimaRutina,{id:Date.now()}));localStorage.setItem("pr_rutinas",JSON.stringify(rutinasGuardadas))}
+  var existe=rutinasGuardadas.find(function(r){return r.titulo===ultimaRutina.titulo});
+  if(!existe){rutinasGuardadas.unshift(Object.assign({},ultimaRutina,{id:Date.now()}));localStorage.setItem("pr_rutinas",JSON.stringify(rutinasGuardadas))}
   verificarLogro("primera_rutina","¡Primera rutina!","Guardaste tu primera rutina","📋");
   if(rutinasGuardadas.length>=5)verificarLogro("5_rutinas","5 rutinas guardadas","Organizaste 5 rutinas distintas","🗂️");
   renderRutinasGuardadas();showToast("✅ Rutina guardada");
@@ -436,16 +537,34 @@ function guardarRutina(){
 function renderRutinasGuardadas(){
   var cont=document.getElementById("rutinas-guardadas");
   if(!rutinasGuardadas.length){cont.innerHTML='<div style="font-size:13px;color:var(--gris-texto)">Todavía no guardaste ninguna rutina.</div>';return}
-  cont.innerHTML=rutinasGuardadas.map(function(r){return'<div style="display:flex;align-items:center;gap:6px;"><div class="chip" onclick="cargarRutina(\''+r.id+'\')" style="margin:0;">'+r.titulo+'</div><button onclick="borrarRutina(\''+r.id+'\')" style="background:none;border:none;cursor:pointer;font-size:14px;color:var(--rojo);">✕</button></div>'}).join("");
+  cont.innerHTML=rutinasGuardadas.map(function(r){
+    return'<div style="display:flex;align-items:center;gap:6px;"><div class="chip" onclick="cargarRutina(\''+r.id+'\')" style="margin:0;">'+r.titulo+'</div><button onclick="borrarRutina(\''+r.id+'\')" style="background:none;border:none;cursor:pointer;font-size:14px;color:var(--rojo);">✕</button></div>';
+  }).join("");
 }
 
-function borrarRutina(id){if(!confirm("¿Eliminar esta rutina?"))return;rutinasGuardadas=rutinasGuardadas.filter(function(r){return r.id!=id});localStorage.setItem("pr_rutinas",JSON.stringify(rutinasGuardadas));renderRutinasGuardadas();showToast("Rutina eliminada")}
+function borrarRutina(id){
+  if(!confirm("¿Eliminar esta rutina?"))return;
+  rutinasGuardadas=rutinasGuardadas.filter(function(r){return r.id!=id});
+  localStorage.setItem("pr_rutinas",JSON.stringify(rutinasGuardadas));
+  renderRutinasGuardadas();showToast("Rutina eliminada");
+}
 
-function cargarRutina(id){var r=rutinasGuardadas.find(function(r){return r.id==id});if(!r)return;ultimaRutina=r;document.getElementById("rutina-titulo").textContent=r.titulo;renderStrip(r.pasos);document.getElementById("rutina-resultado").style.display="block";document.getElementById("rutina-resultado").scrollIntoView({behavior:"smooth"})}
+function cargarRutina(id){
+  var rutina=rutinasGuardadas.find(function(r){return r.id==id});if(!rutina)return;
+  ultimaRutina=rutina;
+  document.getElementById("rutina-titulo").textContent=rutina.titulo;
+  renderStrip(rutina.pasos);
+  document.getElementById("rutina-resultado").style.display="block";
+  document.getElementById("rutina-resultado").scrollIntoView({behavior:"smooth"});
+}
 
 function imprimirRutina(){window.print()}
 
-function hablarRutina(){if(!ultimaRutina)return;hablar(ultimaRutina.titulo+". "+ultimaRutina.pasos.map(function(p){return"Paso "+p.numero+": "+p.nombre}).join(". "))}
+function hablarRutina(){
+  if(!ultimaRutina)return;
+  var texto=ultimaRutina.pasos.map(function(p){return"Paso "+p.numero+": "+p.nombre}).join(". ");
+  hablar(ultimaRutina.titulo+". "+texto);
+}
 
 function compartirRutina(){
   if(!ultimaRutina)return;
@@ -463,16 +582,19 @@ function iniciarPasoAPaso(){
 }
 
 function renderPasoActual(){
-  var paso=pasosActuales[pasoActual],total=pasosActuales.length;
+  var paso=pasosActuales[pasoActual];var total=pasosActuales.length;
   document.getElementById("paso-counter").textContent=(pasoActual+1)+" / "+total;
   document.getElementById("paso-progress-bar").style.width=(((pasoActual+1)/total)*100)+"%";
   document.getElementById("paso-nombre").textContent=paso.nombre;
-  var pg=biblioteca.find(function(p){return p.nombre.toLowerCase().includes(paso.nombre.toLowerCase())||paso.nombre.toLowerCase().includes(p.nombre.toLowerCase())});
+  var pictoGuardado=biblioteca.find(function(p){
+    return p.nombre.toLowerCase().includes(paso.nombre.toLowerCase())||paso.nombre.toLowerCase().includes(p.nombre.toLowerCase());
+  });
+  var tieneImg=pictoGuardado&&pictoGuardado.imageUrl;
   var wrap=document.getElementById("paso-picto-wrap");
   wrap.style.borderColor=paso.color||"#3B82F6";
-  wrap.innerHTML=pg&&pg.imageUrl?'<img src="'+pg.imageUrl+'" alt="'+paso.nombre+'" style="width:100%;height:100%;object-fit:cover;">':'<div class="emoji-paso">'+paso.emoji+"</div>";
-  document.getElementById("paso-btn-ant").style.display=pasoActual===0?"none":"";
-  var btnSig=document.getElementById("paso-btn-sig");
+  wrap.innerHTML=tieneImg?'<img src="'+pictoGuardado.imageUrl+'" alt="'+paso.nombre+'" style="width:100%;height:100%;object-fit:cover;">':'<div class="emoji-paso">'+paso.emoji+"</div>";
+  var btnAnt=document.getElementById("paso-btn-ant");var btnSig=document.getElementById("paso-btn-sig");
+  btnAnt.style.display=pasoActual===0?"none":"";
   if(pasoActual===total-1){btnSig.textContent="✅ Finalizar";btnSig.className="paso-btn finalizar"}
   else{btnSig.textContent="Siguiente →";btnSig.className="paso-btn siguiente"}
   hablarPasoActual();
@@ -483,56 +605,99 @@ function pasoSiguiente(){
   else{
     cerrarPasoAPaso();
     verificarLogro("rutina_completada","¡Rutina completa!","Completaste una rutina entera","🏅");
-    var n=perfil.nombre||"";
-    showToast(perfil.genero==="m"?"¡Excelente, campeón! "+n+" completó toda la rutina 🎉":perfil.genero==="f"?"¡Excelente, campeona! "+n+" completó toda la rutina 🎉":"¡Excelente! Se completó toda la rutina 🎉");
+    var nombre=perfil.nombre||"";
+    var msg=perfil.genero==="m"?"¡Excelente, campeón! "+nombre+" completó toda la rutina 🎉":perfil.genero==="f"?"¡Excelente, campeona! "+nombre+" completó toda la rutina 🎉":"¡Excelente! Se completó toda la rutina 🎉";
+    showToast(msg);
   }
 }
 
 function pasoAnterior(){if(pasoActual>0){pasoActual--;renderPasoActual()}}
-function cerrarPasoAPaso(){document.getElementById("paso-overlay").classList.remove("active");if("speechSynthesis"in window)speechSynthesis.cancel()}
-function hablarPasoActual(){var p=pasosActuales[pasoActual];if(p)hablar(p.nombre)}
-function hablar(texto){if(!("speechSynthesis"in window))return;speechSynthesis.cancel();var u=new SpeechSynthesisUtterance(texto);u.lang="es-AR";u.rate=0.85;u.pitch=1;speechSynthesis.speak(u)}
 
-function abrirTimer(){document.getElementById("timer-overlay").classList.add("active");document.getElementById("timer-setup").style.display="block";document.getElementById("timer-running").style.display="none"}
-function cerrarTimer(){clearInterval(timerInterval);timerInterval=null;document.getElementById("timer-overlay").classList.remove("active");if("speechSynthesis"in window)speechSynthesis.cancel()}
-function selMinutos(min,btn){timerMinutos=min;document.querySelectorAll(".timer-opt").forEach(function(b){b.classList.remove("sel")});btn.classList.add("sel")}
+function cerrarPasoAPaso(){document.getElementById("paso-overlay").classList.remove("active");if("speechSynthesis"in window)speechSynthesis.cancel()}
+
+function hablarPasoActual(){var paso=pasosActuales[pasoActual];if(paso)hablar(paso.nombre)}
+
+function hablar(texto){
+  if(!("speechSynthesis"in window))return;
+  speechSynthesis.cancel();
+  var u=new SpeechSynthesisUtterance(texto);u.lang="es-AR";u.rate=0.85;u.pitch=1;
+  speechSynthesis.speak(u);
+}
+
+function abrirTimer(){
+  document.getElementById("timer-overlay").classList.add("active");
+  document.getElementById("timer-setup").style.display="block";
+  document.getElementById("timer-running").style.display="none";
+}
+
+function cerrarTimer(){
+  clearInterval(timerInterval);timerInterval=null;
+  document.getElementById("timer-overlay").classList.remove("active");
+  if("speechSynthesis"in window)speechSynthesis.cancel();
+}
+
+function selMinutos(min,btn){
+  timerMinutos=min;
+  document.querySelectorAll(".timer-opt").forEach(function(b){b.classList.remove("sel")});
+  btn.classList.add("sel");
+}
 
 function iniciarTimer(){
   timerTotal=timerMinutos*60;timerRestante=timerTotal;
-  document.getElementById("timer-setup").style.display="none";document.getElementById("timer-running").style.display="flex";
+  document.getElementById("timer-setup").style.display="none";
+  document.getElementById("timer-running").style.display="flex";
   actualizarDisplayTimer();
+  var circ=553;
   timerInterval=setInterval(function(){
     timerRestante--;actualizarDisplayTimer();
-    document.getElementById("timer-prog").style.strokeDashoffset=553*(1-timerRestante/timerTotal);
-    if(timerRestante<=0){clearInterval(timerInterval);timerInterval=null;guardarRegistroTimer(false);hablar("El tiempo terminó. Lo hiciste muy bien.");setTimeout(cerrarTimer,1500)}
+    var prog=document.getElementById("timer-prog");
+    prog.style.strokeDashoffset=circ*(1-timerRestante/timerTotal);
+    if(timerRestante<=0){
+      clearInterval(timerInterval);timerInterval=null;
+      guardarRegistroTimer(false);
+      hablar("El tiempo terminó. Lo hiciste muy bien.");
+      setTimeout(cerrarTimer,1500);
+    }
   },1000);
 }
 
-function actualizarDisplayTimer(){var m=Math.floor(timerRestante/60),s=timerRestante%60;document.getElementById("timer-display").textContent=m+":"+(s<10?"0"+s:s);if(timerRestante<30)document.getElementById("timer-frase").textContent="¡Casi terminás! Lo estás haciendo muy bien 🐭"}
+function actualizarDisplayTimer(){
+  var m=Math.floor(timerRestante/60);var s=timerRestante%60;
+  document.getElementById("timer-display").textContent=m+":"+(s<10?"0"+s:s);
+  if(timerRestante<30)document.getElementById("timer-frase").textContent="¡Casi terminás! Lo estás haciendo muy bien 🐭";
+}
 
 function detenerTimer(){
-  clearInterval(timerInterval);timerInterval=null;guardarRegistroTimer(true);
-  var n=perfil.nombre||"";
-  var msg=perfil.genero==="m"?"¡Muy bien, "+(n||"campeón")+"! Te regulaste solo ✨":perfil.genero==="f"?"¡Muy bien, "+(n||"campeona")+"! Te regulaste sola ✨":"¡Muy bien! Se logró regular ✨";
+  clearInterval(timerInterval);timerInterval=null;
+  guardarRegistroTimer(true);
+  var nombre=perfil.nombre||"";
+  var msg=perfil.genero==="m"?"¡Muy bien, "+(nombre||"campeón")+"! Te regulaste solo ✨":perfil.genero==="f"?"¡Muy bien, "+(nombre||"campeona")+"! Te regulaste sola ✨":"¡Muy bien! Se logró regular ✨";
   hablar(msg.replace("✨",""));showToast(msg);
   verificarLogro("primer_timer","Primera regulación","Usaste el timer de regulación por primera vez","🧘");
   cerrarTimer();
 }
 
 function guardarRegistroTimer(anticipado){
-  registrosTimer.unshift({id:Date.now(),fecha:new Date().toISOString(),duracionTotal:timerTotal,duracionTranscurrida:timerTotal-timerRestante,anticipado:anticipado});
+  var transcurrido=timerTotal-timerRestante;
+  registrosTimer.unshift({id:Date.now(),fecha:new Date().toISOString(),duracionTotal:timerTotal,duracionTranscurrida:transcurrido,anticipado:anticipado});
   localStorage.setItem("pr_timer",JSON.stringify(registrosTimer));
   if(registrosTimer.length>=5)verificarLogro("5_timers","5 regulaciones","Usaste el timer 5 veces","💪");
 }
 
 function renderRegulacion(){
-  var total=registrosTimer.length,anticipados=registrosTimer.filter(function(r){return r.anticipado}).length;
+  var total=registrosTimer.length;
+  var anticipados=registrosTimer.filter(function(r){return r.anticipado}).length;
   var promSeg=total?Math.round(registrosTimer.reduce(function(a,r){return a+r.duracionTranscurrida},0)/total):0;
-  var m=Math.floor(promSeg/60),s=promSeg%60;
+  var m=Math.floor(promSeg/60);var s=promSeg%60;
   document.getElementById("stat-regulacion").innerHTML='<div class="stat-card"><div class="stat-num">'+total+'</div><div class="stat-label">Total</div></div><div class="stat-card"><div class="stat-num">'+anticipados+'</div><div class="stat-label">Anticipados</div></div><div class="stat-card"><div class="stat-num">'+m+":"+(s<10?"0"+s:s)+'</div><div class="stat-label">Promedio</div></div>';
   var hist=document.getElementById("regulacion-historial");
   if(!registrosTimer.length){hist.innerHTML='<div class="vacio"><div class="vacio-icon">🕐</div><div class="vacio-txt">Sin registros aún</div><div class="vacio-sub">Usá el timer de regulación para registrar los momentos</div></div>';return}
-  hist.innerHTML=registrosTimer.slice(0,20).map(function(r){var f=new Date(r.fecha),fs=f.toLocaleDateString("es-AR")+" "+f.toLocaleTimeString("es-AR",{hour:"2-digit",minute:"2-digit"}),m2=Math.floor(r.duracionTranscurrida/60),s2=r.duracionTranscurrida%60;return'<div class="reg-item"><div><div style="font-weight:700;">'+(r.anticipado?"Se reguló antes ✨":"Completó el tiempo ⏱️")+'</div><div class="reg-fecha">'+fs+'</div></div><div style="text-align:right;"><div class="reg-dur">'+m2+":"+(s2<10?"0"+s2:s2)+' min</div><div class="reg-badge '+(r.anticipado?"anticipado":"completo")+'">'+(r.anticipado?"Anticipado":"Completo")+"</div></div></div>"}).join("");
+  hist.innerHTML=registrosTimer.slice(0,20).map(function(r){
+    var fecha=new Date(r.fecha);
+    var fechaStr=fecha.toLocaleDateString("es-AR")+" "+fecha.toLocaleTimeString("es-AR",{hour:"2-digit",minute:"2-digit"});
+    var m2=Math.floor(r.duracionTranscurrida/60);var s2=r.duracionTranscurrida%60;
+    return'<div class="reg-item"><div><div style="font-weight:700;">'+( r.anticipado?"Se reguló antes ✨":"Completó el tiempo ⏱️")+'</div><div class="reg-fecha">'+fechaStr+'</div></div><div style="text-align:right;"><div class="reg-dur">'+m2+":"+(s2<10?"0"+s2:s2)+' min</div><div class="reg-badge '+( r.anticipado?"anticipado":"completo")+'">'+( r.anticipado?"Anticipado":"Completo")+'</div></div></div>';
+  }).join("");
 }
 
 var LOGROS_DEF=[
@@ -546,15 +711,130 @@ var LOGROS_DEF=[
   {id:"5_timers",nombre:"Regulación constante",desc:"Usaste el timer 5 veces",icon:"💪"},
 ];
 
-function verificarLogro(id,nombre,desc,icon){if(logros.find(function(l){return l.id===id}))return;logros.push({id:id,nombre:nombre,desc:desc,icon:icon,fecha:new Date().toISOString()});localStorage.setItem("pr_logros",JSON.stringify(logros));showToast("🏆 ¡Nuevo logro: "+nombre+"!")}
+function verificarLogro(id,nombre,desc,icon){
+  if(logros.find(function(l){return l.id===id}))return;
+  logros.push({id:id,nombre:nombre,desc:desc,icon:icon,fecha:new Date().toISOString()});
+  localStorage.setItem("pr_logros",JSON.stringify(logros));
+  showToast("🏆 ¡Nuevo logro: "+nombre+"!");
+}
 
-function renderLogros(){document.getElementById("logros-grid").innerHTML=LOGROS_DEF.map(function(def){var g=logros.find(function(l){return l.id===def.id});return'<div class="logro-card '+(g?"ganado":"")+'""><div class="logro-icon">'+(g?def.icon:"🔒")+'</div><div class="logro-nombre">'+def.nombre+'</div><div class="logro-desc">'+def.desc+"</div>"+(g?'<div class="logro-badge">⭐ Obtenido</div>':'<div style="font-size:10px;color:var(--gris-texto);margin-top:4px;">Sin desbloquear</div>')+"</div>"}).join("")}
+function renderLogros(){
+  var grid=document.getElementById("logros-grid");
+  grid.innerHTML=LOGROS_DEF.map(function(def){
+    var ganado=logros.find(function(l){return l.id===def.id});
+    return'<div class="logro-card '+( ganado?"ganado":"")+'"><div class="logro-icon">'+( ganado?def.icon:"🔒")+'</div><div class="logro-nombre">'+def.nombre+'</div><div class="logro-desc">'+def.desc+'</div>'+( ganado?'<div class="logro-badge">⭐ Obtenido</div>':'<div style="font-size:10px;color:var(--gris-texto);margin-top:4px;">Sin desbloquear</div>')+'</div>';
+  }).join("");
+}
 
-function abrirPerfil(){document.getElementById("perfil-nombre").value=perfil.nombre||"";document.getElementById("perfil-genero").value=perfil.genero||"neutro";document.getElementById("perfil-emoji").textContent=perfil.emoji||"🐭";document.getElementById("stat-perfil").innerHTML='<div class="stat-card"><div class="stat-num">'+biblioteca.length+'</div><div class="stat-label">Pictogramas</div></div><div class="stat-card"><div class="stat-num">'+rutinasGuardadas.length+'</div><div class="stat-label">Rutinas</div></div><div class="stat-card"><div class="stat-num">'+registrosTimer.length+'</div><div class="stat-label">Regulaciones</div></div>';document.getElementById("perfil-modal").style.display="flex"}
+function abrirPerfil(){
+  document.getElementById("perfil-nombre").value=perfil.nombre||"";
+  document.getElementById("perfil-genero").value=perfil.genero||"neutro";
+  document.getElementById("perfil-emoji").textContent=perfil.emoji||"🐭";
+  document.getElementById("stat-perfil").innerHTML='<div class="stat-card"><div class="stat-num">'+biblioteca.length+'</div><div class="stat-label">Pictogramas</div></div><div class="stat-card"><div class="stat-num">'+rutinasGuardadas.length+'</div><div class="stat-label">Rutinas</div></div><div class="stat-card"><div class="stat-num">'+registrosTimer.length+'</div><div class="stat-label">Regulaciones</div></div>';
+  document.getElementById("perfil-modal").style.display="flex";
+}
 
 function cerrarPerfil(){document.getElementById("perfil-modal").style.display="none"}
+
 function setEmoji(emoji){document.getElementById("perfil-emoji").textContent=emoji;perfil.emoji=emoji}
-function guardarPerfil(){perfil.nombre=document.getElementById("perfil-nombre").value.trim();perfil.genero=document.getElementById("perfil-genero").value;localStorage.setItem("pr_perfil",JSON.stringify(perfil));cerrarPerfil();showToast("✅ Perfil guardado")}
+
+function guardarPerfil(){
+  perfil.nombre=document.getElementById("perfil-nombre").value.trim();
+  perfil.genero=document.getElementById("perfil-genero").value;
+  localStorage.setItem("pr_perfil",JSON.stringify(perfil));
+  cerrarPerfil();showToast("✅ Perfil guardado");
+}
+
+
+// ── CONFETI ──
+function lanzarConfeti(){
+  var cont=document.createElement("div");cont.className="confeti-container";document.body.appendChild(cont);
+  var colores=["#3B82F6","#10B981","#F59E0B","#EF4444","#8B5CF6","#F97316","#EC4899","#06B6D4"];
+  for(var i=0;i<80;i++){
+    (function(i){
+      setTimeout(function(){
+        var p=document.createElement("div");p.className="confeti-particle";
+        p.style.left=Math.random()*100+"vw";
+        p.style.background=colores[Math.floor(Math.random()*colores.length)];
+        p.style.width=(Math.random()*10+5)+"px";
+        p.style.height=(Math.random()*10+5)+"px";
+        p.style.borderRadius=Math.random()>0.5?"50%":"2px";
+        p.style.animationDuration=(Math.random()*2+1.5)+"s";
+        p.style.animationDelay="0s";
+        cont.appendChild(p);
+      },i*30);
+    })(i);
+  }
+  setTimeout(function(){cont.remove()},5000);
+}
+
+// ── PALETA DE COLORES ──
+var temaActual=localStorage.getItem("pr_tema")||"";
+function setTema(tema){
+  document.body.className=tema;temaActual=tema;
+  localStorage.setItem("pr_tema",tema);
+  document.querySelectorAll(".paleta-opt").forEach(function(el,i){
+    var temas=["","tema-azul","tema-verde","tema-violeta","tema-calido"];
+    el.classList.toggle("activa",temas[i]===tema);
+  });
+  showToast("🎨 Tema aplicado");
+}
+if(temaActual)document.body.className=temaActual;
+
+// ── SONIDOS ──
+var audioCtx=null;
+function getAudioCtx(){if(!audioCtx)audioCtx=new(window.AudioContext||window.webkitAudioContext)();return audioCtx}
+
+function sonarTick(){
+  try{
+    var ctx=getAudioCtx();
+    var osc=ctx.createOscillator();var gain=ctx.createGain();
+    osc.connect(gain);gain.connect(ctx.destination);
+    osc.type="square";osc.frequency.setValueAtTime(800,ctx.currentTime);
+    gain.gain.setValueAtTime(0.05,ctx.currentTime);gain.gain.exponentialRampToValueAtTime(0.001,ctx.currentTime+0.04);
+    osc.start(ctx.currentTime);osc.stop(ctx.currentTime+0.04);
+  }catch(e){}
+}
+
+function sonarAlarma(){
+  try{
+    var ctx=getAudioCtx();
+    var frecuencias=[523,659,784,1047];
+    frecuencias.forEach(function(f,i){
+      var osc=ctx.createOscillator();var gain=ctx.createGain();
+      osc.connect(gain);gain.connect(ctx.destination);
+      osc.type="sine";osc.frequency.setValueAtTime(f,ctx.currentTime+i*0.15);
+      gain.gain.setValueAtTime(0.3,ctx.currentTime+i*0.15);
+      gain.gain.exponentialRampToValueAtTime(0.001,ctx.currentTime+i*0.15+0.4);
+      osc.start(ctx.currentTime+i*0.15);osc.stop(ctx.currentTime+i*0.15+0.4);
+    });
+  }catch(e){}
+}
+
+// ── COCO COMIENDO ──
+var ALIMENTOS_POR_TIEMPO={1:["🧀"],3:["🧀","🍓","🥕"],5:["🧀","🍓","🥕","🍎","🫐"],10:["🧀","🍓","🥕","🍎","🫐","🍇","🥦","🍊"]};
+var alimentosRestantes=[],intervaloAlimentos=null,tickInterval2=null;
+
+function iniciarAnimacionCoco(minutos){
+  var alimentos=ALIMENTOS_POR_TIEMPO[minutos]||ALIMENTOS_POR_TIEMPO[1];
+  alimentosRestantes=alimentos.slice();
+  var fila=document.getElementById("alimentos-fila");if(fila)fila.innerHTML="";
+  document.getElementById("coco-emoji").textContent="🐭";
+  var intervaloSeg=Math.floor((minutos*60)/alimentos.length);
+  intervaloAlimentos=setInterval(function(){
+    if(!alimentosRestantes.length){clearInterval(intervaloAlimentos);return}
+    var alimento=alimentosRestantes.shift();
+    var fila2=document.getElementById("alimentos-fila");
+    if(fila2){var el=document.createElement("span");el.className="alimento";el.textContent=alimento;fila2.appendChild(el)}
+    var coco=document.getElementById("coco-emoji");
+    if(coco){coco.classList.add("bocado");setTimeout(function(){if(coco)coco.classList.remove("bocado")},300)}
+  },intervaloSeg*1000);
+}
+
+function detenerAnimacionCoco(){
+  clearInterval(intervaloAlimentos);intervaloAlimentos=null;
+  var fila=document.getElementById("alimentos-fila");if(fila)fila.innerHTML="";
+}
 
 renderBiblioteca();renderRutinasGuardadas();renderLogros();
 </script>
