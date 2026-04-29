@@ -164,13 +164,52 @@ body.tema-verde{--azul:#059669;--verde:#16A34A;--gris-fondo:#ECFDF5;--gris-borde
 body.tema-violeta{--azul:#7C3AED;--verde:#9333EA;--gris-fondo:#F5F3FF;--gris-borde:#DDD6FE}
 body.tema-oscuro{--azul:#60A5FA;--verde:#34D399;--gris-fondo:#111827;--gris-borde:#374151;--negro:#F9FAFB;--blanco:#1F2937;--gris-texto:#9CA3AF}
 body.tema-calido{--azul:#EA580C;--verde:#D97706;--gris-fondo:#FFF7ED;--gris-borde:#FED7AA}
+
+/* MODO SIMPLIFICADO */
+.modo-simple-overlay{position:fixed;inset:0;background:var(--gris-fondo);z-index:900;display:none;flex-direction:column}
+.modo-simple-overlay.active{display:flex}
+.ms-header{background:var(--azul);padding:1rem 1.25rem;display:flex;align-items:center;justify-content:space-between}
+.ms-titulo{color:white;font-size:20px;font-weight:800}
+.ms-salir{background:rgba(255,255,255,.2);border:none;color:white;padding:8px 14px;border-radius:var(--radio);cursor:pointer;font-family:"Nunito",sans-serif;font-weight:700;font-size:13px}
+.ms-content{flex:1;overflow-y:auto;padding:1.25rem}
+.ms-rutina-btn{width:100%;background:var(--blanco);border:3px solid var(--azul);border-radius:var(--radio-lg);padding:1.25rem;margin-bottom:12px;cursor:pointer;font-family:"Nunito",sans-serif;font-size:18px;font-weight:700;color:var(--negro);text-align:left;display:flex;align-items:center;gap:12px;transition:all .15s}
+.ms-rutina-btn:hover{background:#EFF6FF;transform:scale(1.01)}
+.ms-timer-btn{width:100%;background:var(--violeta);border:none;border-radius:var(--radio-lg);padding:1.25rem;cursor:pointer;font-family:"Nunito",sans-serif;font-size:18px;font-weight:700;color:white;display:flex;align-items:center;justify-content:center;gap:10px;margin-top:8px}
+.ms-vacio{text-align:center;padding:3rem 1rem;color:var(--gris-texto)}
+
+/* PASO A PASO CON MARCAR */
+.paso-hecho-btn{background:var(--verde);border:none;color:white;font-family:"Nunito",sans-serif;font-size:15px;font-weight:700;padding:12px 28px;border-radius:var(--radio);cursor:pointer;transition:all .15s}
+.paso-hecho-btn:active{transform:scale(0.95)}
+.paso-step-check{position:absolute;top:8px;left:8px;width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:16px}
+.paso-step-check.hecho{background:var(--verde);color:white}
+.paso-check-fila{display:flex;gap:6px;position:absolute;bottom:16px;left:0;right:0;justify-content:center}
+.paso-dot{width:10px;height:10px;border-radius:50%;background:rgba(255,255,255,.3);transition:all .3s}
+.paso-dot.hecho{background:var(--verde)}
+
+/* ARASAAC BUSCAR */
+.arasaac-modal{position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:500;display:none;align-items:center;justify-content:center;padding:1rem}
+.arasaac-modal.active{display:flex}
+.arasaac-box{background:var(--blanco);border-radius:var(--radio-lg);width:100%;max-width:560px;max-height:85vh;display:flex;flex-direction:column;overflow:hidden}
+.arasaac-header{padding:1rem 1.25rem;border-bottom:1px solid var(--gris-borde);display:flex;align-items:center;gap:8px}
+.arasaac-header input{flex:1;font-family:"Nunito",sans-serif;font-size:15px;padding:9px 12px;border-radius:var(--radio);border:1.5px solid var(--gris-borde);outline:none}
+.arasaac-header input:focus{border-color:var(--azul)}
+.arasaac-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(90px,1fr));gap:10px;padding:1rem;overflow-y:auto;flex:1}
+.arasaac-item{text-align:center;cursor:pointer;padding:6px;border-radius:var(--radio);border:2px solid transparent;transition:all .15s}
+.arasaac-item:hover{border-color:var(--azul);background:#EFF6FF}
+.arasaac-item img{width:70px;height:70px;object-fit:contain}
+.arasaac-item-txt{font-size:10px;font-weight:700;margin-top:4px;color:var(--negro)}
+.arasaac-loading{text-align:center;padding:2rem;color:var(--gris-texto);grid-column:1/-1}
+.arasaac-footer{padding:.75rem 1.25rem;border-top:1px solid var(--gris-borde);font-size:11px;color:var(--gris-texto);text-align:center}
 </style>
 </head>
 <body>
 
 <div class="header">
   <div><div class="logo">Picto<span>Rutinas</span></div><div class="header-sub">Pictogramas y rutinas para TEA</div></div>
-  <button class="btn btn-icon" onclick="abrirPerfil()" title="Perfil" style="font-size:18px;border:none;">👤</button>
+  <div style="display:flex;gap:6px;align-items:center;">
+    <button class="btn" id="btn-modo-simple" onclick="abrirModoSimple()" style="font-size:12px;padding:6px 12px;background:var(--azul);color:white;border-color:var(--azul);">🧒 Modo niño</button>
+    <button class="btn btn-icon" onclick="abrirPerfil()" title="Perfil" style="font-size:18px;border:none;">👤</button>
+  </div>
 </div>
 
 <div class="tabs">
@@ -208,7 +247,10 @@ body.tema-calido{--azul:#EA580C;--verde:#D97706;--gris-fondo:#FFF7ED;--gris-bord
 <div class="panel" id="panel-generar">
   <div class="card">
     <div class="card-title">Subí una foto</div>
-    <div class="upload-area">
+    <div style="margin-bottom:10px;">
+    <button class="btn btn-full" onclick="abrirArasaac()" style="background:#4A90D9;color:white;border-color:#4A90D9;font-size:14px;padding:11px;">🔍 Buscar en ARASAAC</button>
+  </div>
+  <div class="upload-area">
       <label class="upload-btn"><input type="file" accept="image/*" capture="environment" onchange="previsualizarImagen(this)"><span class="ub-icon">📷</span><span class="ub-txt">Sacar foto</span><span class="ub-sub">Abre la cámara</span></label>
       <label class="upload-btn"><input type="file" accept="image/*" onchange="previsualizarImagen(this)"><span class="ub-icon">🖼️</span><span class="ub-txt">Desde galería</span><span class="ub-sub">Fotos guardadas</span></label>
     </div>
@@ -302,9 +344,11 @@ body.tema-calido{--azul:#EA580C;--verde:#D97706;--gris-fondo:#FFF7ED;--gris-bord
   </div>
   <div class="paso-picto-wrap" id="paso-picto-wrap"></div>
   <div class="paso-nombre" id="paso-nombre"></div>
-  <div class="paso-nav">
+  <div class="paso-check-fila" id="paso-dots"></div>
+  <div class="paso-nav" style="margin-top:12px;">
     <button class="paso-btn" id="paso-btn-ant" onclick="pasoAnterior()">← Anterior</button>
     <button class="paso-voz-btn" onclick="hablarPasoActual()" title="Leer en voz alta">🔊</button>
+    <button class="paso-hecho-btn" onclick="marcarHecho()">✅ Lo hice</button>
     <button class="paso-btn siguiente" id="paso-btn-sig" onclick="pasoSiguiente()">Siguiente →</button>
   </div>
 </div>
@@ -377,6 +421,33 @@ body.tema-calido{--azul:#EA580C;--verde:#D97706;--gris-fondo:#FFF7ED;--gris-bord
     </div>
 <div class="stat-grid" id="stat-perfil"></div>
     <button class="btn btn-primary btn-full" onclick="guardarPerfil()" style="margin-top:.5rem;">Guardar perfil</button>
+  </div>
+</div>
+
+<!-- MODAL ARASAAC -->
+<div class="arasaac-modal" id="arasaac-modal">
+  <div class="arasaac-box">
+    <div class="arasaac-header">
+      <input type="text" id="arasaac-input" placeholder="Buscar pictograma... ej: baño, comer, dormir" onkeydown="if(event.key==='Enter')buscarArasaac()">
+      <button class="btn btn-primary" onclick="buscarArasaac()" style="white-space:nowrap;">Buscar</button>
+      <button onclick="cerrarArasaac()" style="background:none;border:none;font-size:20px;cursor:pointer;padding:0 4px;">✕</button>
+    </div>
+    <div class="arasaac-grid" id="arasaac-grid">
+      <div class="arasaac-loading">Buscá un pictograma arriba 🔍</div>
+    </div>
+    <div class="arasaac-footer">Pictogramas de ARASAAC — Gobierno de Aragón, España. Licencia CC BY-NC-SA 4.0</div>
+  </div>
+</div>
+
+<!-- MODO SIMPLIFICADO -->
+<div class="modo-simple-overlay" id="modo-simple">
+  <div class="ms-header">
+    <div class="ms-titulo" id="ms-saludo">¡Hola! 🐭</div>
+    <button class="ms-salir" onclick="cerrarModoSimple()">Salir ✕</button>
+  </div>
+  <div class="ms-content">
+    <div id="ms-rutinas-lista"></div>
+    <button class="ms-timer-btn" onclick="cerrarModoSimple();abrirTimer()">⏱ Timer de calma</button>
   </div>
 </div>
 
@@ -573,14 +644,11 @@ function compartirRutina(){
   else{navigator.clipboard.writeText(texto).then(function(){showToast("📋 Rutina copiada al portapapeles")})}
 }
 
-function iniciarPasoAPaso(){
-  if(!ultimaRutina||!ultimaRutina.pasos.length)return;
-  pasosActuales=ultimaRutina.pasos;pasoActual=0;
-  document.getElementById("paso-titulo-header").textContent=ultimaRutina.titulo;
-  document.getElementById("paso-overlay").classList.add("active");
-  renderPasoActual();
-}
+// reemplazado abajo
 
+function renderPasoActualBase(){
+  renderDots();
+}
 function renderPasoActual(){
   var paso=pasosActuales[pasoActual];var total=pasosActuales.length;
   document.getElementById("paso-counter").textContent=(pasoActual+1)+" / "+total;
@@ -598,6 +666,7 @@ function renderPasoActual(){
   if(pasoActual===total-1){btnSig.textContent="✅ Finalizar";btnSig.className="paso-btn finalizar"}
   else{btnSig.textContent="Siguiente →";btnSig.className="paso-btn siguiente"}
   hablarPasoActual();
+  renderDots();
 }
 
 function pasoSiguiente(){
@@ -613,7 +682,7 @@ function pasoSiguiente(){
 
 function pasoAnterior(){if(pasoActual>0){pasoActual--;renderPasoActual()}}
 
-function cerrarPasoAPaso(){document.getElementById("paso-overlay").classList.remove("active");if("speechSynthesis"in window)speechSynthesis.cancel()}
+function cerrarPasoAPaso(){document.getElementById("paso-overlay").classList.remove("active");pasosHechos=[];if("speechSynthesis"in window)speechSynthesis.cancel()}
 
 function hablarPasoActual(){var paso=pasosActuales[pasoActual];if(paso)hablar(paso.nombre)}
 
@@ -742,7 +811,13 @@ function guardarPerfil(){
   perfil.nombre=document.getElementById("perfil-nombre").value.trim();
   perfil.genero=document.getElementById("perfil-genero").value;
   localStorage.setItem("pr_perfil",JSON.stringify(perfil));
+  actualizarBtnModoSimple();
   cerrarPerfil();showToast("✅ Perfil guardado");
+}
+
+function actualizarBtnModoSimple(){
+  var btn=document.getElementById("btn-modo-simple");
+  if(btn)btn.textContent="🧒 Modo "+(perfil.nombre||"niño");
 }
 
 
@@ -836,7 +911,120 @@ function detenerAnimacionCoco(){
   var fila=document.getElementById("alimentos-fila");if(fila)fila.innerHTML="";
 }
 
-renderBiblioteca();renderRutinasGuardadas();renderLogros();
+
+// ── MARCAR PASOS HECHOS ──
+var pasosHechos=[];
+
+function iniciarPasoAPaso(){
+  if(!ultimaRutina||!ultimaRutina.pasos.length)return;
+  pasosActuales=ultimaRutina.pasos;pasoActual=0;
+  pasosHechos=new Array(ultimaRutina.pasos.length).fill(false);
+  document.getElementById("paso-titulo-header").textContent=ultimaRutina.titulo;
+  document.getElementById("paso-overlay").classList.add("active");
+  renderPasoActual();
+}
+
+function renderDots(){
+  var cont=document.getElementById("paso-dots");
+  if(!cont)return;
+  cont.innerHTML=pasosActuales.map(function(_,i){
+    return'<div class="paso-dot'+(pasosHechos[i]?" hecho":"")+'"></div>';
+  }).join("");
+}
+
+function marcarHecho(){
+  pasosHechos[pasoActual]=true;
+  renderDots();
+  var coco=document.getElementById("paso-emoji")||document.getElementById("coco-emoji");
+  hablar("¡Muy bien!");
+  setTimeout(function(){pasoSiguiente()},600);
+}
+
+// ── BUSCAR EN ARASAAC ──
+function abrirArasaac(){
+  document.getElementById("arasaac-modal").classList.add("active");
+  document.getElementById("arasaac-input").focus();
+}
+function cerrarArasaac(){document.getElementById("arasaac-modal").classList.remove("active")}
+
+async function buscarArasaac(){
+  var q=document.getElementById("arasaac-input").value.trim();
+  if(!q)return;
+  var grid=document.getElementById("arasaac-grid");
+  grid.innerHTML='<div class="arasaac-loading"><div class="spinner" style="margin:0 auto 8px;"></div>Buscando...</div>';
+  try{
+    var res=await fetch("https://api.arasaac.org/api/pictograms/es/search/"+encodeURIComponent(q));
+    var data=await res.json();
+    if(!data||!data.length){grid.innerHTML='<div class="arasaac-loading">No se encontraron resultados para "'+q+'"</div>';return}
+    grid.innerHTML=data.slice(0,40).map(function(p){
+      var url="https://static.arasaac.org/pictograms/"+p._id+"/"+p._id+"_300.png";
+      return'<div class="arasaac-item" onclick="seleccionarArasaac('+ JSON.stringify(url)+','+JSON.stringify(p.keywords&&p.keywords[0]?p.keywords[0].keyword:q)+')"><img src="'+url+'" alt="'+( p.keywords&&p.keywords[0]?p.keywords[0].keyword:q)+'" loading="lazy"><div class="arasaac-item-txt">'+( p.keywords&&p.keywords[0]?p.keywords[0].keyword:q)+'</div></div>';
+    }).join("");
+  }catch(e){grid.innerHTML='<div class="arasaac-loading">Error al buscar. Revisá tu conexión.</div>'}
+}
+
+async function seleccionarArasaac(url,nombre){
+  cerrarArasaac();
+  setTab("generar");
+  var loading=document.getElementById("loading-picto");
+  var txt=document.getElementById("loading-txt");
+  loading.style.display="flex";txt.textContent="Guardando pictograma de ARASAAC...";
+  var picto={
+    nombre:nombre,descripcion:"Pictograma de ARASAAC",
+    categoria:detectarCategoria(nombre),
+    color:COLORES[detectarCategoria(nombre)]||"#3B82F6",
+    colorLabel:LABELS[detectarCategoria(nombre)]||"General",
+    imageUrl:url,
+    id:Date.now()
+  };
+  biblioteca.unshift(picto);
+  localStorage.setItem("pr_biblioteca",JSON.stringify(biblioteca));
+  loading.style.display="none";
+  verificarLogro("primer_picto","¡Primer pictograma!","Generaste tu primer pictograma personalizado","🖼️");
+  if(biblioteca.length>=5)verificarLogro("5_pictos","5 pictogramas","Tu biblioteca está creciendo","📚");
+  setTab("biblioteca");
+  showToast("✅ Pictograma de ARASAAC guardado: "+nombre);
+}
+
+function detectarCategoria(nombre){
+  var n=nombre.toLowerCase();
+  var cats={higiene:["baño","ducha","dientes","manos","jabón","cepillo","peine","toalla"],comida:["comer","beber","comida","leche","agua","fruta","pan","desayuno","almuerzo","cena","merienda"],escuela:["jardín","escuela","mochila","libro","lápiz","clase"],descanso:["dormir","cama","siesta","descanso"],juego:["jugar","juguete","pelota","música","parque"],ropa:["ropa","vestir","zapato","camisa","pantalón","medias"]};
+  for(var cat in cats){if(cats[cat].some(function(k){return n.includes(k)}))return cat}
+  return"juego";
+}
+
+// ── MODO SIMPLIFICADO ──
+function abrirModoSimple(){
+  var nombre=perfil.nombre||"";
+  var saludo=nombre?"¡Hola, "+nombre+"! 🐭":"¡Hola! 🐭";
+  document.getElementById("ms-saludo").textContent=saludo;
+  renderMsRutinas();
+  document.getElementById("modo-simple").classList.add("active");
+}
+
+function cerrarModoSimple(){document.getElementById("modo-simple").classList.remove("active")}
+
+function renderMsRutinas(){
+  var cont=document.getElementById("ms-rutinas-lista");
+  if(!rutinasGuardadas.length){
+    cont.innerHTML='<div class="ms-vacio"><div style="font-size:48px;margin-bottom:10px;">📋</div><div style="font-size:16px;font-weight:700;">No hay rutinas guardadas</div><div style="font-size:13px;margin-top:6px;">Pedile a un adulto que cree una rutina</div></div>';
+    return;
+  }
+  cont.innerHTML=rutinasGuardadas.map(function(r){
+    var emoji=r.pasos&&r.pasos[0]?r.pasos[0].emoji:"📋";
+    return'<button class="ms-rutina-btn" onclick="iniciarRutinaSimple(\''+r.id+'\')"><span style="font-size:32px;">'+emoji+'</span><div><div>'+r.titulo+'</div><div style="font-size:13px;font-weight:400;color:var(--gris-texto);">'+( r.pasos?r.pasos.length+" pasos":"")+'</div></div></button>';
+  }).join("");
+}
+
+function iniciarRutinaSimple(id){
+  var r=rutinasGuardadas.find(function(x){return x.id==id});
+  if(!r)return;
+  ultimaRutina=r;
+  cerrarModoSimple();
+  iniciarPasoAPaso();
+}
+
+renderBiblioteca();renderRutinasGuardadas();renderLogros();actualizarBtnModoSimple();
 </script>
 </body>
 </html>
