@@ -4,360 +4,507 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>PictoRutinas</title>
-<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
-:root{--azul:#3B82F6;--verde:#10B981;--amarillo:#F59E0B;--rojo:#EF4444;--violeta:#8B5CF6;--naranja:#F97316;--gris-fondo:#F5F4F1;--gris-borde:#E5E3DF;--gris-texto:#6B6860;--negro:#1C1B18;--blanco:#FFFFFF;--radio:12px;--radio-lg:18px}
-body{font-family:"Nunito",sans-serif;background:var(--gris-fondo);color:var(--negro);min-height:100vh}
-.header{background:var(--blanco);border-bottom:1px solid var(--gris-borde);padding:0 1.25rem;display:flex;align-items:center;justify-content:space-between;height:56px;position:sticky;top:0;z-index:200}
-.logo{font-size:20px;font-weight:800}.logo span{color:var(--azul)}
-.header-sub{font-size:12px;color:var(--gris-texto)}
-.tabs{display:flex;gap:4px;padding:0.75rem 1.25rem 0;background:var(--blanco);border-bottom:1px solid var(--gris-borde);overflow-x:auto}
-.tab{padding:8px 14px;border-radius:var(--radio) var(--radio) 0 0;font-size:13px;font-weight:700;cursor:pointer;color:var(--gris-texto);border:none;background:transparent;white-space:nowrap}
-.tab.active{background:var(--gris-fondo);color:var(--negro);border-bottom:2px solid var(--azul)}
-.content{max-width:800px;margin:0 auto;padding:1.25rem}
-.panel{display:none}.panel.active{display:block}
-.card{background:var(--blanco);border:1px solid var(--gris-borde);border-radius:var(--radio-lg);padding:1.25rem;margin-bottom:1rem}
-.card-title{font-size:11px;font-weight:700;color:var(--gris-texto);text-transform:uppercase;letter-spacing:.06em;margin-bottom:1rem}
-.leyenda{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:1rem}
-.leyenda-item{display:flex;align-items:center;gap:5px;font-size:12px;color:var(--gris-texto)}
-.leyenda-dot{width:11px;height:11px;border-radius:50%}
-.btn{font-family:"Nunito",sans-serif;font-size:14px;font-weight:700;padding:9px 18px;border-radius:var(--radio);border:1.5px solid var(--gris-borde);background:var(--blanco);color:var(--negro);cursor:pointer;transition:all .15s}
-.btn:hover{background:var(--gris-fondo)}.btn:disabled{opacity:.4;cursor:not-allowed}
-.btn-primary{background:var(--azul);color:var(--blanco);border-color:var(--azul)}.btn-primary:hover{background:#2563EB}
-.btn-verde{background:var(--verde);color:var(--blanco);border-color:var(--verde)}
-.btn-full{width:100%;font-size:16px;padding:14px}
-.btn-icon{width:36px;height:36px;padding:0;display:flex;align-items:center;justify-content:center;border-radius:50%}
-.input-row{display:flex;gap:8px}
-input[type=text],input[type=number],select,textarea{font-family:"Nunito",sans-serif;font-size:14px;padding:9px 12px;border-radius:var(--radio);border:1.5px solid var(--gris-borde);color:var(--negro);background:var(--gris-fondo);outline:none;width:100%}
-input:focus,select:focus,textarea:focus{border-color:var(--azul);background:var(--blanco)}
-label.field{display:block;font-size:12px;font-weight:700;color:var(--gris-texto);margin-bottom:5px;margin-top:12px}
-.picto-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(100px,1fr));gap:10px}
+:root{
+--cream:#FFFBF0;--cream-dot:#F5E6D3;
+--verde:#7DD3B0;--verde-oscuro:#5DB891;
+--celeste:#7DD9E0;--celeste-oscuro:#5DBDC7;
+--violeta:#D4A5D4;--violeta-oscuro:#BC8CBC;
+--amarillo:#F4D876;--amarillo-oscuro:#E8C85B;
+--gris-claro:#E8DDD0;--gris-medio:#C8B8AA;--gris-oscuro:#6B5D4F;
+--negro:#2B2318;--blanco:#FFFFFF;
+--radio:20px;--radio-lg:28px
+}
+body{font-family:"Fredoka",sans-serif;background:var(--cream);color:var(--negro);min-height:100vh;padding-bottom:100px}
+body::before{content:"";position:fixed;top:0;left:0;right:0;bottom:0;background-image:radial-gradient(circle,var(--cream-dot) 2px,transparent 2px);background-size:30px 30px;background-position:0 0,15px 15px;pointer-events:none;z-index:1}
+
+/* PANTALLA PRINCIPAL */
+.pantalla-principal{display:none;position:relative;z-index:10;padding:2rem 1.5rem;text-align:center;min-height:100vh;overflow-y:auto}
+.pantalla-principal.active{display:flex;flex-direction:column;align-items:center;justify-content:center}
+
+.coco-bienvenida{font-size:120px;margin-bottom:1rem;animation:flotante 3s ease-in-out infinite}
+@keyframes flotante{0%,100%{transform:translateY(0)}50%{transform:translateY(-20px)}}
+
+.frase-coco{font-size:28px;font-weight:700;color:var(--negro);margin-bottom:1.5rem;line-height:1.3;max-width:300px}
+.frase-coco-sub{font-size:16px;color:var(--gris-medio);margin-bottom:2rem}
+
+.botones-principales{display:grid;grid-template-columns:1fr 1fr;gap:1rem;width:100%;max-width:300px;margin:0 auto}
+.btn-main{padding:2rem 1.5rem;border-radius:var(--radio-lg);border:none;cursor:pointer;font-family:"Fredoka",sans-serif;font-weight:700;font-size:16px;color:white;transition:all .2s;box-shadow:0 6px 20px rgba(0,0,0,.15);position:relative;overflow:hidden}
+.btn-main::before{content:"";position:absolute;top:0;left:0;right:0;bottom:0;background:rgba(255,255,255,.2);opacity:0;transition:opacity .2s}
+.btn-main:active{transform:scale(0.95)}
+.btn-main:active::before{opacity:1}
+
+.btn-main-rutinas{background:var(--verde);box-shadow:0 6px 20px rgba(125,179,176,.3)}
+.btn-main-rutinas:hover{background:var(--verde-oscuro);transform:translateY(-4px)}
+
+.btn-main-pictos{background:var(--celeste);box-shadow:0 6px 20px rgba(125,217,224,.3)}
+.btn-main-pictos:hover{background:var(--celeste-oscuro);transform:translateY(-4px)}
+
+.btn-main-regulacion{background:var(--violeta);box-shadow:0 6px 20px rgba(212,165,212,.3)}
+.btn-main-regulacion:hover{background:var(--violeta-oscuro);transform:translateY(-4px)}
+
+.btn-main-logros{background:var(--amarillo);color:var(--negro);box-shadow:0 6px 20px rgba(244,216,118,.3)}
+.btn-main-logros:hover{background:var(--amarillo-oscuro);transform:translateY(-4px)}
+
+.btn-main-icon{font-size:36px;display:block;margin-bottom:8px}
+
+/* SECCIONES */
+.seccion{display:none;position:relative;z-index:10;padding:2rem 1.5rem;min-height:100vh;padding-bottom:120px;overflow-y:auto}
+.seccion.active{display:block}
+
+.header-seccion{display:flex;align-items:center;justify-content:space-between;margin-bottom:2rem;padding-bottom:1.5rem;border-bottom:3px solid;gap:1rem}
+.header-seccion.verde{border-color:var(--verde)}
+.header-seccion.celeste{border-color:var(--celeste)}
+.header-seccion.violeta{border-color:var(--violeta)}
+.header-seccion.amarillo{border-color:var(--amarillo)}
+
+.titulo-seccion{font-size:24px;font-weight:700;color:var(--negro)}
+.btn-header{background:none;border:none;font-size:28px;cursor:pointer;padding:0;width:44px;height:44px;display:flex;align-items:center;justify-content:center;border-radius:50%;transition:all .2s}
+.btn-header:hover{background:rgba(0,0,0,.08);transform:scale(1.1)}
+
+/* CARD */
+.card{background:rgba(255,255,255,.8);border-radius:var(--radio-lg);padding:1.5rem;margin-bottom:1.5rem;border:none;backdrop-filter:blur(10px)}
+.card-title{font-size:13px;font-weight:700;color:var(--gris-oscuro);text-transform:uppercase;letter-spacing:.08em;margin-bottom:1.25rem}
+
+/* BOTONES */
+.btn{font-family:"Fredoka",sans-serif;font-size:15px;font-weight:700;padding:12px 20px;border-radius:var(--radio);border:none;cursor:pointer;transition:all .15s;background:white;color:var(--negro);border:2px solid var(--gris-claro)}
+.btn:hover{border-color:var(--gris-medio);background:#FAFAF8}
+.btn:active{transform:scale(0.95)}
+
+.btn-primary{background:var(--verde);color:white;border-color:var(--verde);font-size:16px;padding:14px 24px}
+.btn-primary:hover{background:var(--verde-oscuro)}
+
+.btn-primary-celeste{background:var(--celeste);color:white;border-color:var(--celeste)}
+.btn-primary-celeste:hover{background:var(--celeste-oscuro)}
+
+.btn-primary-violeta{background:var(--violeta);color:white;border-color:var(--violeta)}
+.btn-primary-violeta:hover{background:var(--violeta-oscuro)}
+
+.btn-primary-amarillo{background:var(--amarillo);color:var(--negro);border-color:var(--amarillo);font-weight:700}
+.btn-primary-amarillo:hover{background:var(--amarillo-oscuro)}
+
+.btn-full{width:100%;padding:15px}
+.btn-icon{width:40px;height:40px;padding:0;display:flex;align-items:center;justify-content:center;border-radius:50%;font-size:18px;border:none;background:white;cursor:pointer}
+.btn-icon:hover{background:var(--gris-claro)}
+
+/* INPUTS */
+input[type=text],input[type=number],select,textarea{font-family:"Fredoka",sans-serif;font-size:15px;padding:12px;border-radius:var(--radio);border:2px solid var(--gris-claro);background:white;color:var(--negro);width:100%;outline:none;transition:all .15s}
+input:focus,select:focus,textarea:focus{border-color:var(--gris-oscuro);box-shadow:0 0 0 3px rgba(107,93,79,.1)}
+
+label.field{display:block;font-size:13px;font-weight:700;color:var(--gris-oscuro);margin-bottom:6px;margin-top:1rem}
+
+/* CHIPS */
+.chips{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:1rem}
+.chip{padding:8px 14px;border-radius:100px;font-size:13px;font-weight:600;border:2px solid var(--gris-claro);background:white;cursor:pointer;transition:all .15s}
+.chip:hover{border-color:var(--gris-medio);background:#FAFAF8}
+
+/* BIBLIOTECA */
+.picto-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(110px,1fr));gap:12px}
 .picto-card{text-align:center}
-.picto-img-wrap{width:100%;aspect-ratio:1;border-radius:var(--radio);border:3px solid var(--azul);overflow:hidden;margin-bottom:5px;display:flex;align-items:center;justify-content:center;background:var(--gris-fondo);position:relative}
-.picto-img-wrap img{width:100%;height:100%;object-fit:cover}
-.emoji-big{font-size:38px}
-.picto-nombre{font-size:11px;font-weight:700;color:var(--negro)}
-.picto-cat{font-size:10px;color:var(--gris-texto);margin-top:2px}
-.picto-del{position:absolute;top:3px;right:3px;width:20px;height:20px;border-radius:50%;border:none;background:rgba(0,0,0,.5);color:white;font-size:11px;cursor:pointer;display:flex;align-items:center;justify-content:center}
-.rutina-strip{display:flex;align-items:flex-start;gap:6px;overflow-x:auto;padding:.5rem 0 1rem}
-.rutina-step{display:flex;flex-direction:column;align-items:center;min-width:90px}
-.rutina-num{font-size:10px;font-weight:700;color:var(--gris-texto);margin-bottom:3px}
-.rutina-picto{width:82px;height:82px;border-radius:var(--radio);border:3px solid var(--azul);display:flex;align-items:center;justify-content:center;background:var(--gris-fondo);overflow:hidden}
-.rutina-picto img{width:100%;height:100%;object-fit:cover}
-.rutina-picto .emoji{font-size:32px}
-.rutina-nombre{font-size:10px;font-weight:700;color:var(--negro);margin-top:5px;text-align:center;max-width:82px;line-height:1.3}
-.rutina-arrow{color:var(--gris-texto);font-size:18px;padding-top:35px;flex-shrink:0}
-.resultado-picto{display:flex;align-items:center;gap:1.25rem;flex-wrap:wrap}
-.resultado-img-wrap{width:140px;height:140px;border-radius:var(--radio);border:4px solid var(--azul);overflow:hidden;flex-shrink:0}
-.resultado-img-wrap img{width:100%;height:100%;object-fit:cover}
-.resultado-info{flex:1;min-width:160px}
-.resultado-nombre{font-size:22px;font-weight:800;margin-bottom:6px}
-.resultado-badge{display:inline-flex;align-items:center;gap:5px;padding:3px 10px;border-radius:100px;font-size:11px;font-weight:700;color:var(--blanco);margin-bottom:10px}
-.loading{display:flex;align-items:center;gap:10px;font-size:14px;color:var(--gris-texto);margin:1rem 0}
-.spinner{width:18px;height:18px;border:2px solid var(--gris-borde);border-top-color:var(--azul);border-radius:50%;animation:spin .7s linear infinite;flex-shrink:0}
-@keyframes spin{to{transform:rotate(360deg)}}
-.error{font-size:13px;color:var(--rojo);background:#FEF2F2;border:1px solid #FECACA;border-radius:var(--radio);padding:9px 12px;margin:.75rem 0;display:none}
-.error.visible{display:block}
-.acciones{display:flex;gap:8px;flex-wrap:wrap;margin-top:1rem}
-.vacio{text-align:center;padding:2.5rem 1rem;color:var(--gris-texto)}
-.vacio-icon{font-size:44px;margin-bottom:10px}
-.vacio-txt{font-size:15px;font-weight:700;margin-bottom:5px}
-.vacio-sub{font-size:13px}
-.chips{display:flex;flex-wrap:wrap;gap:7px;margin:.5rem 0 1rem}
-.chip{padding:6px 13px;border-radius:100px;font-size:12px;font-weight:700;border:1.5px solid var(--gris-borde);background:var(--blanco);cursor:pointer;transition:all .15s}
-.chip:hover{border-color:var(--azul);color:var(--azul)}
+.picto-wrap{width:100%;aspect-ratio:1;border-radius:var(--radio);border:3px solid var(--celeste);overflow:hidden;margin-bottom:6px;display:flex;align-items:center;justify-content:center;background:rgba(125,217,224,.1);position:relative}
+.picto-wrap img{width:100%;height:100%;object-fit:cover}
+.picto-wrap .emoji{font-size:44px}
+.picto-nombre{font-size:13px;font-weight:700;color:var(--negro);line-height:1.3}
+.picto-cat{font-size:11px;color:var(--gris-medio);margin-top:2px}
+.picto-del{position:absolute;top:3px;right:3px;width:24px;height:24px;border-radius:50%;border:none;background:rgba(0,0,0,.6);color:white;font-size:12px;cursor:pointer;display:flex;align-items:center;justify-content:center}
+
+/* UPLOAD */
 .upload-area{display:flex;gap:10px;margin-bottom:1rem}
-.upload-btn{flex:1;display:flex;flex-direction:column;align-items:center;gap:7px;padding:1rem;border:2px dashed var(--gris-borde);border-radius:var(--radio);cursor:pointer;text-align:center;position:relative;background:var(--blanco);transition:all .15s}
-.upload-btn:hover{border-color:var(--azul)}
+.upload-btn{flex:1;display:flex;flex-direction:column;align-items:center;gap:8px;padding:1.5rem;border:2px dashed var(--gris-claro);border-radius:var(--radio);cursor:pointer;text-align:center;position:relative;background:white;transition:all .15s}
+.upload-btn:hover{border-color:var(--gris-medio);background:#FAFAF8}
 .upload-btn input{position:absolute;inset:0;opacity:0;cursor:pointer}
-.ub-icon{font-size:28px}.ub-txt{font-size:12px;font-weight:700;color:var(--negro)}.ub-sub{font-size:10px;color:var(--gris-texto)}
+.ub-icon{font-size:32px}
+.ub-txt{font-size:13px;font-weight:700;color:var(--negro)}
+.ub-sub{font-size:11px;color:var(--gris-medio)}
+
+/* RUTINAS */
+.rutina-strip{display:flex;align-items:flex-start;gap:8px;overflow-x:auto;padding:1rem 0;margin-bottom:1rem}
+.rutina-step{display:flex;flex-direction:column;align-items:center;min-width:100px}
+.rutina-num{font-size:11px;font-weight:700;color:var(--gris-medio);margin-bottom:4px}
+.rutina-picto{width:90px;height:90px;border-radius:var(--radio);border:3px solid var(--verde);display:flex;align-items:center;justify-content:center;background:rgba(125,179,176,.1);overflow:hidden}
+.rutina-picto img{width:100%;height:100%;object-fit:cover}
+.rutina-picto .emoji{font-size:40px}
+.rutina-nombre{font-size:11px;font-weight:700;color:var(--negro);margin-top:6px;text-align:center;max-width:90px;line-height:1.3}
+.rutina-arrow{color:var(--gris-medio);font-size:20px;padding-top:30px;flex-shrink:0}
+
+/* RESULTADO GENERACIÓN */
+.resultado-container{display:flex;align-items:center;gap:1.5rem;flex-wrap:wrap}
+.resultado-img{width:140px;height:140px;border-radius:var(--radio);border:4px solid var(--celeste);overflow:hidden}
+.resultado-img img{width:100%;height:100%;object-fit:cover}
+.resultado-info{flex:1;min-width:160px}
+.resultado-nombre{font-size:20px;font-weight:800;margin-bottom:8px;color:var(--negro)}
+.resultado-badge{display:inline-block;padding:6px 12px;border-radius:100px;font-size:12px;font-weight:700;color:white;background:var(--celeste);margin-bottom:8px}
+
+/* LOGROS */
+.logros-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:12px}
+.logro-card{background:white;border:3px solid var(--gris-claro);border-radius:var(--radio-lg);padding:1.25rem;text-align:center;transition:all .2s}
+.logro-card.ganado{border-color:var(--amarillo);background:rgba(244,216,118,.1)}
+.logro-icon{font-size:40px;margin-bottom:8px}
+.logro-nombre{font-size:13px;font-weight:700;color:var(--negro);margin-bottom:4px}
+.logro-desc{font-size:11px;color:var(--gris-medio);line-height:1.4}
+
+/* STATS */
+.stat-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:1.5rem}
+.stat-card{background:white;border-radius:var(--radio);padding:1rem;text-align:center;border:2px solid var(--gris-claro)}
+.stat-num{font-size:28px;font-weight:800;color:var(--verde)}
+.stat-label{font-size:11px;color:var(--gris-medio);margin-top:4px}
+
+/* REGULACIÓN */
+.reg-item{display:flex;justify-content:space-between;align-items:center;padding:12px 0;border-bottom:2px solid var(--gris-claro);font-size:14px}
+.reg-item:last-child{border-bottom:none}
+.reg-fecha{color:var(--gris-medio);font-size:12px}
+.reg-badge{padding:4px 10px;border-radius:100px;font-size:11px;font-weight:700}
+.reg-badge-completo{background:rgba(125,179,176,.2);color:var(--verde-oscuro)}
+.reg-badge-anticipado{background:rgba(244,216,118,.2);color:var(--amarillo-oscuro)}
+
+/* VACIO */
+.vacio{text-align:center;padding:2rem 1rem;color:var(--gris-medio)}
+.vacio-icon{font-size:48px;margin-bottom:12px}
+.vacio-txt{font-size:16px;font-weight:700;margin-bottom:6px;color:var(--negro)}
+.vacio-sub{font-size:13px}
+
 /* PASO A PASO */
-.paso-overlay{position:fixed;inset:0;background:#1a1a2e;z-index:500;display:none;flex-direction:column;align-items:center;justify-content:center}
+.paso-overlay{position:fixed;inset:0;background:linear-gradient(135deg,#1a1a2e 0%,#2d3561 100%);z-index:500;display:none;flex-direction:column;align-items:center;justify-content:center;padding:1.5rem}
 .paso-overlay.active{display:flex}
-.paso-progress{position:absolute;top:0;left:0;right:0;height:5px;background:rgba(255,255,255,.15)}
-.paso-progress-bar{height:100%;background:var(--azul);transition:width .4s}
+.paso-progress{position:absolute;top:0;left:0;right:0;height:6px;background:rgba(255,255,255,.15)}
+.paso-progress-bar{height:100%;background:var(--verde);transition:width .4s}
 .paso-top{position:absolute;top:16px;left:16px;right:16px;display:flex;justify-content:space-between;align-items:center}
-.paso-counter{color:rgba(255,255,255,.7);font-size:13px;font-weight:700}
-.paso-titulo{color:white;font-size:14px;font-weight:700;text-align:center}
-.paso-cerrar{background:rgba(255,255,255,.15);border:none;color:white;width:36px;height:36px;border-radius:50%;cursor:pointer;font-size:18px;display:flex;align-items:center;justify-content:center}
-.paso-picto-wrap{width:min(70vw,320px);height:min(70vw,320px);border-radius:20px;overflow:hidden;border:4px solid rgba(255,255,255,.3);margin-bottom:1.5rem;display:flex;align-items:center;justify-content:center;background:rgba(255,255,255,.1)}
+.paso-counter{color:rgba(255,255,255,.7);font-size:14px;font-weight:700}
+.paso-cerrar{background:rgba(255,255,255,.15);border:none;color:white;width:40px;height:40px;border-radius:50%;cursor:pointer;font-size:20px;display:flex;align-items:center;justify-content:center;transition:all .2s}
+.paso-cerrar:hover{background:rgba(255,255,255,.25)}
+
+.paso-picto-wrap{width:min(80vw,340px);height:min(80vw,340px);border-radius:24px;overflow:hidden;border:4px solid rgba(255,255,255,.3);margin-bottom:2rem;display:flex;align-items:center;justify-content:center;background:rgba(125,179,176,.1)}
 .paso-picto-wrap img{width:100%;height:100%;object-fit:cover}
-.emoji-paso{font-size:100px}
-.paso-nombre{color:white;font-size:2rem;font-weight:800;text-align:center;margin-bottom:2rem;padding:0 1rem;line-height:1.2}
-.paso-nav{display:flex;gap:16px;align-items:center}
-.paso-btn{background:rgba(255,255,255,.2);border:2px solid rgba(255,255,255,.4);color:white;font-size:15px;font-weight:700;padding:14px 28px;border-radius:var(--radio);cursor:pointer;font-family:"Nunito",sans-serif;transition:all .15s}
-.paso-btn.siguiente{background:var(--azul);border-color:var(--azul);font-size:16px;padding:14px 36px}
-.paso-btn.finalizar{background:var(--verde);border-color:var(--verde)}
-.paso-voz-btn{background:rgba(255,255,255,.15);border:none;color:white;width:44px;height:44px;border-radius:50%;cursor:pointer;font-size:20px;display:flex;align-items:center;justify-content:center}
+.emoji-paso{font-size:120px}
+
+.paso-nombre{color:white;font-size:2.2rem;font-weight:800;text-align:center;margin-bottom:2rem;padding:0 1rem;line-height:1.2}
+
+.paso-nav{display:flex;gap:12px;align-items:center;flex-wrap:wrap;justify-content:center}
+.paso-btn{background:rgba(255,255,255,.15);border:2px solid rgba(255,255,255,.3);color:white;font-size:15px;font-weight:700;padding:12px 20px;border-radius:var(--radio);cursor:pointer;font-family:"Fredoka",sans-serif;transition:all .15s}
+.paso-btn:hover{background:rgba(255,255,255,.25)}
+.paso-btn-hecho{background:var(--verde);border-color:var(--verde);font-size:16px;padding:12px 24px}
+.paso-btn-hecho:hover{background:var(--verde-oscuro)}
+
 /* TIMER */
-.timer-overlay{position:fixed;inset:0;background:linear-gradient(135deg,#1a1a2e,#16213e,#0f3460);z-index:600;display:none;flex-direction:column;align-items:center;justify-content:center}
+.timer-overlay{position:fixed;inset:0;background:linear-gradient(135deg,#1a1a2e,#2d3561);z-index:600;display:none;flex-direction:column;align-items:center;justify-content:center;padding:1.5rem}
 .timer-overlay.active{display:flex}
-.coco-timer{font-size:80px;margin-bottom:1rem;animation:respirar 4s ease-in-out infinite}
-@keyframes respirar{0%,100%{transform:scale(1)}50%{transform:scale(1.12)}}
-.timer-frase{color:rgba(255,255,255,.8);font-size:16px;text-align:center;margin-bottom:2rem;padding:0 2rem;line-height:1.5}
+.timer-cerrar{position:absolute;top:16px;right:16px;background:rgba(255,255,255,.15);border:none;color:white;width:40px;height:40px;border-radius:50%;cursor:pointer;font-size:20px;display:flex;align-items:center;justify-content:center}
+
+.coco-timer{font-size:100px;margin-bottom:1.5rem;animation:respirar 4s ease-in-out infinite}
+@keyframes respirar{0%,100%{transform:scale(1)}50%{transform:scale(1.15)}}
+
+.alimentos-fila{display:flex;gap:8px;flex-wrap:wrap;justify-content:center;min-height:50px;max-width:280px;margin-bottom:1.5rem}
+.alimento{font-size:32px;animation:aparecer .4s ease-out;opacity:1}
+@keyframes aparecer{from{transform:scale(0) rotate(-20deg);opacity:0}to{transform:scale(1) rotate(0deg);opacity:1}}
+
+.timer-frase{color:rgba(255,255,255,.9);font-size:18px;text-align:center;margin-bottom:2rem;padding:0 2rem;line-height:1.5}
 .timer-circle{position:relative;width:200px;height:200px;margin-bottom:2rem}
 .timer-svg{transform:rotate(-90deg)}
-.timer-track{fill:none;stroke:rgba(255,255,255,.1);stroke-width:8}
-.timer-prog{fill:none;stroke:var(--azul);stroke-width:8;stroke-linecap:round;transition:stroke-dashoffset 1s linear}
+.timer-track{fill:none;stroke:rgba(255,255,255,.1);stroke-width:10}
+.timer-prog{fill:none;stroke:var(--verde);stroke-width:10;stroke-linecap:round;transition:stroke-dashoffset 1s linear}
 .timer-display{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
 .timer-tiempo{color:white;font-size:2.5rem;font-weight:800}
-.timer-label{color:rgba(255,255,255,.6);font-size:12px}
-.timer-opts{display:flex;gap:10px;justify-content:center;flex-wrap:wrap}
-.timer-opt{background:rgba(255,255,255,.1);border:2px solid rgba(255,255,255,.2);color:white;padding:10px 20px;border-radius:var(--radio);cursor:pointer;font-family:"Nunito",sans-serif;font-size:14px;font-weight:700;transition:all .15s}
-.timer-opt.sel{background:var(--azul);border-color:var(--azul)}
-.timer-cerrar{position:absolute;top:16px;right:16px;background:rgba(255,255,255,.15);border:none;color:white;width:38px;height:38px;border-radius:50%;cursor:pointer;font-size:18px;display:flex;align-items:center;justify-content:center}
-.timer-fab{position:fixed;bottom:80px;right:16px;width:52px;height:52px;border-radius:50%;background:var(--violeta);border:none;color:white;font-size:22px;cursor:pointer;z-index:300;box-shadow:0 4px 16px rgba(139,92,246,.5);display:flex;align-items:center;justify-content:center;transition:transform .15s}
+.timer-label{color:rgba(255,255,255,.6);font-size:13px;margin-top:4px}
+
+.timer-opts{display:flex;gap:12px;justify-content:center;flex-wrap:wrap;margin-bottom:1.5rem}
+.timer-opt{background:rgba(255,255,255,.1);border:2px solid rgba(255,255,255,.2);color:white;padding:12px 24px;border-radius:var(--radio);cursor:pointer;font-family:"Fredoka",sans-serif;font-size:15px;font-weight:700;transition:all .15s}
+.timer-opt.sel{background:var(--verde);border-color:var(--verde)}
+
+.timer-fab{position:fixed;bottom:100px;right:20px;width:60px;height:60px;border-radius:50%;background:var(--violeta);border:none;color:white;font-size:24px;cursor:pointer;z-index:300;box-shadow:0 4px 16px rgba(212,165,212,.5);display:flex;align-items:center;justify-content:center;transition:all .15s}
 .timer-fab:hover{transform:scale(1.1)}
-/* LOGROS */
-.logros-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:12px}
-.logro-card{background:var(--blanco);border:1.5px solid var(--gris-borde);border-radius:var(--radio-lg);padding:1rem;text-align:center}
-.logro-card.ganado{border-color:var(--amarillo);background:#FFFBEB}
-.logro-icon{font-size:36px;margin-bottom:8px}
-.logro-nombre{font-size:12px;font-weight:700;color:var(--negro);margin-bottom:4px}
-.logro-desc{font-size:10px;color:var(--gris-texto);line-height:1.4}
-.logro-badge{font-size:10px;font-weight:700;color:var(--amarillo);margin-top:6px}
-/* STATS */
-.stat-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:1rem}
-.stat-card{background:var(--gris-fondo);border-radius:var(--radio);padding:12px;text-align:center}
-.stat-num{font-size:24px;font-weight:800;color:var(--azul)}
-.stat-label{font-size:10px;color:var(--gris-texto);margin-top:2px}
-.reg-item{display:flex;justify-content:space-between;align-items:center;padding:10px 0;border-bottom:1px solid var(--gris-borde);font-size:13px}
-.reg-item:last-child{border-bottom:none}
-.reg-fecha{color:var(--gris-texto);font-size:11px}
-.reg-dur{font-weight:700}
-.reg-badge{padding:2px 8px;border-radius:100px;font-size:10px;font-weight:700}
-.reg-badge.completo{background:#ECFDF5;color:#065F46}
-.reg-badge.anticipado{background:#FEF3C7;color:#92400E}
-.toast{position:fixed;bottom:120px;left:50%;transform:translateX(-50%) translateY(20px);background:var(--negro);color:white;padding:10px 20px;border-radius:100px;font-size:13px;font-weight:700;z-index:700;opacity:0;transition:all .3s;pointer-events:none;white-space:nowrap}
+
+/* NAVBAR */
+.navbar{position:fixed;bottom:0;left:0;right:0;background:white;border-top:3px solid var(--gris-claro);display:flex;justify-content:space-around;align-items:center;height:90px;z-index:200;box-shadow:0 -4px 16px rgba(0,0,0,.08)}
+.nav-btn{background:none;border:none;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;cursor:pointer;padding:8px;flex:1;font-family:"Fredoka",sans-serif;font-size:11px;font-weight:700;color:var(--gris-medio);transition:all .2s}
+.nav-btn:hover{color:var(--negro)}
+.nav-btn.active{color:var(--verde)}
+.nav-btn-icon{font-size:28px}
+
+/* PERFIL MODAL */
+.perfil-modal{display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:400;align-items:flex-end;justify-content:center}
+.perfil-modal.active{display:flex}
+.perfil-modal-content{background:white;border-radius:var(--radio-lg) var(--radio-lg) 0 0;padding:1.5rem;width:100%;max-width:480px;max-height:85vh;overflow-y:auto}
+.perfil-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:1.5rem}
+.perfil-titulo{font-size:20px;font-weight:800;color:var(--negro)}
+.perfil-cerrar{background:none;border:none;font-size:24px;cursor:pointer;color:var(--gris-oscuro)}
+.perfil-emoji{font-size:72px;text-align:center;margin:1rem 0 1.5rem}
+
+/* MODO SIMPLIFICADO */
+.modo-simple{position:fixed;inset:0;background:var(--cream);z-index:900;display:none;flex-direction:column}
+.modo-simple.active{display:flex}
+.ms-header{background:var(--verde);padding:1.5rem;display:flex;align-items:center;justify-content:space-between}
+.ms-titulo{color:white;font-size:24px;font-weight:800}
+.ms-salir{background:rgba(255,255,255,.2);border:none;color:white;padding:8px 14px;border-radius:var(--radio);cursor:pointer;font-family:"Fredoka",sans-serif;font-weight:700;font-size:13px;transition:all .2s}
+.ms-salir:hover{background:rgba(255,255,255,.3)}
+.ms-content{flex:1;overflow-y:auto;padding:1.5rem}
+.ms-rutina-btn{width:100%;background:white;border:3px solid var(--verde);border-radius:var(--radio-lg);padding:1.5rem;margin-bottom:14px;cursor:pointer;font-family:"Fredoka",sans-serif;font-size:18px;font-weight:700;color:var(--negro);text-align:left;display:flex;align-items:center;gap:14px;transition:all .15s}
+.ms-rutina-btn:hover{background:#FAFAF8;transform:translateY(-2px)}
+.ms-timer-btn{width:100%;background:var(--violeta);border:none;border-radius:var(--radio-lg);padding:1.5rem;cursor:pointer;font-family:"Fredoka",sans-serif;font-size:18px;font-weight:700;color:white;display:flex;align-items:center;justify-content:center;gap:12px;transition:all .15s}
+.ms-timer-btn:hover{background:var(--violeta-oscuro);transform:translateY(-2px)}
+.ms-vacio{text-align:center;padding:3rem 1rem;color:var(--gris-medio)}
+
+/* ARASAAC MODAL */
+.arasaac-modal{position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:500;display:none;align-items:center;justify-content:center;padding:1rem}
+.arasaac-modal.active{display:flex}
+.arasaac-box{background:white;border-radius:var(--radio-lg);width:100%;max-width:560px;max-height:85vh;display:flex;flex-direction:column;overflow:hidden}
+.arasaac-header{padding:1.25rem;border-bottom:2px solid var(--gris-claro);display:flex;align-items:center;gap:8px}
+.arasaac-header input{flex:1;font-family:"Fredoka",sans-serif;font-size:15px;padding:10px 12px;border-radius:var(--radio);border:2px solid var(--gris-claro);outline:none}
+.arasaac-header input:focus{border-color:var(--gris-oscuro)}
+.arasaac-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(90px,1fr));gap:10px;padding:1rem;overflow-y:auto;flex:1}
+.arasaac-item{text-align:center;cursor:pointer;padding:8px;border-radius:var(--radio);border:2px solid transparent;transition:all .15s}
+.arasaac-item:hover{border-color:var(--verde);background:rgba(125,179,176,.1)}
+.arasaac-item img{width:70px;height:70px;object-fit:contain}
+.arasaac-item-txt{font-size:11px;font-weight:700;margin-top:4px;color:var(--negro)}
+
+/* TOAST */
+.toast{position:fixed;bottom:120px;left:50%;transform:translateX(-50%) translateY(20px);background:var(--negro);color:white;padding:12px 20px;border-radius:100px;font-size:14px;font-weight:700;z-index:700;opacity:0;transition:all .3s;pointer-events:none;white-space:nowrap}
 .toast.visible{opacity:1;transform:translateX(-50%) translateY(0)}
-@media print{.header,.tabs,.acciones,.input-row,.chips,.card-title,.timer-fab{display:none!important}.rutina-strip{overflow:visible}}
 
 /* CONFETI */
 .confeti-container{position:fixed;inset:0;pointer-events:none;z-index:800;overflow:hidden}
 .confeti-particle{position:absolute;width:10px;height:10px;border-radius:2px;animation:caer linear forwards}
 @keyframes caer{0%{transform:translateY(-20px) rotate(0deg);opacity:1}100%{transform:translateY(110vh) rotate(720deg);opacity:0}}
 
-/* PALETA SELECTOR */
-.paleta-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:8px;margin-top:8px}
-.paleta-opt{height:36px;border-radius:var(--radio);border:3px solid transparent;cursor:pointer;transition:all .15s}
-.paleta-opt.activa{border-color:var(--negro)}
-.paleta-opt:hover{transform:scale(1.05)}
+/* SPINNER */
+.spinner{width:20px;height:20px;border:3px solid var(--gris-claro);border-top-color:var(--verde);border-radius:50%;animation:spin .7s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+.loading{display:flex;align-items:center;gap:10px;font-size:15px;color:var(--gris-oscuro);margin:1rem 0}
 
-/* COCO COMIENDO */
-.coco-escena{display:flex;flex-direction:column;align-items:center;gap:8px;margin-bottom:1rem}
-.coco-principal{font-size:80px;animation:respirar 4s ease-in-out infinite;position:relative}
-.alimentos-fila{display:flex;gap:6px;flex-wrap:wrap;justify-content:center;min-height:40px;max-width:280px}
-.alimento{font-size:28px;animation:aparecer .4s ease-out;opacity:1}
-@keyframes aparecer{from{transform:scale(0) rotate(-20deg);opacity:0}to{transform:scale(1) rotate(0deg);opacity:1}}
-.bocado{animation:morder .3s ease-in-out}
-@keyframes morder{0%,100%{transform:scale(1)}50%{transform:scale(1.3) rotate(10deg)}}
+/* ERROR */
+.error{font-size:14px;color:#C41C3B;background:rgba(196,28,59,.1);border:2px solid rgba(196,28,59,.2);border-radius:var(--radio);padding:10px 12px;margin:1rem 0;display:none}
+.error.visible{display:block}
 
-/* LOGRO ANIMADO */
-.logro-card{transition:transform .2s;cursor:default}
-.logro-card.ganado{animation:logro-pop .5s ease-out}
-@keyframes logro-pop{0%{transform:scale(1)}40%{transform:scale(1.15)}70%{transform:scale(0.95)}100%{transform:scale(1)}}
+/* RESPONSIVE */
+@media(max-width:480px){
+.botones-principales{grid-template-columns:1fr 1fr}
+.btn-main{padding:1.5rem 1rem;font-size:14px}
+.btn-main-icon{font-size:28px;margin-bottom:4px}
+}
 
-/* TEMAS */
-body.tema-azul{--azul:#2563EB;--verde:#0891B2;--gris-fondo:#EFF6FF;--gris-borde:#BFDBFE}
-body.tema-verde{--azul:#059669;--verde:#16A34A;--gris-fondo:#ECFDF5;--gris-borde:#A7F3D0}
-body.tema-violeta{--azul:#7C3AED;--verde:#9333EA;--gris-fondo:#F5F3FF;--gris-borde:#DDD6FE}
-body.tema-oscuro{--azul:#60A5FA;--verde:#34D399;--gris-fondo:#111827;--gris-borde:#374151;--negro:#F9FAFB;--blanco:#1F2937;--gris-texto:#9CA3AF}
-body.tema-calido{--azul:#EA580C;--verde:#D97706;--gris-fondo:#FFF7ED;--gris-borde:#FED7AA}
-
-/* MODO SIMPLIFICADO */
-.modo-simple-overlay{position:fixed;inset:0;background:var(--gris-fondo);z-index:900;display:none;flex-direction:column}
-.modo-simple-overlay.active{display:flex}
-.ms-header{background:var(--azul);padding:1rem 1.25rem;display:flex;align-items:center;justify-content:space-between}
-.ms-titulo{color:white;font-size:20px;font-weight:800}
-.ms-salir{background:rgba(255,255,255,.2);border:none;color:white;padding:8px 14px;border-radius:var(--radio);cursor:pointer;font-family:"Nunito",sans-serif;font-weight:700;font-size:13px}
-.ms-content{flex:1;overflow-y:auto;padding:1.25rem}
-.ms-rutina-btn{width:100%;background:var(--blanco);border:3px solid var(--azul);border-radius:var(--radio-lg);padding:1.25rem;margin-bottom:12px;cursor:pointer;font-family:"Nunito",sans-serif;font-size:18px;font-weight:700;color:var(--negro);text-align:left;display:flex;align-items:center;gap:12px;transition:all .15s}
-.ms-rutina-btn:hover{background:#EFF6FF;transform:scale(1.01)}
-.ms-timer-btn{width:100%;background:var(--violeta);border:none;border-radius:var(--radio-lg);padding:1.25rem;cursor:pointer;font-family:"Nunito",sans-serif;font-size:18px;font-weight:700;color:white;display:flex;align-items:center;justify-content:center;gap:10px;margin-top:8px}
-.ms-vacio{text-align:center;padding:3rem 1rem;color:var(--gris-texto)}
-
-/* PASO A PASO CON MARCAR */
-.paso-hecho-btn{background:var(--verde);border:none;color:white;font-family:"Nunito",sans-serif;font-size:15px;font-weight:700;padding:12px 28px;border-radius:var(--radio);cursor:pointer;transition:all .15s}
-.paso-hecho-btn:active{transform:scale(0.95)}
-.paso-step-check{position:absolute;top:8px;left:8px;width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:16px}
-.paso-step-check.hecho{background:var(--verde);color:white}
-.paso-check-fila{display:flex;gap:6px;position:absolute;bottom:16px;left:0;right:0;justify-content:center}
-.paso-dot{width:10px;height:10px;border-radius:50%;background:rgba(255,255,255,.3);transition:all .3s}
-.paso-dot.hecho{background:var(--verde)}
-
-/* ARASAAC BUSCAR */
-.arasaac-modal{position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:500;display:none;align-items:center;justify-content:center;padding:1rem}
-.arasaac-modal.active{display:flex}
-.arasaac-box{background:var(--blanco);border-radius:var(--radio-lg);width:100%;max-width:560px;max-height:85vh;display:flex;flex-direction:column;overflow:hidden}
-.arasaac-header{padding:1rem 1.25rem;border-bottom:1px solid var(--gris-borde);display:flex;align-items:center;gap:8px}
-.arasaac-header input{flex:1;font-family:"Nunito",sans-serif;font-size:15px;padding:9px 12px;border-radius:var(--radio);border:1.5px solid var(--gris-borde);outline:none}
-.arasaac-header input:focus{border-color:var(--azul)}
-.arasaac-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(90px,1fr));gap:10px;padding:1rem;overflow-y:auto;flex:1}
-.arasaac-item{text-align:center;cursor:pointer;padding:6px;border-radius:var(--radio);border:2px solid transparent;transition:all .15s}
-.arasaac-item:hover{border-color:var(--azul);background:#EFF6FF}
-.arasaac-item img{width:70px;height:70px;object-fit:contain}
-.arasaac-item-txt{font-size:10px;font-weight:700;margin-top:4px;color:var(--negro)}
-.arasaac-loading{text-align:center;padding:2rem;color:var(--gris-texto);grid-column:1/-1}
-.arasaac-footer{padding:.75rem 1.25rem;border-top:1px solid var(--gris-borde);font-size:11px;color:var(--gris-texto);text-align:center}
+@media print{.navbar,.timer-fab,.btn-header,.perfil-modal{display:none!important}}
 </style>
 </head>
 <body>
 
-<div class="header">
-  <div><div class="logo">Picto<span>Rutinas</span></div><div class="header-sub">Pictogramas y rutinas para TEA</div></div>
-  <div style="display:flex;gap:6px;align-items:center;">
-    <button class="btn" id="btn-modo-simple" onclick="abrirModoSimple()" style="font-size:12px;padding:6px 12px;background:var(--azul);color:white;border-color:var(--azul);">🧒 Modo niño</button>
-    <button class="btn btn-icon" onclick="abrirPerfil()" title="Perfil" style="font-size:18px;border:none;">👤</button>
+<!-- PANTALLA PRINCIPAL -->
+<div class="pantalla-principal active" id="pantalla-principal">
+  <div class="coco-bienvenida">🐭</div>
+  <div class="frase-coco" id="frase-coco">¿Qué queremos hacer hoy?</div>
+  <div class="frase-coco-sub">Elegí una actividad para empezar</div>
+  <div class="botones-principales">
+    <button class="btn-main btn-main-rutinas" onclick="irSeccion('rutinas')">
+      <span class="btn-main-icon">📋</span>
+      Mis Rutinas
+    </button>
+    <button class="btn-main btn-main-pictos" onclick="irSeccion('biblioteca')">
+      <span class="btn-main-icon">🖼️</span>
+      Pictogramas
+    </button>
+    <button class="btn-main btn-main-regulacion" onclick="irSeccion('regulacion')">
+      <span class="btn-main-icon">🧘</span>
+      Regulación
+    </button>
+    <button class="btn-main btn-main-logros" onclick="irSeccion('logros')">
+      <span class="btn-main-icon">🏆</span>
+      Logros
+    </button>
   </div>
 </div>
 
-<div class="tabs">
-  <button class="tab active" onclick="setTab('biblioteca')">📚 Mis pictos</button>
-  <button class="tab" onclick="setTab('generar')">📷 Generar picto</button>
-  <button class="tab" onclick="setTab('rutina')">📋 Rutinas</button>
-  <button class="tab" onclick="setTab('logros')">🏆 Logros</button>
-  <button class="tab" onclick="setTab('regulacion')">📊 Regulación</button>
-</div>
-
-<div class="content">
-
-<!-- BIBLIOTECA -->
-<div class="panel active" id="panel-biblioteca">
-  <div class="card">
-    <div class="card-title">Leyenda de colores</div>
-    <div class="leyenda">
-      <div class="leyenda-item"><div class="leyenda-dot" style="background:#3B82F6"></div>Higiene</div>
-      <div class="leyenda-item"><div class="leyenda-dot" style="background:#10B981"></div>Comida</div>
-      <div class="leyenda-item"><div class="leyenda-dot" style="background:#F59E0B"></div>Escuela</div>
-      <div class="leyenda-item"><div class="leyenda-dot" style="background:#EF4444"></div>Descanso</div>
-      <div class="leyenda-item"><div class="leyenda-dot" style="background:#8B5CF6"></div>Juego</div>
-      <div class="leyenda-item"><div class="leyenda-dot" style="background:#F97316"></div>Ropa</div>
+<!-- SECCIÓN: BIBLIOTECA DE PICTOGRAMAS -->
+<div class="seccion" id="seccion-biblioteca">
+  <div class="header-seccion verde">
+    <div>
+      <h1 class="titulo-seccion">Mis Pictogramas</h1>
     </div>
+    <button class="btn-header" onclick="abrirPerfil()" title="Perfil">👤</button>
   </div>
+
   <div class="card">
     <div class="card-title">Biblioteca — <span id="count-pictos">0</span> pictograma(s)</div>
     <div class="picto-grid" id="picto-grid">
       <div class="vacio" style="grid-column:1/-1"><div class="vacio-icon">🖼️</div><div class="vacio-txt">Tu biblioteca está vacía</div><div class="vacio-sub">Generá tu primer pictograma desde "Generar picto"</div></div>
     </div>
   </div>
+
+  <div class="card">
+    <div class="card-title">Generar pictograma</div>
+    <button class="btn btn-primary btn-primary-celeste btn-full" onclick="irSeccion('generar')" style="margin-bottom:1rem;">
+      📷 Sacar foto o subir imagen
+    </button>
+    <button class="btn btn-primary btn-primary-celeste btn-full" onclick="abrirArasaac()">
+      🔍 Buscar en ARASAAC
+    </button>
+  </div>
 </div>
 
-<!-- GENERAR -->
-<div class="panel" id="panel-generar">
+<!-- SECCIÓN: GENERAR PICTOGRAMA -->
+<div class="seccion" id="seccion-generar">
+  <div class="header-seccion celeste">
+    <h1 class="titulo-seccion">Generar Pictograma</h1>
+  </div>
+
   <div class="card">
     <div class="card-title">Subí una foto</div>
-    <div style="margin-bottom:10px;">
-    <button class="btn btn-full" onclick="abrirArasaac()" style="background:#4A90D9;color:white;border-color:#4A90D9;font-size:14px;padding:11px;">🔍 Buscar en ARASAAC</button>
-  </div>
-  <div class="upload-area">
+    <div class="upload-area">
       <label class="upload-btn"><input type="file" accept="image/*" capture="environment" onchange="previsualizarImagen(this)"><span class="ub-icon">📷</span><span class="ub-txt">Sacar foto</span><span class="ub-sub">Abre la cámara</span></label>
-      <label class="upload-btn"><input type="file" accept="image/*" onchange="previsualizarImagen(this)"><span class="ub-icon">🖼️</span><span class="ub-txt">Desde galería</span><span class="ub-sub">Fotos guardadas</span></label>
+      <label class="upload-btn"><input type="file" accept="image/*" onchange="previsualizarImagen(this)"><span class="ub-icon">📁</span><span class="ub-txt">Galería</span><span class="ub-sub">Fotos guardadas</span></label>
     </div>
-    <img id="preview" style="display:none;max-width:200px;border-radius:var(--radio);margin:0 auto 1rem;border:2px solid var(--gris-borde);">
+    <img id="preview" style="display:none;max-width:200px;border-radius:var(--radio);margin:0 auto 1.5rem;border:3px solid var(--gris-claro);">
     <div class="loading" id="loading-picto" style="display:none;"><div class="spinner"></div><span id="loading-txt">Analizando...</span></div>
     <div class="error" id="error-picto"></div>
-    <div id="resultado-container" style="display:none;margin-top:1rem;">
-      <div class="resultado-picto">
-        <div class="resultado-img-wrap" id="resultado-img-wrap"><img id="resultado-img" src="" alt="pictograma"></div>
+    
+    <div id="resultado-container" style="display:none;margin-top:1.5rem;">
+      <div class="resultado-container">
+        <div class="resultado-img" id="resultado-img-wrap"><img id="resultado-img" src="" alt="pictograma"></div>
         <div class="resultado-info">
           <div class="resultado-nombre" id="resultado-nombre"></div>
           <div class="resultado-badge" id="resultado-badge"></div>
-          <div id="resultado-desc" style="font-size:11px;color:var(--gris-texto);margin-top:6px;"></div>
+          <div id="resultado-desc" style="font-size:12px;color:var(--gris-medio);margin-top:8px;"></div>
         </div>
       </div>
-      <div class="acciones">
-        <button class="btn btn-primary" onclick="guardarPictograma()">Guardar en biblioteca</button>
+      <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:1.5rem;">
+        <button class="btn btn-primary btn-primary-celeste" onclick="guardarPictograma()">✅ Guardar</button>
         <button class="btn" onclick="resetGenerar()">Generar otro</button>
       </div>
     </div>
-    <div style="margin-top:1rem;display:none;" id="btn-generar-wrap">
-      <button class="btn btn-primary btn-full" id="btn-generar" onclick="generarPictograma()">Generar pictograma ↗</button>
+    
+    <div style="margin-top:1.5rem;display:none;" id="btn-generar-wrap">
+      <button class="btn btn-primary btn-primary-celeste btn-full" id="btn-generar" onclick="generarPictograma()">Generar pictograma ↗</button>
     </div>
   </div>
 </div>
 
-<!-- RUTINAS -->
-<div class="panel" id="panel-rutina">
+<!-- SECCIÓN: RUTINAS -->
+<div class="seccion" id="seccion-rutinas">
+  <div class="header-seccion verde">
+    <h1 class="titulo-seccion">Mis Rutinas</h1>
+    <button class="btn-header" onclick="abrirModoSimple()" title="Modo niño" style="background:rgba(125,179,176,.2);color:var(--verde);">🧒</button>
+  </div>
+
   <div class="card">
     <div class="card-title">Rutinas guardadas</div>
-    <div class="chips" id="rutinas-guardadas"><div style="font-size:13px;color:var(--gris-texto)">Todavía no guardaste ninguna rutina.</div></div>
+    <div class="chips" id="rutinas-guardadas"><div style="font-size:13px;color:var(--gris-medio);">Todavía no guardaste ninguna rutina.</div></div>
   </div>
+
   <div class="card">
     <div class="card-title">Crear rutina nueva</div>
-    <div class="input-row">
-      <input type="text" id="rutina-input" placeholder="Ej: llegada del jardín, baño...">
-      <button class="btn btn-primary" id="btn-rutina" onclick="generarRutina()">Generar ↗</button>
+    <div style="display:flex;gap:8px;margin-bottom:1rem;">
+      <input type="text" id="rutina-input" placeholder="Ej: llegada del jardín...">
+      <button class="btn btn-primary" id="btn-rutina" onclick="generarRutina()" style="min-width:100px;">Generar</button>
     </div>
-    <div style="margin-top:8px;font-size:11px;color:var(--gris-texto)">Sugerencias:</div>
-    <div class="chips" style="margin-top:6px;">
+    <div style="font-size:12px;color:var(--gris-medio);margin-bottom:8px;">Sugerencias:</div>
+    <div class="chips" style="margin-bottom:1rem;">
       <div class="chip" onclick="usarSugerencia('llegada del jardín')">Llegada jardín</div>
       <div class="chip" onclick="usarSugerencia('antes de dormir')">Antes de dormir</div>
       <div class="chip" onclick="usarSugerencia('desayuno')">Desayuno</div>
       <div class="chip" onclick="usarSugerencia('baño de la mañana')">Baño mañana</div>
-      <div class="chip" onclick="usarSugerencia('preparar la mochila')">Mochila</div>
-      <div class="chip" onclick="usarSugerencia('merienda')">Merienda</div>
     </div>
-    <div class="loading" id="loading-rutina" style="display:none;"><div class="spinner"></div>Generando la rutina...</div>
+    <div class="loading" id="loading-rutina" style="display:none;"><div class="spinner"></div>Generando rutina...</div>
     <div class="error" id="error-rutina"></div>
   </div>
+
   <div class="card" id="rutina-resultado" style="display:none;">
-    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1rem;">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1.5rem;">
       <div class="card-title" id="rutina-titulo" style="margin-bottom:0;"></div>
       <div style="display:flex;gap:6px;">
-        <button class="btn btn-icon" onclick="hablarRutina()" title="Leer rutina" style="font-size:16px;">🔊</button>
-        <button class="btn btn-icon" onclick="compartirRutina()" title="Compartir" style="font-size:16px;">📤</button>
+        <button class="btn-icon" onclick="hablarRutina()" title="Leer rutina">🔊</button>
+        <button class="btn-icon" onclick="compartirRutina()" title="Compartir">📤</button>
       </div>
     </div>
     <div class="rutina-strip" id="rutina-strip"></div>
-    <div class="acciones">
+    <div style="display:flex;gap:8px;flex-wrap:wrap;">
       <button class="btn btn-primary" onclick="iniciarPasoAPaso()">▶ Paso a paso</button>
-      <button class="btn btn-verde" onclick="guardarRutina()">Guardar</button>
+      <button class="btn btn-primary" onclick="guardarRutina()">💾 Guardar</button>
       <button class="btn" onclick="imprimirRutina()">🖨 Imprimir</button>
     </div>
   </div>
 </div>
 
-<!-- LOGROS -->
-<div class="panel" id="panel-logros">
-  <div class="card"><div class="card-title">Tus logros</div><div class="logros-grid" id="logros-grid"></div></div>
+<!-- SECCIÓN: REGULACIÓN -->
+<div class="seccion" id="seccion-regulacion">
+  <div class="header-seccion violeta">
+    <h1 class="titulo-seccion">Regulación Emocional</h1>
+  </div>
+
+  <div class="card">
+    <div class="card-title">Resumen</div>
+    <div class="stat-grid" id="stat-regulacion">
+      <div class="stat-card"><div class="stat-num">0</div><div class="stat-label">Total</div></div>
+      <div class="stat-card"><div class="stat-num">0</div><div class="stat-label">Anticipados</div></div>
+      <div class="stat-card"><div class="stat-num">0:00</div><div class="stat-label">Promedio</div></div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">Historial</div>
+    <div id="regulacion-historial">
+      <div class="vacio"><div class="vacio-icon">🕐</div><div class="vacio-txt">Sin registros aún</div><div class="vacio-sub">Usá el timer de regulación para registrar los momentos</div></div>
+    </div>
+  </div>
 </div>
 
-<!-- REGULACION -->
-<div class="panel" id="panel-regulacion">
-  <div class="card"><div class="card-title">Resumen de regulación</div><div class="stat-grid" id="stat-regulacion"></div></div>
-  <div class="card"><div class="card-title">Historial</div><div id="regulacion-historial"><div class="vacio"><div class="vacio-icon">🕐</div><div class="vacio-txt">Sin registros aún</div><div class="vacio-sub">Usá el timer de regulación para registrar los momentos</div></div></div></div>
+<!-- SECCIÓN: LOGROS -->
+<div class="seccion" id="seccion-logros">
+  <div class="header-seccion amarillo">
+    <h1 class="titulo-seccion" style="color:var(--negro);">Mis Logros</h1>
+  </div>
+
+  <div class="card">
+    <div class="logros-grid" id="logros-grid"></div>
+  </div>
 </div>
 
-</div><!-- /content -->
+<!-- NAVBAR INFERIOR -->
+<div class="navbar">
+  <button class="nav-btn active" onclick="irSeccion('principal')" id="nav-principal">
+    <span class="nav-btn-icon">🏠</span>
+    Inicio
+  </button>
+  <button class="nav-btn" onclick="irSeccion('biblioteca')" id="nav-biblioteca">
+    <span class="nav-btn-icon">🖼️</span>
+    Pictos
+  </button>
+  <button class="nav-btn" onclick="irSeccion('rutinas')" id="nav-rutinas">
+    <span class="nav-btn-icon">📋</span>
+    Rutinas
+  </button>
+  <button class="nav-btn" onclick="irSeccion('logros')" id="nav-logros">
+    <span class="nav-btn-icon">🏆</span>
+    Logros
+  </button>
+  <button class="nav-btn" onclick="abrirPerfil()" id="nav-perfil">
+    <span class="nav-btn-icon">⚙️</span>
+    Config
+  </button>
+</div>
 
 <!-- TIMER FAB -->
-<button class="timer-fab" onclick="abrirTimer()" title="Timer de regulación">🕐</button>
+<button class="timer-fab" onclick="abrirTimer()" title="Timer de regulación">⏱</button>
 
 <!-- PASO A PASO -->
 <div class="paso-overlay" id="paso-overlay">
   <div class="paso-progress"><div class="paso-progress-bar" id="paso-progress-bar"></div></div>
   <div class="paso-top">
     <div class="paso-counter" id="paso-counter"></div>
-    <div class="paso-titulo" id="paso-titulo-header"></div>
     <button class="paso-cerrar" onclick="cerrarPasoAPaso()">✕</button>
   </div>
   <div class="paso-picto-wrap" id="paso-picto-wrap"></div>
   <div class="paso-nombre" id="paso-nombre"></div>
-  <div class="paso-check-fila" id="paso-dots"></div>
-  <div class="paso-nav" style="margin-top:12px;">
+  <div class="paso-nav" style="margin-top:1rem;">
     <button class="paso-btn" id="paso-btn-ant" onclick="pasoAnterior()">← Anterior</button>
-    <button class="paso-voz-btn" onclick="hablarPasoActual()" title="Leer en voz alta">🔊</button>
-    <button class="paso-hecho-btn" onclick="marcarHecho()">✅ Lo hice</button>
-    <button class="paso-btn siguiente" id="paso-btn-sig" onclick="pasoSiguiente()">Siguiente →</button>
+    <button class="paso-btn-hecho" onclick="marcarHecho()">✅ Lo hice</button>
+    <button class="paso-btn" id="paso-btn-sig" onclick="pasoSiguiente()">Siguiente →</button>
   </div>
 </div>
 
 <!-- TIMER OVERLAY -->
 <div class="timer-overlay" id="timer-overlay">
   <button class="timer-cerrar" onclick="cerrarTimer()">✕</button>
-    <div class="coco-escena">
-    <div class="coco-principal" id="coco-emoji">🐭</div>
+  <div>
+    <div class="coco-timer">🐭</div>
     <div class="alimentos-fila" id="alimentos-fila"></div>
   </div>
   <div id="timer-setup">
@@ -368,7 +515,7 @@ body.tema-calido{--azul:#EA580C;--verde:#D97706;--gris-fondo:#FFF7ED;--gris-bord
       <button class="timer-opt" onclick="selMinutos(5,this)">5 min</button>
       <button class="timer-opt" onclick="selMinutos(10,this)">10 min</button>
     </div>
-    <div style="margin-top:1.5rem;"><button class="btn btn-primary" onclick="iniciarTimer()" style="padding:12px 40px;font-size:16px;">Comenzar</button></div>
+    <div style="margin-top:1.5rem;"><button class="btn btn-primary" onclick="iniciarTimer()" style="padding:14px 40px;font-size:16px;">Comenzar</button></div>
   </div>
   <div id="timer-running" style="display:none;flex-direction:column;align-items:center;">
     <div class="timer-frase" id="timer-frase">Respirá tranquilo... estoy con vos 🐭</div>
@@ -379,26 +526,29 @@ body.tema-calido{--azul:#EA580C;--verde:#D97706;--gris-fondo:#FFF7ED;--gris-bord
       </svg>
       <div class="timer-display"><div class="timer-tiempo" id="timer-display">1:00</div><div class="timer-label">min : seg</div></div>
     </div>
-    <button class="btn" onclick="detenerTimer()" style="background:rgba(255,255,255,.15);border-color:rgba(255,255,255,.3);color:white;font-size:14px;padding:12px 24px;">✅ Ya me regulé</button>
+    <button class="btn" onclick="detenerTimer()" style="background:rgba(255,255,255,.15);border:2px solid rgba(255,255,255,.3);color:white;font-size:14px;padding:12px 24px;margin-top:1.5rem;">✅ Ya me regulé</button>
   </div>
 </div>
 
 <!-- PERFIL MODAL -->
-<div id="perfil-modal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:400;align-items:flex-end;justify-content:center;">
-  <div style="background:var(--blanco);border-radius:var(--radio-lg) var(--radio-lg) 0 0;padding:1.5rem;width:100%;max-width:480px;max-height:85vh;overflow-y:auto;">
-    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1.25rem;">
-      <div style="font-size:18px;font-weight:800;">Mi perfil</div>
-      <button onclick="cerrarPerfil()" style="background:none;border:none;font-size:22px;cursor:pointer;">✕</button>
+<div class="perfil-modal" id="perfil-modal">
+  <div class="perfil-modal-content">
+    <div class="perfil-header">
+      <h2 class="perfil-titulo">Mi Perfil</h2>
+      <button class="perfil-cerrar" onclick="cerrarPerfil()">✕</button>
     </div>
-    <div style="font-size:64px;text-align:center;margin-bottom:1rem;" id="perfil-emoji">🐭</div>
+    <div class="perfil-emoji" id="perfil-emoji">🐭</div>
+    
     <label class="field">Nombre del asistido</label>
     <input type="text" id="perfil-nombre" placeholder="Ej: Camilo">
+    
     <label class="field">Género (para mensajes)</label>
     <select id="perfil-genero">
       <option value="neutro">Neutro</option>
       <option value="m">Masculino (campeón)</option>
       <option value="f">Femenino (campeona)</option>
     </select>
+    
     <label class="field">Emoji del perfil</label>
     <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:6px;margin-bottom:1rem;">
       <span style="font-size:28px;cursor:pointer;" onclick="setEmoji('🐭')">🐭</span>
@@ -406,21 +556,10 @@ body.tema-calido{--azul:#EA580C;--verde:#D97706;--gris-fondo:#FFF7ED;--gris-bord
       <span style="font-size:28px;cursor:pointer;" onclick="setEmoji('🐶')">🐶</span>
       <span style="font-size:28px;cursor:pointer;" onclick="setEmoji('🐱')">🐱</span>
       <span style="font-size:28px;cursor:pointer;" onclick="setEmoji('🐸')">🐸</span>
-      <span style="font-size:28px;cursor:pointer;" onclick="setEmoji('🦁')">🦁</span>
-      <span style="font-size:28px;cursor:pointer;" onclick="setEmoji('🐼')">🐼</span>
-      <span style="font-size:28px;cursor:pointer;" onclick="setEmoji('🦋')">🦋</span>
     </div>
     
-    <label class="field">Tema de colores</label>
-    <div class="paleta-grid">
-      <div class="paleta-opt" style="background:linear-gradient(135deg,#3B82F6,#10B981)" onclick="setTema('')" title="Claro"></div>
-      <div class="paleta-opt" style="background:linear-gradient(135deg,#2563EB,#0891B2)" onclick="setTema('tema-azul')" title="Azul"></div>
-      <div class="paleta-opt" style="background:linear-gradient(135deg,#059669,#16A34A)" onclick="setTema('tema-verde')" title="Verde"></div>
-      <div class="paleta-opt" style="background:linear-gradient(135deg,#7C3AED,#9333EA)" onclick="setTema('tema-violeta')" title="Violeta"></div>
-      <div class="paleta-opt" style="background:linear-gradient(135deg,#EA580C,#D97706)" onclick="setTema('tema-calido')" title="Cálido"></div>
-    </div>
-<div class="stat-grid" id="stat-perfil"></div>
-    <button class="btn btn-primary btn-full" onclick="guardarPerfil()" style="margin-top:.5rem;">Guardar perfil</button>
+    <div class="stat-grid" id="stat-perfil"></div>
+    <button class="btn btn-primary btn-full" onclick="guardarPerfil()" style="margin-top:1rem;">Guardar perfil</button>
   </div>
 </div>
 
@@ -428,19 +567,18 @@ body.tema-calido{--azul:#EA580C;--verde:#D97706;--gris-fondo:#FFF7ED;--gris-bord
 <div class="arasaac-modal" id="arasaac-modal">
   <div class="arasaac-box">
     <div class="arasaac-header">
-      <input type="text" id="arasaac-input" placeholder="Buscar pictograma... ej: baño, comer, dormir" onkeydown="if(event.key==='Enter')buscarArasaac()">
+      <input type="text" id="arasaac-input" placeholder="Buscar: baño, comer, dormir..." onkeydown="if(event.key==='Enter')buscarArasaac()">
       <button class="btn btn-primary" onclick="buscarArasaac()" style="white-space:nowrap;">Buscar</button>
       <button onclick="cerrarArasaac()" style="background:none;border:none;font-size:20px;cursor:pointer;padding:0 4px;">✕</button>
     </div>
     <div class="arasaac-grid" id="arasaac-grid">
-      <div class="arasaac-loading">Buscá un pictograma arriba 🔍</div>
+      <div style="grid-column:1/-1;text-align:center;padding:2rem;color:var(--gris-medio);">Buscá un pictograma arriba 🔍</div>
     </div>
-    <div class="arasaac-footer">Pictogramas de ARASAAC — Gobierno de Aragón, España. Licencia CC BY-NC-SA 4.0</div>
   </div>
 </div>
 
 <!-- MODO SIMPLIFICADO -->
-<div class="modo-simple-overlay" id="modo-simple">
+<div class="modo-simple" id="modo-simple">
   <div class="ms-header">
     <div class="ms-titulo" id="ms-saludo">¡Hola! 🐭</div>
     <button class="ms-salir" onclick="cerrarModoSimple()">Salir ✕</button>
@@ -453,6 +591,7 @@ body.tema-calido{--azul:#EA580C;--verde:#D97706;--gris-fondo:#FFF7ED;--gris-bord
 
 <div class="toast" id="toast"></div>
 
+<!-- JAVASCRIPT LÓGICA ORIGINAL -->
 <script>
 var biblioteca=JSON.parse(localStorage.getItem("pr_biblioteca")||"[]");
 var rutinasGuardadas=JSON.parse(localStorage.getItem("pr_rutinas")||"[]");
@@ -462,569 +601,156 @@ var logros=JSON.parse(localStorage.getItem("pr_logros")||"[]");
 var imagenBase64=null,ultimoPicto=null,ultimaRutina=null;
 var pasoActual=0,pasosActuales=[];
 var timerMinutos=1,timerTotal=60,timerRestante=60,timerInterval=null;
+var seccionActual="principal";
 
 var COLORES={higiene:"#3B82F6",comida:"#10B981",escuela:"#F59E0B",descanso:"#EF4444",juego:"#8B5CF6",ropa:"#F97316"};
 var LABELS={higiene:"Higiene",comida:"Comida",escuela:"Escuela",descanso:"Descanso",juego:"Juego",ropa:"Ropa"};
 
-function setTab(tab){
-  document.querySelectorAll(".tab").forEach(function(t,i){
-    var tabs=["biblioteca","generar","rutina","logros","regulacion"];
-    t.classList.toggle("active",tabs[i]===tab);
-  });
-  document.querySelectorAll(".panel").forEach(function(p){p.classList.remove("active")});
-  document.getElementById("panel-"+tab).classList.add("active");
-  if(tab==="biblioteca")renderBiblioteca();
-  if(tab==="rutina")renderRutinasGuardadas();
-  if(tab==="logros")renderLogros();
-  if(tab==="regulacion")renderRegulacion();
+function irSeccion(seccion){
+  if(seccion==="principal"||seccion==="biblioteca"||seccion==="generar"||seccion==="rutinas"||seccion==="regulacion"||seccion==="logros"){
+    document.querySelectorAll(".seccion").forEach(s=>s.classList.remove("active"));
+    document.getElementById("pantalla-principal").classList.remove("active");
+    if(seccion==="principal"){
+      document.getElementById("pantalla-principal").classList.add("active");
+      seccionActual="principal";
+    }else{
+      document.getElementById("seccion-"+seccion).classList.add("active");
+      seccionActual=seccion;
+      if(seccion==="biblioteca")renderBiblioteca();
+      if(seccion==="rutinas")renderRutinasGuardadas();
+      if(seccion==="logros")renderLogros();
+      if(seccion==="regulacion")renderRegulacion();
+    }
+    actualizarNav();
+  }
+}
+
+function actualizarNav(){
+  document.querySelectorAll(".nav-btn").forEach(b=>b.classList.remove("active"));
+  if(seccionActual==="principal")document.getElementById("nav-principal").classList.add("active");
+  else if(seccionActual==="biblioteca")document.getElementById("nav-biblioteca").classList.add("active");
+  else if(seccionActual==="rutinas")document.getElementById("nav-rutinas").classList.add("active");
+  else if(seccionActual==="logros")document.getElementById("nav-logros").classList.add("active");
 }
 
 function showToast(msg){
-  var t=document.getElementById("toast");
-  t.textContent=msg;t.classList.add("visible");
-  setTimeout(function(){t.classList.remove("visible")},2500);
+  var t=document.getElementById("toast");t.textContent=msg;t.classList.add("visible");
+  setTimeout(()=>t.classList.remove("visible"),2500);
 }
 
 function renderBiblioteca(){
   var grid=document.getElementById("picto-grid");
   document.getElementById("count-pictos").textContent=biblioteca.length;
-  if(!biblioteca.length){grid.innerHTML='<div class="vacio" style="grid-column:1/-1"><div class="vacio-icon">🖼️</div><div class="vacio-txt">Tu biblioteca está vacía</div><div class="vacio-sub">Generá tu primer pictograma desde "Generar picto"</div></div>';return}
-  grid.innerHTML=biblioteca.map(function(p){
-    return'<div class="picto-card"><div class="picto-img-wrap" style="border-color:'+p.color+';position:relative;">'+
-      (p.imageUrl?'<img src="'+p.imageUrl+'" alt="'+p.nombre+'" loading="lazy">':'<div class="emoji-big">'+( p.emoji||"🖼️")+'</div>')+
-      '<button class="picto-del" onclick="borrarPicto('+p.id+')">✕</button></div><div class="picto-nombre">'+p.nombre+'</div><div class="picto-cat">'+( LABELS[p.categoria]||p.categoria)+'</div></div>';
-  }).join("");
+  if(!biblioteca.length){grid.innerHTML='<div class="vacio" style="grid-column:1/-1"><div class="vacio-icon">🖼️</div><div class="vacio-txt">Tu biblioteca está vacía</div><div class="vacio-sub">Generá tu primer pictograma</div></div>';return}
+  grid.innerHTML=biblioteca.map(p=>'<div class="picto-card"><div class="picto-wrap" style="border-color:var(--celeste);">'+(p.imageUrl?'<img src="'+p.imageUrl+'" alt="'+p.nombre+'">':'<div class="emoji">🖼️</div>')+'<button class="picto-del" onclick="borrarPicto('+p.id+')">✕</button></div><div class="picto-nombre">'+p.nombre+'</div><div class="picto-cat">'+( LABELS[p.categoria]||p.categoria)+'</div></div>').join("");
 }
 
-function borrarPicto(id){
-  if(!confirm("¿Borrar este pictograma?"))return;
-  biblioteca=biblioteca.filter(function(p){return p.id!==id});
-  localStorage.setItem("pr_biblioteca",JSON.stringify(biblioteca));
-  renderBiblioteca();showToast("Pictograma eliminado");
-}
+function borrarPicto(id){if(!confirm("¿Borrar este pictograma?"))return;biblioteca=biblioteca.filter(p=>p.id!==id);localStorage.setItem("pr_biblioteca",JSON.stringify(biblioteca));renderBiblioteca();showToast("Pictograma eliminado")}
 
 function previsualizarImagen(input){
   var file=input.files[0];if(!file)return;
-  var reader=new FileReader();
-  reader.onload=function(e){
-    imagenBase64=e.target.result;
-    var preview=document.getElementById("preview");
-    preview.src=imagenBase64;preview.style.display="block";
-    document.getElementById("btn-generar-wrap").style.display="block";
-    document.getElementById("resultado-container").style.display="none";
-  };
-  reader.readAsDataURL(file);
+  var reader=new FileReader();reader.onload=e=>{imagenBase64=e.target.result;var preview=document.getElementById("preview");preview.src=imagenBase64;preview.style.display="block";document.getElementById("btn-generar-wrap").style.display="block";document.getElementById("resultado-container").style.display="none"};reader.readAsDataURL(file);
 }
 
 async function generarPictograma(){
-  if(!imagenBase64)return;
-  var btn=document.getElementById("btn-generar");
-  var loading=document.getElementById("loading-picto");
-  var error=document.getElementById("error-picto");
-  var txt=document.getElementById("loading-txt");
-  error.classList.remove("visible");btn.disabled=true;loading.style.display="flex";
-  txt.textContent="Analizando la imagen...";
-  setTimeout(function(){txt.textContent="Generando el pictograma..."},4000);
-  try{
-    var res=await fetch("/api/generar-picto",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({imagen:imagenBase64})});
-    var data=await res.json();
-    if(!res.ok||data.error)throw new Error(data.error||"Error del servidor");
-    ultimoPicto=data;
-    document.getElementById("resultado-img-wrap").style.borderColor=data.color;
-    document.getElementById("resultado-img").src=data.imageUrl;
-    document.getElementById("resultado-nombre").textContent=data.nombre;
-    var badge=document.getElementById("resultado-badge");
-    badge.textContent=LABELS[data.categoria]||data.categoria;badge.style.background=data.color;
-    document.getElementById("resultado-desc").textContent=data.descripcion;
-    document.getElementById("resultado-container").style.display="block";
-    document.getElementById("btn-generar-wrap").style.display="none";
-  }catch(e){error.textContent="Error: "+e.message;error.classList.add("visible")}
-  btn.disabled=false;loading.style.display="none";
-}
+  if(!imagenBase64)return;var btn=document.getElementById("btn-generar");var loading=document.getElementById("loading-picto");var error=document.getElementById("error-picto");var txt=document.getElementById("loading-txt");error.classList.remove("visible");btn.disabled=true;loading.style.display="flex";txt.textContent="Analizando la imagen...";setTimeout(()=>txt.textContent="Generando el pictograma...",4000);try{var res=await fetch("/api/generar-picto",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({imagen:imagenBase64})});var data=await res.json();if(!res.ok||data.error)throw new Error(data.error||"Error del servidor");ultimoPicto=data;document.getElementById("resultado-img").src=data.imageUrl;document.getElementById("resultado-nombre").textContent=data.nombre;var badge=document.getElementById("resultado-badge");badge.textContent=LABELS[data.categoria]||data.categoria;document.getElementById("resultado-desc").textContent=data.descripcion;document.getElementById("resultado-container").style.display="block";document.getElementById("btn-generar-wrap").style.display="none"}catch(e){error.textContent="Error: "+e.message;error.classList.add("visible")}btn.disabled=false;loading.style.display="none";}
 
-function guardarPictograma(){
-  if(!ultimoPicto)return;
-  biblioteca.unshift(Object.assign({},ultimoPicto,{id:Date.now()}));
-  localStorage.setItem("pr_biblioteca",JSON.stringify(biblioteca));
-  verificarLogro("primer_picto","¡Primer pictograma!","Generaste tu primer pictograma personalizado","🖼️");
-  if(biblioteca.length>=5)verificarLogro("5_pictos","5 pictogramas","Tu biblioteca está creciendo","📚");
-  if(biblioteca.length>=10)verificarLogro("10_pictos","10 pictogramas","Colección completa","🌟");
-  resetGenerar();setTab("biblioteca");showToast("✅ Pictograma guardado");
-}
+function guardarPictograma(){if(!ultimoPicto)return;biblioteca.unshift(Object.assign({},ultimoPicto,{id:Date.now()}));localStorage.setItem("pr_biblioteca",JSON.stringify(biblioteca));verificarLogro("primer_picto","¡Primer pictograma!","Generaste tu primer pictograma personalizado","🖼️");resetGenerar();irSeccion("biblioteca");showToast("✅ Pictograma guardado")}
 
-function resetGenerar(){
-  imagenBase64=null;ultimoPicto=null;
-  var p=document.getElementById("preview");p.style.display="none";
-  document.getElementById("resultado-container").style.display="none";
-  document.getElementById("btn-generar-wrap").style.display="none";
-  document.getElementById("error-picto").classList.remove("visible");
-  document.querySelectorAll("#panel-generar input[type=file]").forEach(function(i){i.value=""});
-}
+function resetGenerar(){imagenBase64=null;ultimoPicto=null;var p=document.getElementById("preview");p.style.display="none";document.getElementById("resultado-container").style.display="none";document.getElementById("btn-generar-wrap").style.display="none";document.getElementById("error-picto").classList.remove("visible");document.querySelectorAll("#seccion-generar input[type=file]").forEach(i=>i.value="")}
 
 function usarSugerencia(txt){document.getElementById("rutina-input").value=txt}
 
 async function generarRutina(){
-  var rutina=document.getElementById("rutina-input").value.trim();if(!rutina)return;
-  var btn=document.getElementById("btn-rutina");
-  var loading=document.getElementById("loading-rutina");
-  var error=document.getElementById("error-rutina");
-  error.classList.remove("visible");btn.disabled=true;loading.style.display="flex";
-  document.getElementById("rutina-resultado").style.display="none";
-  try{
-    var res=await fetch("/api/generar-rutina",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({rutina:rutina})});
-    var data=await res.json();
-    if(!res.ok||data.error)throw new Error(data.error||"Error del servidor");
-    ultimaRutina=data;
-    document.getElementById("rutina-titulo").textContent=data.titulo;
-    renderStrip(data.pasos);
-    document.getElementById("rutina-resultado").style.display="block";
-    document.getElementById("rutina-resultado").scrollIntoView({behavior:"smooth",block:"nearest"});
-  }catch(e){error.textContent="Error: "+e.message;error.classList.add("visible")}
-  btn.disabled=false;loading.style.display="none";
-}
+  var rutina=document.getElementById("rutina-input").value.trim();if(!rutina)return;var btn=document.getElementById("btn-rutina");var loading=document.getElementById("loading-rutina");var error=document.getElementById("error-rutina");error.classList.remove("visible");btn.disabled=true;loading.style.display="flex";document.getElementById("rutina-resultado").style.display="none";try{var res=await fetch("/api/generar-rutina",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({rutina:rutina})});var data=await res.json();if(!res.ok||data.error)throw new Error(data.error||"Error del servidor");ultimaRutina=data;document.getElementById("rutina-titulo").textContent=data.titulo;renderStrip(data.pasos);document.getElementById("rutina-resultado").style.display="block"}catch(e){error.textContent="Error: "+e.message;error.classList.add("visible")}btn.disabled=false;loading.style.display="none"}
 
 function renderStrip(pasos){
-  var strip=document.getElementById("rutina-strip");
-  strip.innerHTML=pasos.map(function(paso,i){
-    var pictoGuardado=biblioteca.find(function(p){
-      return p.nombre.toLowerCase().includes(paso.nombre.toLowerCase())||paso.nombre.toLowerCase().includes(p.nombre.toLowerCase());
-    });
-    var tieneImg=pictoGuardado&&pictoGuardado.imageUrl;
-    var contenido=tieneImg?'<img src="'+pictoGuardado.imageUrl+'" alt="'+paso.nombre+'">':'<div class="emoji">'+paso.emoji+"</div>";
-    var flecha=i<pasos.length-1?'<div class="rutina-arrow">›</div>':"";
-    return'<div class="rutina-step"><div class="rutina-num">Paso '+paso.numero+'</div><div class="rutina-picto" style="border-color:'+paso.color+'">'+contenido+'</div><div class="rutina-nombre">'+paso.nombre+'</div></div>'+flecha;
-  }).join("");
+  var strip=document.getElementById("rutina-strip");strip.innerHTML=pasos.map((paso,i)=>{var pictoGuardado=biblioteca.find(p=>p.nombre.toLowerCase().includes(paso.nombre.toLowerCase())||paso.nombre.toLowerCase().includes(p.nombre.toLowerCase()));var tieneImg=pictoGuardado&&pictoGuardado.imageUrl;var contenido=tieneImg?'<img src="'+pictoGuardado.imageUrl+'" alt="'+paso.nombre+'">':'<div class="emoji">'+paso.emoji+"</div>";var flecha=i<pasos.length-1?'<div class="rutina-arrow">›</div>':"";return'<div class="rutina-step"><div class="rutina-num">Paso '+paso.numero+'</div><div class="rutina-picto" style="border-color:var(--verde)">'+contenido+'</div><div class="rutina-nombre">'+paso.nombre+'</div></div>'+flecha}).join("")
 }
 
-function guardarRutina(){
-  if(!ultimaRutina)return;
-  var existe=rutinasGuardadas.find(function(r){return r.titulo===ultimaRutina.titulo});
-  if(!existe){rutinasGuardadas.unshift(Object.assign({},ultimaRutina,{id:Date.now()}));localStorage.setItem("pr_rutinas",JSON.stringify(rutinasGuardadas))}
-  verificarLogro("primera_rutina","¡Primera rutina!","Guardaste tu primera rutina","📋");
-  if(rutinasGuardadas.length>=5)verificarLogro("5_rutinas","5 rutinas guardadas","Organizaste 5 rutinas distintas","🗂️");
-  renderRutinasGuardadas();showToast("✅ Rutina guardada");
-}
+function guardarRutina(){if(!ultimaRutina)return;var existe=rutinasGuardadas.find(r=>r.titulo===ultimaRutina.titulo);if(!existe){rutinasGuardadas.unshift(Object.assign({},ultimaRutina,{id:Date.now()}));localStorage.setItem("pr_rutinas",JSON.stringify(rutinasGuardadas))}verificarLogro("primera_rutina","¡Primera rutina!","Guardaste tu primera rutina","📋");renderRutinasGuardadas();showToast("✅ Rutina guardada")}
 
 function renderRutinasGuardadas(){
-  var cont=document.getElementById("rutinas-guardadas");
-  if(!rutinasGuardadas.length){cont.innerHTML='<div style="font-size:13px;color:var(--gris-texto)">Todavía no guardaste ninguna rutina.</div>';return}
-  cont.innerHTML=rutinasGuardadas.map(function(r){
-    return'<div style="display:flex;align-items:center;gap:6px;"><div class="chip" onclick="cargarRutina(\''+r.id+'\')" style="margin:0;">'+r.titulo+'</div><button onclick="borrarRutina(\''+r.id+'\')" style="background:none;border:none;cursor:pointer;font-size:14px;color:var(--rojo);">✕</button></div>';
-  }).join("");
+  var cont=document.getElementById("rutinas-guardadas");if(!rutinasGuardadas.length){cont.innerHTML='<div style="font-size:13px;color:var(--gris-medio)">Todavía no guardaste ninguna rutina.</div>';return}cont.innerHTML=rutinasGuardadas.map(r=>'<div style="display:flex;align-items:center;gap:6px;"><div class="chip" onclick="cargarRutina(\''+r.id+'\')" style="margin:0;cursor:pointer;">'+r.titulo+'</div><button onclick="borrarRutina(\''+r.id+'\')" style="background:none;border:none;cursor:pointer;font-size:14px;color:var(--gris-oscuro);">✕</button></div>').join("")
 }
 
-function borrarRutina(id){
-  if(!confirm("¿Eliminar esta rutina?"))return;
-  rutinasGuardadas=rutinasGuardadas.filter(function(r){return r.id!=id});
-  localStorage.setItem("pr_rutinas",JSON.stringify(rutinasGuardadas));
-  renderRutinasGuardadas();showToast("Rutina eliminada");
-}
+function borrarRutina(id){if(!confirm("¿Eliminar esta rutina?"))return;rutinasGuardadas=rutinasGuardadas.filter(r=>r.id!=id);localStorage.setItem("pr_rutinas",JSON.stringify(rutinasGuardadas));renderRutinasGuardadas();showToast("Rutina eliminada")}
 
-function cargarRutina(id){
-  var rutina=rutinasGuardadas.find(function(r){return r.id==id});if(!rutina)return;
-  ultimaRutina=rutina;
-  document.getElementById("rutina-titulo").textContent=rutina.titulo;
-  renderStrip(rutina.pasos);
-  document.getElementById("rutina-resultado").style.display="block";
-  document.getElementById("rutina-resultado").scrollIntoView({behavior:"smooth"});
-}
+function cargarRutina(id){var rutina=rutinasGuardadas.find(r=>r.id==id);if(!rutina)return;ultimaRutina=rutina;document.getElementById("rutina-titulo").textContent=rutina.titulo;renderStrip(rutina.pasos);document.getElementById("rutina-resultado").style.display="block"}
 
 function imprimirRutina(){window.print()}
 
-function hablarRutina(){
-  if(!ultimaRutina)return;
-  var texto=ultimaRutina.pasos.map(function(p){return"Paso "+p.numero+": "+p.nombre}).join(". ");
-  hablar(ultimaRutina.titulo+". "+texto);
-}
+function hablarRutina(){if(!ultimaRutina)return;var texto=ultimaRutina.pasos.map(p=>"Paso "+p.numero+": "+p.nombre).join(". ");hablar(ultimaRutina.titulo+". "+texto)}
 
-function compartirRutina(){
-  if(!ultimaRutina)return;
-  var texto="📋 "+ultimaRutina.titulo+"\n"+ultimaRutina.pasos.map(function(p){return p.numero+". "+p.nombre+" "+p.emoji}).join("\n");
-  if(navigator.share){navigator.share({title:ultimaRutina.titulo,text:texto})}
-  else{navigator.clipboard.writeText(texto).then(function(){showToast("📋 Rutina copiada al portapapeles")})}
-}
+function compartirRutina(){if(!ultimaRutina)return;var texto="📋 "+ultimaRutina.titulo+"\n"+ultimaRutina.pasos.map(p=>p.numero+". "+p.nombre+" "+p.emoji).join("\n");if(navigator.share){navigator.share({title:ultimaRutina.titulo,text:texto})}else{navigator.clipboard.writeText(texto).then(()=>showToast("📋 Rutina copiada"))}}
 
-// reemplazado abajo
+function iniciarPasoAPaso(){if(!ultimaRutina||!ultimaRutina.pasos.length)return;pasosActuales=ultimaRutina.pasos;pasoActual=0;document.getElementById("paso-overlay").classList.add("active");renderPasoActual()}
 
-function renderPasoActualBase(){
-  renderDots();
-}
 function renderPasoActual(){
-  var paso=pasosActuales[pasoActual];var total=pasosActuales.length;
-  document.getElementById("paso-counter").textContent=(pasoActual+1)+" / "+total;
-  document.getElementById("paso-progress-bar").style.width=(((pasoActual+1)/total)*100)+"%";
-  document.getElementById("paso-nombre").textContent=paso.nombre;
-  var pictoGuardado=biblioteca.find(function(p){
-    return p.nombre.toLowerCase().includes(paso.nombre.toLowerCase())||paso.nombre.toLowerCase().includes(p.nombre.toLowerCase());
-  });
-  var tieneImg=pictoGuardado&&pictoGuardado.imageUrl;
-  var wrap=document.getElementById("paso-picto-wrap");
-  wrap.style.borderColor=paso.color||"#3B82F6";
-  wrap.innerHTML=tieneImg?'<img src="'+pictoGuardado.imageUrl+'" alt="'+paso.nombre+'" style="width:100%;height:100%;object-fit:cover;">':'<div class="emoji-paso">'+paso.emoji+"</div>";
-  var btnAnt=document.getElementById("paso-btn-ant");var btnSig=document.getElementById("paso-btn-sig");
-  btnAnt.style.display=pasoActual===0?"none":"";
-  if(pasoActual===total-1){btnSig.textContent="✅ Finalizar";btnSig.className="paso-btn finalizar"}
-  else{btnSig.textContent="Siguiente →";btnSig.className="paso-btn siguiente"}
-  hablarPasoActual();
-  renderDots();
-}
+  var paso=pasosActuales[pasoActual];var total=pasosActuales.length;document.getElementById("paso-counter").textContent=(pasoActual+1)+" / "+total;document.getElementById("paso-progress-bar").style.width=(((pasoActual+1)/total)*100)+"%";document.getElementById("paso-nombre").textContent=paso.nombre;var pictoGuardado=biblioteca.find(p=>p.nombre.toLowerCase().includes(paso.nombre.toLowerCase())||paso.nombre.toLowerCase().includes(p.nombre.toLowerCase()));var tieneImg=pictoGuardado&&pictoGuardado.imageUrl;var wrap=document.getElementById("paso-picto-wrap");wrap.innerHTML=tieneImg?'<img src="'+pictoGuardado.imageUrl+'" alt="'+paso.nombre+'">':'<div class="emoji-paso">'+paso.emoji+"</div>";var btnAnt=document.getElementById("paso-btn-ant");var btnSig=document.getElementById("paso-btn-sig");btnAnt.style.display=pasoActual===0?"none":"";if(pasoActual===total-1){btnSig.textContent="✅ Finalizar";btnSig.style.background="var(--verde)"}else{btnSig.textContent="Siguiente →";btnSig.style.background=""}hablarPasoActual()}
 
-function pasoSiguiente(){
-  if(pasoActual<pasosActuales.length-1){pasoActual++;renderPasoActual()}
-  else{
-    cerrarPasoAPaso();
-    verificarLogro("rutina_completada","¡Rutina completa!","Completaste una rutina entera","🏅");
-    var nombre=perfil.nombre||"";
-    var msg=perfil.genero==="m"?"¡Excelente, campeón! "+nombre+" completó toda la rutina 🎉":perfil.genero==="f"?"¡Excelente, campeona! "+nombre+" completó toda la rutina 🎉":"¡Excelente! Se completó toda la rutina 🎉";
-    showToast(msg);
-  }
-}
+function pasoSiguiente(){if(pasoActual<pasosActuales.length-1){pasoActual++;renderPasoActual()}else{cerrarPasoAPaso();verificarLogro("rutina_completada","¡Rutina completa!","Completaste una rutina entera","🏅");var nombre=perfil.nombre||"";var msg=perfil.genero==="m"?"¡Excelente, campeón! "+nombre+" completó toda la rutina 🎉":perfil.genero==="f"?"¡Excelente, campeona! "+nombre+" completó toda la rutina 🎉":"¡Excelente! Se completó toda la rutina 🎉";showToast(msg)}}
 
 function pasoAnterior(){if(pasoActual>0){pasoActual--;renderPasoActual()}}
 
-function cerrarPasoAPaso(){document.getElementById("paso-overlay").classList.remove("active");pasosHechos=[];if("speechSynthesis"in window)speechSynthesis.cancel()}
+function marcarHecho(){hablar("¡Muy bien!");setTimeout(()=>pasoSiguiente(),600)}
+
+function cerrarPasoAPaso(){document.getElementById("paso-overlay").classList.remove("active");if("speechSynthesis"in window)speechSynthesis.cancel()}
 
 function hablarPasoActual(){var paso=pasosActuales[pasoActual];if(paso)hablar(paso.nombre)}
 
-function hablar(texto){
-  if(!("speechSynthesis"in window))return;
-  speechSynthesis.cancel();
-  var u=new SpeechSynthesisUtterance(texto);u.lang="es-AR";u.rate=0.85;u.pitch=1;
-  speechSynthesis.speak(u);
-}
+function hablar(texto){if(!("speechSynthesis"in window))return;speechSynthesis.cancel();var u=new SpeechSynthesisUtterance(texto);u.lang="es-AR";u.rate=0.85;u.pitch=1;speechSynthesis.speak(u)}
 
-function abrirTimer(){
-  document.getElementById("timer-overlay").classList.add("active");
-  document.getElementById("timer-setup").style.display="block";
-  document.getElementById("timer-running").style.display="none";
-}
+function abrirTimer(){document.getElementById("timer-overlay").classList.add("active");document.getElementById("timer-setup").style.display="block";document.getElementById("timer-running").style.display="none"}
 
-function cerrarTimer(){
-  clearInterval(timerInterval);timerInterval=null;
-  document.getElementById("timer-overlay").classList.remove("active");
-  if("speechSynthesis"in window)speechSynthesis.cancel();
-}
+function cerrarTimer(){clearInterval(timerInterval);timerInterval=null;document.getElementById("timer-overlay").classList.remove("active");if("speechSynthesis"in window)speechSynthesis.cancel()}
 
-function selMinutos(min,btn){
-  timerMinutos=min;
-  document.querySelectorAll(".timer-opt").forEach(function(b){b.classList.remove("sel")});
-  btn.classList.add("sel");
-}
+function selMinutos(min,btn){timerMinutos=min;document.querySelectorAll(".timer-opt").forEach(b=>b.classList.remove("sel"));btn.classList.add("sel")}
 
-function iniciarTimer(){
-  timerTotal=timerMinutos*60;timerRestante=timerTotal;
-  document.getElementById("timer-setup").style.display="none";
-  document.getElementById("timer-running").style.display="flex";
-  actualizarDisplayTimer();
-  var circ=553;
-  timerInterval=setInterval(function(){
-    timerRestante--;actualizarDisplayTimer();
-    var prog=document.getElementById("timer-prog");
-    prog.style.strokeDashoffset=circ*(1-timerRestante/timerTotal);
-    if(timerRestante<=0){
-      clearInterval(timerInterval);timerInterval=null;
-      guardarRegistroTimer(false);
-      hablar("El tiempo terminó. Lo hiciste muy bien.");
-      setTimeout(cerrarTimer,1500);
-    }
-  },1000);
-}
+function iniciarTimer(){timerTotal=timerMinutos*60;timerRestante=timerTotal;document.getElementById("timer-setup").style.display="none";document.getElementById("timer-running").style.display="flex";actualizarDisplayTimer();var circ=553;timerInterval=setInterval(()=>{timerRestante--;actualizarDisplayTimer();var prog=document.getElementById("timer-prog");prog.style.strokeDashoffset=circ*(1-timerRestante/timerTotal);if(timerRestante<=0){clearInterval(timerInterval);timerInterval=null;guardarRegistroTimer(false);hablar("El tiempo terminó. Lo hiciste muy bien.");setTimeout(cerrarTimer,1500)}},1000)}
 
-function actualizarDisplayTimer(){
-  var m=Math.floor(timerRestante/60);var s=timerRestante%60;
-  document.getElementById("timer-display").textContent=m+":"+(s<10?"0"+s:s);
-  if(timerRestante<30)document.getElementById("timer-frase").textContent="¡Casi terminás! Lo estás haciendo muy bien 🐭";
-}
+function actualizarDisplayTimer(){var m=Math.floor(timerRestante/60);var s=timerRestante%60;document.getElementById("timer-display").textContent=m+":"+(s<10?"0"+s:s);if(timerRestante<30)document.getElementById("timer-frase").textContent="¡Casi terminás! Lo estás haciendo muy bien 🐭"}
 
-function detenerTimer(){
-  clearInterval(timerInterval);timerInterval=null;
-  guardarRegistroTimer(true);
-  var nombre=perfil.nombre||"";
-  var msg=perfil.genero==="m"?"¡Muy bien, "+(nombre||"campeón")+"! Te regulaste solo ✨":perfil.genero==="f"?"¡Muy bien, "+(nombre||"campeona")+"! Te regulaste sola ✨":"¡Muy bien! Se logró regular ✨";
-  hablar(msg.replace("✨",""));showToast(msg);
-  verificarLogro("primer_timer","Primera regulación","Usaste el timer de regulación por primera vez","🧘");
-  cerrarTimer();
-}
+function detenerTimer(){clearInterval(timerInterval);timerInterval=null;guardarRegistroTimer(true);var nombre=perfil.nombre||"";var msg=perfil.genero==="m"?"¡Muy bien, "+(nombre||"campeón")+"! Te regulaste solo ✨":perfil.genero==="f"?"¡Muy bien, "+(nombre||"campeona")+"! Te regulaste sola ✨":"¡Muy bien! Se logró regular ✨";hablar(msg.replace("✨",""));showToast(msg);verificarLogro("primer_timer","Primera regulación","Usaste el timer de regulación por primera vez","🧘");cerrarTimer()}
 
-function guardarRegistroTimer(anticipado){
-  var transcurrido=timerTotal-timerRestante;
-  registrosTimer.unshift({id:Date.now(),fecha:new Date().toISOString(),duracionTotal:timerTotal,duracionTranscurrida:transcurrido,anticipado:anticipado});
-  localStorage.setItem("pr_timer",JSON.stringify(registrosTimer));
-  if(registrosTimer.length>=5)verificarLogro("5_timers","5 regulaciones","Usaste el timer 5 veces","💪");
-}
+function guardarRegistroTimer(anticipado){var transcurrido=timerTotal-timerRestante;registrosTimer.unshift({id:Date.now(),fecha:new Date().toISOString(),duracionTotal:timerTotal,duracionTranscurrida:transcurrido,anticipado:anticipado});localStorage.setItem("pr_timer",JSON.stringify(registrosTimer));if(registrosTimer.length>=5)verificarLogro("5_timers","5 regulaciones","Usaste el timer 5 veces","💪")}
 
-function renderRegulacion(){
-  var total=registrosTimer.length;
-  var anticipados=registrosTimer.filter(function(r){return r.anticipado}).length;
-  var promSeg=total?Math.round(registrosTimer.reduce(function(a,r){return a+r.duracionTranscurrida},0)/total):0;
-  var m=Math.floor(promSeg/60);var s=promSeg%60;
-  document.getElementById("stat-regulacion").innerHTML='<div class="stat-card"><div class="stat-num">'+total+'</div><div class="stat-label">Total</div></div><div class="stat-card"><div class="stat-num">'+anticipados+'</div><div class="stat-label">Anticipados</div></div><div class="stat-card"><div class="stat-num">'+m+":"+(s<10?"0"+s:s)+'</div><div class="stat-label">Promedio</div></div>';
-  var hist=document.getElementById("regulacion-historial");
-  if(!registrosTimer.length){hist.innerHTML='<div class="vacio"><div class="vacio-icon">🕐</div><div class="vacio-txt">Sin registros aún</div><div class="vacio-sub">Usá el timer de regulación para registrar los momentos</div></div>';return}
-  hist.innerHTML=registrosTimer.slice(0,20).map(function(r){
-    var fecha=new Date(r.fecha);
-    var fechaStr=fecha.toLocaleDateString("es-AR")+" "+fecha.toLocaleTimeString("es-AR",{hour:"2-digit",minute:"2-digit"});
-    var m2=Math.floor(r.duracionTranscurrida/60);var s2=r.duracionTranscurrida%60;
-    return'<div class="reg-item"><div><div style="font-weight:700;">'+( r.anticipado?"Se reguló antes ✨":"Completó el tiempo ⏱️")+'</div><div class="reg-fecha">'+fechaStr+'</div></div><div style="text-align:right;"><div class="reg-dur">'+m2+":"+(s2<10?"0"+s2:s2)+' min</div><div class="reg-badge '+( r.anticipado?"anticipado":"completo")+'">'+( r.anticipado?"Anticipado":"Completo")+'</div></div></div>';
-  }).join("");
-}
+function renderRegulacion(){var total=registrosTimer.length;var anticipados=registrosTimer.filter(r=>r.anticipado).length;var promSeg=total?Math.round(registrosTimer.reduce((a,r)=>a+r.duracionTranscurrida,0)/total):0;var m=Math.floor(promSeg/60);var s=promSeg%60;document.getElementById("stat-regulacion").innerHTML='<div class="stat-card"><div class="stat-num">'+total+'</div><div class="stat-label">Total</div></div><div class="stat-card"><div class="stat-num">'+anticipados+'</div><div class="stat-label">Anticipados</div></div><div class="stat-card"><div class="stat-num">'+m+":"+(s<10?"0"+s:s)+'</div><div class="stat-label">Promedio</div></div>';var hist=document.getElementById("regulacion-historial");if(!registrosTimer.length){hist.innerHTML='<div class="vacio"><div class="vacio-icon">🕐</div><div class="vacio-txt">Sin registros aún</div><div class="vacio-sub">Usá el timer de regulación</div></div>';return}hist.innerHTML=registrosTimer.slice(0,20).map(r=>{var fecha=new Date(r.fecha);var fechaStr=fecha.toLocaleDateString("es-AR")+" "+fecha.toLocaleTimeString("es-AR",{hour:"2-digit",minute:"2-digit"});var m2=Math.floor(r.duracionTranscurrida/60);var s2=r.duracionTranscurrida%60;return'<div class="reg-item"><div><div style="font-weight:700;">'+( r.anticipado?"Se reguló antes ✨":"Completó el tiempo ⏱️")+'</div><div class="reg-fecha">'+fechaStr+'</div></div><div style="text-align:right;"><div class="reg-dur">'+m2+":"+(s2<10?"0"+s2:s2)+' min</div><div class="reg-badge '+( r.anticipado?"reg-badge-anticipado":"reg-badge-completo")+'">'+( r.anticipado?"Anticipado":"Completo")+'</div></div></div>'}).join("")}
 
-var LOGROS_DEF=[
-  {id:"primer_picto",nombre:"¡Primer pictograma!",desc:"Generaste tu primer pictograma personalizado",icon:"🖼️"},
-  {id:"5_pictos",nombre:"Biblioteca activa",desc:"Tenés 5 o más pictogramas guardados",icon:"📚"},
-  {id:"10_pictos",nombre:"Colección completa",desc:"Tenés 10 o más pictogramas",icon:"🌟"},
-  {id:"primera_rutina",nombre:"¡Primera rutina!",desc:"Guardaste tu primera rutina",icon:"📋"},
-  {id:"5_rutinas",nombre:"Organizador experto",desc:"Guardaste 5 rutinas distintas",icon:"🗂️"},
-  {id:"rutina_completada",nombre:"¡Rutina completa!",desc:"Completaste una rutina entera paso a paso",icon:"🏅"},
-  {id:"primer_timer",nombre:"Primera regulación",desc:"Usaste el timer de regulación por primera vez",icon:"🧘"},
-  {id:"5_timers",nombre:"Regulación constante",desc:"Usaste el timer 5 veces",icon:"💪"},
-];
+var LOGROS_DEF=[{id:"primer_picto",nombre:"¡Primer pictograma!",desc:"Generaste tu primer pictograma personalizado",icon:"🖼️"},{id:"5_pictos",nombre:"Biblioteca activa",desc:"Tenés 5 o más pictogramas guardados",icon:"📚"},{id:"10_pictos",nombre:"Colección completa",desc:"Tenés 10 o más pictogramas",icon:"🌟"},{id:"primera_rutina",nombre:"¡Primera rutina!",desc:"Guardaste tu primera rutina",icon:"📋"},{id:"5_rutinas",nombre:"Organizador experto",desc:"Guardaste 5 rutinas distintas",icon:"🗂️"},{id:"rutina_completada",nombre:"¡Rutina completa!",desc:"Completaste una rutina entera paso a paso",icon:"🏅"},{id:"primer_timer",nombre:"Primera regulación",desc:"Usaste el timer de regulación por primera vez",icon:"🧘"},{id:"5_timers",nombre:"Regulación constante",desc:"Usaste el timer 5 veces",icon:"💪"}];
 
-function verificarLogro(id,nombre,desc,icon){
-  if(logros.find(function(l){return l.id===id}))return;
-  logros.push({id:id,nombre:nombre,desc:desc,icon:icon,fecha:new Date().toISOString()});
-  localStorage.setItem("pr_logros",JSON.stringify(logros));
-  showToast("🏆 ¡Nuevo logro: "+nombre+"!");
-}
+function verificarLogro(id,nombre,desc,icon){if(logros.find(l=>l.id===id))return;logros.push({id:id,nombre:nombre,desc:desc,icon:icon,fecha:new Date().toISOString()});localStorage.setItem("pr_logros",JSON.stringify(logros));showToast("🏆 ¡Nuevo logro: "+nombre+"!")}
 
-function renderLogros(){
-  var grid=document.getElementById("logros-grid");
-  grid.innerHTML=LOGROS_DEF.map(function(def){
-    var ganado=logros.find(function(l){return l.id===def.id});
-    return'<div class="logro-card '+( ganado?"ganado":"")+'"><div class="logro-icon">'+( ganado?def.icon:"🔒")+'</div><div class="logro-nombre">'+def.nombre+'</div><div class="logro-desc">'+def.desc+'</div>'+( ganado?'<div class="logro-badge">⭐ Obtenido</div>':'<div style="font-size:10px;color:var(--gris-texto);margin-top:4px;">Sin desbloquear</div>')+'</div>';
-  }).join("");
-}
+function renderLogros(){var grid=document.getElementById("logros-grid");grid.innerHTML=LOGROS_DEF.map(def=>{var ganado=logros.find(l=>l.id===def.id);return'<div class="logro-card '+( ganado?"ganado":"")+'"><div class="logro-icon">'+( ganado?def.icon:"🔒")+'</div><div class="logro-nombre">'+def.nombre+'</div><div class="logro-desc">'+def.desc+'</div>'+( ganado?'<div style="font-size:10px;color:var(--verde);margin-top:6px;font-weight:700;">⭐ Obtenido</div>':'<div style="font-size:10px;color:var(--gris-medio);margin-top:4px;">Sin desbloquear</div>')+'</div>'}).join("")}
 
-function abrirPerfil(){
-  document.getElementById("perfil-nombre").value=perfil.nombre||"";
-  document.getElementById("perfil-genero").value=perfil.genero||"neutro";
-  document.getElementById("perfil-emoji").textContent=perfil.emoji||"🐭";
-  document.getElementById("stat-perfil").innerHTML='<div class="stat-card"><div class="stat-num">'+biblioteca.length+'</div><div class="stat-label">Pictogramas</div></div><div class="stat-card"><div class="stat-num">'+rutinasGuardadas.length+'</div><div class="stat-label">Rutinas</div></div><div class="stat-card"><div class="stat-num">'+registrosTimer.length+'</div><div class="stat-label">Regulaciones</div></div>';
-  document.getElementById("perfil-modal").style.display="flex";
-}
+function abrirPerfil(){document.getElementById("perfil-nombre").value=perfil.nombre||"";document.getElementById("perfil-genero").value=perfil.genero||"neutro";document.getElementById("perfil-emoji").textContent=perfil.emoji||"🐭";document.getElementById("stat-perfil").innerHTML='<div class="stat-card"><div class="stat-num">'+biblioteca.length+'</div><div class="stat-label">Pictogramas</div></div><div class="stat-card"><div class="stat-num">'+rutinasGuardadas.length+'</div><div class="stat-label">Rutinas</div></div><div class="stat-card"><div class="stat-num">'+registrosTimer.length+'</div><div class="stat-label">Regulaciones</div></div>';document.getElementById("perfil-modal").classList.add("active")}
 
-function cerrarPerfil(){document.getElementById("perfil-modal").style.display="none"}
+function cerrarPerfil(){document.getElementById("perfil-modal").classList.remove("active")}
 
 function setEmoji(emoji){document.getElementById("perfil-emoji").textContent=emoji;perfil.emoji=emoji}
 
-function guardarPerfil(){
-  perfil.nombre=document.getElementById("perfil-nombre").value.trim();
-  perfil.genero=document.getElementById("perfil-genero").value;
-  localStorage.setItem("pr_perfil",JSON.stringify(perfil));
-  actualizarBtnModoSimple();
-  cerrarPerfil();showToast("✅ Perfil guardado");
-}
+function guardarPerfil(){perfil.nombre=document.getElementById("perfil-nombre").value.trim();perfil.genero=document.getElementById("perfil-genero").value;localStorage.setItem("pr_perfil",JSON.stringify(perfil));document.getElementById("frase-coco").textContent=perfil.nombre?"¡Hola, "+perfil.nombre+"! ¿Qué queremos hacer hoy?":"¿Qué queremos hacer hoy?";actualizarFrasecoco();cerrarPerfil();showToast("✅ Perfil guardado")}
 
-function actualizarBtnModoSimple(){
-  var btn=document.getElementById("btn-modo-simple");
-  if(btn)btn.textContent="🧒 Modo "+(perfil.nombre||"niño");
-}
+function actualizarFrasecoco(){var saludo=perfil.nombre?perfil.nombre:"";document.getElementById("frase-coco").textContent=saludo?"¡Hola, "+saludo+"! ¿Qué queremos hacer hoy?":"¿Qué queremos hacer hoy?"}
 
-
-// ── CONFETI ──
-function lanzarConfeti(){
-  var cont=document.createElement("div");cont.className="confeti-container";document.body.appendChild(cont);
-  var colores=["#3B82F6","#10B981","#F59E0B","#EF4444","#8B5CF6","#F97316","#EC4899","#06B6D4"];
-  for(var i=0;i<80;i++){
-    (function(i){
-      setTimeout(function(){
-        var p=document.createElement("div");p.className="confeti-particle";
-        p.style.left=Math.random()*100+"vw";
-        p.style.background=colores[Math.floor(Math.random()*colores.length)];
-        p.style.width=(Math.random()*10+5)+"px";
-        p.style.height=(Math.random()*10+5)+"px";
-        p.style.borderRadius=Math.random()>0.5?"50%":"2px";
-        p.style.animationDuration=(Math.random()*2+1.5)+"s";
-        p.style.animationDelay="0s";
-        cont.appendChild(p);
-      },i*30);
-    })(i);
-  }
-  setTimeout(function(){cont.remove()},5000);
-}
-
-// ── PALETA DE COLORES ──
-var temaActual=localStorage.getItem("pr_tema")||"";
-function setTema(tema){
-  document.body.className=tema;temaActual=tema;
-  localStorage.setItem("pr_tema",tema);
-  document.querySelectorAll(".paleta-opt").forEach(function(el,i){
-    var temas=["","tema-azul","tema-verde","tema-violeta","tema-calido"];
-    el.classList.toggle("activa",temas[i]===tema);
-  });
-  showToast("🎨 Tema aplicado");
-}
-if(temaActual)document.body.className=temaActual;
-
-// ── SONIDOS ──
-var audioCtx=null;
-function getAudioCtx(){if(!audioCtx)audioCtx=new(window.AudioContext||window.webkitAudioContext)();return audioCtx}
-
-function sonarTick(){
-  try{
-    var ctx=getAudioCtx();
-    var osc=ctx.createOscillator();var gain=ctx.createGain();
-    osc.connect(gain);gain.connect(ctx.destination);
-    osc.type="square";osc.frequency.setValueAtTime(800,ctx.currentTime);
-    gain.gain.setValueAtTime(0.05,ctx.currentTime);gain.gain.exponentialRampToValueAtTime(0.001,ctx.currentTime+0.04);
-    osc.start(ctx.currentTime);osc.stop(ctx.currentTime+0.04);
-  }catch(e){}
-}
-
-function sonarAlarma(){
-  try{
-    var ctx=getAudioCtx();
-    var frecuencias=[523,659,784,1047];
-    frecuencias.forEach(function(f,i){
-      var osc=ctx.createOscillator();var gain=ctx.createGain();
-      osc.connect(gain);gain.connect(ctx.destination);
-      osc.type="sine";osc.frequency.setValueAtTime(f,ctx.currentTime+i*0.15);
-      gain.gain.setValueAtTime(0.3,ctx.currentTime+i*0.15);
-      gain.gain.exponentialRampToValueAtTime(0.001,ctx.currentTime+i*0.15+0.4);
-      osc.start(ctx.currentTime+i*0.15);osc.stop(ctx.currentTime+i*0.15+0.4);
-    });
-  }catch(e){}
-}
-
-// ── COCO COMIENDO ──
-var ALIMENTOS_POR_TIEMPO={1:["🧀"],3:["🧀","🍓","🥕"],5:["🧀","🍓","🥕","🍎","🫐"],10:["🧀","🍓","🥕","🍎","🫐","🍇","🥦","🍊"]};
-var alimentosRestantes=[],intervaloAlimentos=null,tickInterval2=null;
-
-function iniciarAnimacionCoco(minutos){
-  var alimentos=ALIMENTOS_POR_TIEMPO[minutos]||ALIMENTOS_POR_TIEMPO[1];
-  alimentosRestantes=alimentos.slice();
-  var fila=document.getElementById("alimentos-fila");if(fila)fila.innerHTML="";
-  document.getElementById("coco-emoji").textContent="🐭";
-  var intervaloSeg=Math.floor((minutos*60)/alimentos.length);
-  intervaloAlimentos=setInterval(function(){
-    if(!alimentosRestantes.length){clearInterval(intervaloAlimentos);return}
-    var alimento=alimentosRestantes.shift();
-    var fila2=document.getElementById("alimentos-fila");
-    if(fila2){var el=document.createElement("span");el.className="alimento";el.textContent=alimento;fila2.appendChild(el)}
-    var coco=document.getElementById("coco-emoji");
-    if(coco){coco.classList.add("bocado");setTimeout(function(){if(coco)coco.classList.remove("bocado")},300)}
-  },intervaloSeg*1000);
-}
-
-function detenerAnimacionCoco(){
-  clearInterval(intervaloAlimentos);intervaloAlimentos=null;
-  var fila=document.getElementById("alimentos-fila");if(fila)fila.innerHTML="";
-}
-
-
-// ── MARCAR PASOS HECHOS ──
-var pasosHechos=[];
-
-function iniciarPasoAPaso(){
-  if(!ultimaRutina||!ultimaRutina.pasos.length)return;
-  pasosActuales=ultimaRutina.pasos;pasoActual=0;
-  pasosHechos=new Array(ultimaRutina.pasos.length).fill(false);
-  document.getElementById("paso-titulo-header").textContent=ultimaRutina.titulo;
-  document.getElementById("paso-overlay").classList.add("active");
-  renderPasoActual();
-}
-
-function renderDots(){
-  var cont=document.getElementById("paso-dots");
-  if(!cont)return;
-  cont.innerHTML=pasosActuales.map(function(_,i){
-    return'<div class="paso-dot'+(pasosHechos[i]?" hecho":"")+'"></div>';
-  }).join("");
-}
-
-function marcarHecho(){
-  pasosHechos[pasoActual]=true;
-  renderDots();
-  var coco=document.getElementById("paso-emoji")||document.getElementById("coco-emoji");
-  hablar("¡Muy bien!");
-  setTimeout(function(){pasoSiguiente()},600);
-}
-
-// ── BUSCAR EN ARASAAC ──
-function abrirArasaac(){
-  document.getElementById("arasaac-modal").classList.add("active");
-  document.getElementById("arasaac-input").focus();
-}
+function abrirArasaac(){document.getElementById("arasaac-modal").classList.add("active");document.getElementById("arasaac-input").focus()}
 function cerrarArasaac(){document.getElementById("arasaac-modal").classList.remove("active")}
 
-async function buscarArasaac(){
-  var q=document.getElementById("arasaac-input").value.trim();
-  if(!q)return;
-  var grid=document.getElementById("arasaac-grid");
-  grid.innerHTML='<div class="arasaac-loading"><div class="spinner" style="margin:0 auto 8px;"></div>Buscando...</div>';
-  try{
-    var res=await fetch("https://api.arasaac.org/api/pictograms/es/search/"+encodeURIComponent(q));
-    var data=await res.json();
-    if(!data||!data.length){grid.innerHTML='<div class="arasaac-loading">No se encontraron resultados para "'+q+'"</div>';return}
-    grid.innerHTML=data.slice(0,40).map(function(p){
-      var url="https://static.arasaac.org/pictograms/"+p._id+"/"+p._id+"_300.png";
-      return'<div class="arasaac-item" onclick="seleccionarArasaac('+ JSON.stringify(url)+','+JSON.stringify(p.keywords&&p.keywords[0]?p.keywords[0].keyword:q)+')"><img src="'+url+'" alt="'+( p.keywords&&p.keywords[0]?p.keywords[0].keyword:q)+'" loading="lazy"><div class="arasaac-item-txt">'+( p.keywords&&p.keywords[0]?p.keywords[0].keyword:q)+'</div></div>';
-    }).join("");
-  }catch(e){grid.innerHTML='<div class="arasaac-loading">Error al buscar. Revisá tu conexión.</div>'}
-}
+async function buscarArasaac(){var q=document.getElementById("arasaac-input").value.trim();if(!q)return;var grid=document.getElementById("arasaac-grid");grid.innerHTML='<div style="grid-column:1/-1;text-align:center;padding:2rem;color:var(--gris-medio);"><div class="spinner" style="margin:0 auto 8px;"></div>Buscando...</div>';try{var res=await fetch("https://api.arasaac.org/api/pictograms/es/search/"+encodeURIComponent(q));var data=await res.json();if(!data||!data.length){grid.innerHTML='<div style="grid-column:1/-1;text-align:center;padding:2rem;color:var(--gris-medio);">No se encontraron resultados</div>';return}grid.innerHTML=data.slice(0,40).map(p=>{var url="https://static.arasaac.org/pictograms/"+p._id+"/"+p._id+"_300.png";return'<div class="arasaac-item" onclick="seleccionarArasaac(\''+url+'\',\''+( p.keywords&&p.keywords[0]?p.keywords[0].keyword:q)+'\')"><img src="'+url+'" alt="'+( p.keywords&&p.keywords[0]?p.keywords[0].keyword:q)+'" loading="lazy"><div class="arasaac-item-txt">'+( p.keywords&&p.keywords[0]?p.keywords[0].keyword:q)+'</div></div>'}).join("")}catch(e){grid.innerHTML='<div style="grid-column:1/-1;text-align:center;padding:2rem;color:var(--gris-medio);">Error al buscar</div>'}}
 
-async function seleccionarArasaac(url,nombre){
-  cerrarArasaac();
-  setTab("generar");
-  var loading=document.getElementById("loading-picto");
-  var txt=document.getElementById("loading-txt");
-  loading.style.display="flex";txt.textContent="Guardando pictograma de ARASAAC...";
-  var picto={
-    nombre:nombre,descripcion:"Pictograma de ARASAAC",
-    categoria:detectarCategoria(nombre),
-    color:COLORES[detectarCategoria(nombre)]||"#3B82F6",
-    colorLabel:LABELS[detectarCategoria(nombre)]||"General",
-    imageUrl:url,
-    id:Date.now()
-  };
-  biblioteca.unshift(picto);
-  localStorage.setItem("pr_biblioteca",JSON.stringify(biblioteca));
-  loading.style.display="none";
-  verificarLogro("primer_picto","¡Primer pictograma!","Generaste tu primer pictograma personalizado","🖼️");
-  if(biblioteca.length>=5)verificarLogro("5_pictos","5 pictogramas","Tu biblioteca está creciendo","📚");
-  setTab("biblioteca");
-  showToast("✅ Pictograma de ARASAAC guardado: "+nombre);
-}
+function seleccionarArasaac(url,nombre){cerrarArasaac();irSeccion("biblioteca");var loading=document.getElementById("loading-picto");var txt=document.getElementById("loading-txt");loading.style.display="flex";txt.textContent="Guardando pictograma...";var picto={nombre:nombre,descripcion:"Pictograma de ARASAAC",categoria:detectarCategoria(nombre),color:COLORES[detectarCategoria(nombre)]||"#3B82F6",colorLabel:LABELS[detectarCategoria(nombre)]||"General",imageUrl:url,id:Date.now()};biblioteca.unshift(picto);localStorage.setItem("pr_biblioteca",JSON.stringify(biblioteca));loading.style.display="none";verificarLogro("primer_picto","¡Primer pictograma!","Generaste tu primer pictograma personalizado","🖼️");renderBiblioteca();showToast("✅ Pictograma guardado: "+nombre)}
 
-function detectarCategoria(nombre){
-  var n=nombre.toLowerCase();
-  var cats={higiene:["baño","ducha","dientes","manos","jabón","cepillo","peine","toalla"],comida:["comer","beber","comida","leche","agua","fruta","pan","desayuno","almuerzo","cena","merienda"],escuela:["jardín","escuela","mochila","libro","lápiz","clase"],descanso:["dormir","cama","siesta","descanso"],juego:["jugar","juguete","pelota","música","parque"],ropa:["ropa","vestir","zapato","camisa","pantalón","medias"]};
-  for(var cat in cats){if(cats[cat].some(function(k){return n.includes(k)}))return cat}
-  return"juego";
-}
+function detectarCategoria(nombre){var n=nombre.toLowerCase();var cats={higiene:["baño","ducha","dientes","manos","jabón","cepillo","peine","toalla"],comida:["comer","beber","comida","leche","agua","fruta","pan","desayuno","almuerzo","cena","merienda"],escuela:["jardín","escuela","mochila","libro","lápiz","clase"],descanso:["dormir","cama","siesta","descanso"],juego:["jugar","juguete","pelota","música","parque"],ropa:["ropa","vestir","zapato","camisa","pantalón","medias"]};for(var cat in cats){if(cats[cat].some(k=>n.includes(k)))return cat}return"juego"}
 
-// ── MODO SIMPLIFICADO ──
-function abrirModoSimple(){
-  var nombre=perfil.nombre||"";
-  var saludo=nombre?"¡Hola, "+nombre+"! 🐭":"¡Hola! 🐭";
-  document.getElementById("ms-saludo").textContent=saludo;
-  renderMsRutinas();
-  document.getElementById("modo-simple").classList.add("active");
-}
+function abrirModoSimple(){var nombre=perfil.nombre||"";var saludo=nombre?"¡Hola, "+nombre+"! 🐭":"¡Hola! 🐭";document.getElementById("ms-saludo").textContent=saludo;renderMsRutinas();document.getElementById("modo-simple").classList.add("active")}
 
 function cerrarModoSimple(){document.getElementById("modo-simple").classList.remove("active")}
 
-function renderMsRutinas(){
-  var cont=document.getElementById("ms-rutinas-lista");
-  if(!rutinasGuardadas.length){
-    cont.innerHTML='<div class="ms-vacio"><div style="font-size:48px;margin-bottom:10px;">📋</div><div style="font-size:16px;font-weight:700;">No hay rutinas guardadas</div><div style="font-size:13px;margin-top:6px;">Pedile a un adulto que cree una rutina</div></div>';
-    return;
-  }
-  cont.innerHTML=rutinasGuardadas.map(function(r){
-    var emoji=r.pasos&&r.pasos[0]?r.pasos[0].emoji:"📋";
-    return'<button class="ms-rutina-btn" onclick="iniciarRutinaSimple(\''+r.id+'\')"><span style="font-size:32px;">'+emoji+'</span><div><div>'+r.titulo+'</div><div style="font-size:13px;font-weight:400;color:var(--gris-texto);">'+( r.pasos?r.pasos.length+" pasos":"")+'</div></div></button>';
-  }).join("");
-}
+function renderMsRutinas(){var cont=document.getElementById("ms-rutinas-lista");if(!rutinasGuardadas.length){cont.innerHTML='<div class="ms-vacio"><div style="font-size:48px;margin-bottom:10px;">📋</div><div style="font-size:16px;font-weight:700;">No hay rutinas guardadas</div><div style="font-size:13px;margin-top:6px;">Pedile a un adulto que cree una rutina</div></div>';return}cont.innerHTML=rutinasGuardadas.map(r=>{var emoji=r.pasos&&r.pasos[0]?r.pasos[0].emoji:"📋";return'<button class="ms-rutina-btn" onclick="iniciarRutinaSimple(\''+r.id+'\')"><span style="font-size:32px;">'+emoji+'</span><div><div>'+r.titulo+'</div><div style="font-size:13px;font-weight:400;color:var(--gris-medio);">'+( r.pasos?r.pasos.length+" pasos":"")+'</div></div></button>'}).join("")}
 
-function iniciarRutinaSimple(id){
-  var r=rutinasGuardadas.find(function(x){return x.id==id});
-  if(!r)return;
-  ultimaRutina=r;
-  cerrarModoSimple();
-  iniciarPasoAPaso();
-}
+function iniciarRutinaSimple(id){var r=rutinasGuardadas.find(x=>x.id==id);if(!r)return;ultimaRutina=r;cerrarModoSimple();iniciarPasoAPaso()}
 
-renderBiblioteca();renderRutinasGuardadas();renderLogros();actualizarBtnModoSimple();
+actualizarFrasecoco();renderBiblioteca();renderRutinasGuardadas();renderLogros();
 </script>
 </body>
 </html>
