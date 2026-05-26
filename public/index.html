@@ -600,6 +600,23 @@ body::before{display:none!important}
     </div>
 
     <button class="btn btn-primary btn-full" onclick="guardarPerfil()">✅ Guardar</button>
+
+    <div class="perfil-section" style="margin-top:1.5rem">
+      <div class="perfil-section-title">📱 Mis datos entre dispositivos</div>
+      <p style="font-size:13px;color:var(--gris-oscuro);margin-bottom:1rem;line-height:1.5;">
+        Tus rutinas, pictogramas y logros se guardan en <strong>este dispositivo y este navegador</strong>.
+        Para verlos en otra PC o celular, exportá tus datos y luego importalos allá.
+      </p>
+      <div style="display:flex;flex-direction:column;gap:10px;">
+        <button class="btn btn-primary btn-full" onclick="exportarDatos()" style="background:var(--celeste);border-color:var(--celeste);">
+          ⬇️ Exportar mis datos
+        </button>
+        <label class="btn btn-full" style="cursor:pointer;text-align:center;" for="input-importar">
+          ⬆️ Importar datos desde archivo
+        </label>
+        <input type="file" id="input-importar" accept=".json" style="display:none" onchange="importarDatos(event)" data-no-sound>
+      </div>
+    </div>
   </div>
 </div>
 
@@ -1451,6 +1468,122 @@ if('serviceWorker'in navigator){
       .then(reg=>console.log('✓ SW registrado'))
       .catch(err=>console.log('✗ Error SW:',err));
   });
+}
+
+// ============================================
+// EXPORTAR / IMPORTAR DATOS (SINCRONIZACIÓN ENTRE DISPOSITIVOS)
+// ============================================
+
+async function exportarDatos(){
+  showToast('📦 Preparando exportación...');
+  try{
+    var tipos=['biblioteca','rutinas','timer','logros','perfil','config_audio','config_frases'];
+    var datos={version:2,fecha:new Date().toISOString(),perfil:perfilActivo,datos:{}};
+
+    // Guardar todos los valores de localStorage
+    tipos.forEach(function(tipo){
+      datos.datos[tipo]=getPerfildatos(tipo);
+    });
+    datos.modoBajoEstimulo=modusBajoEstimulo;
+
+    // Exportar imágenes de IndexedDB como base64
+    datos.imagenes={};
+    var biblioteca=datos.datos.biblioteca||[];
+    for(var i=0;i<biblioteca.length;i++){
+      var p=biblioteca[i];
+      if(p.imageRef&&p.imageRef.type==='indexeddb'&&p.imageRef.id){
+        try{
+          var rec=await obtenerImagenDB(p.imageRef.id);
+          if(rec&&rec.blob){
+            datos.imagenes[p.imageRef.id]=await blobABase64(rec.blob);
+          }
+        }catch(e){}
+      }
+    }
+
+    var json=JSON.stringify(datos,null,2);
+    var blob=new Blob([json],{type:'application/json'});
+    var url=URL.createObjectURL(blob);
+    var a=document.createElement('a');
+    var nombre=perfil.nombre?'pictorutinas-'+perfil.nombre.toLowerCase().replace(/\s+/g,'_'):('pictorutinas');
+    a.download=nombre+'-'+new Date().toISOString().slice(0,10)+'.json';
+    a.href=url;
+    a.click();
+    URL.revokeObjectURL(url);
+    showToast('✅ Datos exportados correctamente');
+  }catch(e){
+    showToast('❌ Error al exportar: '+e.message);
+    console.error(e);
+  }
+}
+
+async function importarDatos(event){
+  var file=event.target.files[0];
+  if(!file)return;
+  event.target.value='';
+
+  try{
+    var texto=await file.text();
+    var datos=JSON.parse(texto);
+
+    if(!datos.datos){
+      showToast('❌ Archivo no válido');
+      return;
+    }
+
+    var ok=confirm('⚠️ ¿Importar los datos de "'+file.name+'"?\n\nEsto REEMPLAZARÁ todo lo que tenés guardado en este dispositivo.\n\n¿Continuar?');
+    if(!ok)return;
+
+    showToast('📥 Importando datos...');
+
+    // Restaurar datos en localStorage
+    var tipos=Object.keys(datos.datos);
+    tipos.forEach(function(tipo){
+      guardarPerfilDatos(tipo,datos.datos[tipo]);
+    });
+
+    if(typeof datos.modoBajoEstimulo==='boolean'){
+      localStorage.setItem('pr_modo_bajo_estimulo',datos.modoBajoEstimulo);
+    }
+
+    // Restaurar imágenes en IndexedDB
+    if(datos.imagenes&&Object.keys(datos.imagenes).length>0){
+      var ids=Object.keys(datos.imagenes);
+      for(var i=0;i<ids.length;i++){
+        var id=ids[i];
+        try{
+          var b64=datos.imagenes[id];
+          var res=await fetch(b64);
+          var blob=await res.blob();
+          await guardarImagenDB(id,blob);
+        }catch(e){console.warn('No se pudo restaurar imagen '+id,e);}
+      }
+    }
+
+    // Recargar datos en memoria
+    biblioteca=getPerfildatos('biblioteca');
+    rutinasGuardadas=getPerfildatos('rutinas');
+    registrosTimer=getPerfildatos('timer');
+    perfil=getPerfildatos('perfil');
+    logros=getPerfildatos('logros');
+    configAudio=getPerfildatos('config_audio');
+    configFrases=getPerfildatos('config_frases');
+    modusBajoEstimulo=localStorage.getItem('pr_modo_bajo_estimulo')==='true';
+
+    // Actualizar UI
+    if(modusBajoEstimulo)document.body.classList.add('modo-bajo-estimulo');
+    else document.body.classList.remove('modo-bajo-estimulo');
+    document.getElementById('frase-coco').textContent=perfil.nombre?'¡Hola, '+perfil.nombre+'!':'¿Qué queremos hacer hoy?';
+    renderBiblioteca();
+    renderRutinasGuardadas();
+    renderLogros();
+    cerrarPerfil();
+
+    showToast('✅ ¡Datos importados! Ya podés ver tus proyectos.');
+  }catch(e){
+    showToast('❌ Error al importar: '+e.message);
+    console.error(e);
+  }
 }
 
 // ============================================
