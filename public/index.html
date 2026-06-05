@@ -372,7 +372,7 @@ body::before{display:none!important}
 <!-- SECCIÓN: BIBLIOTECA -->
 <div class="seccion" id="seccion-biblioteca">
   <div class="header-seccion verde">
-    <button class="btn-header" onclick="irSeccion('principal')">← Atrás</button>
+    <button class="btn-header" onclick="irSeccion('principal')">←</button>
     <h1 class="titulo-seccion">Mis Pictogramas</h1>
     <button class="btn-header" onclick="abrirPerfil()">👤</button>
   </div>
@@ -401,7 +401,7 @@ body::before{display:none!important}
 <!-- SECCIÓN: GENERAR PICTOGRAMA -->
 <div class="seccion" id="seccion-generar">
   <div class="header-seccion celeste">
-    <button class="btn-header" onclick="irSeccion('biblioteca')">← Atrás</button>
+    <button class="btn-header" onclick="irSeccion('biblioteca')">←</button>
     <h1 class="titulo-seccion">Generar Pictograma</h1>
     <div style="width:40px;"></div>
   </div>
@@ -439,7 +439,7 @@ body::before{display:none!important}
 <!-- SECCIÓN: RUTINAS -->
 <div class="seccion" id="seccion-rutinas">
   <div class="header-seccion verde">
-    <button class="btn-header" onclick="irSeccion('principal')">← Atrás</button>
+    <button class="btn-header" onclick="irSeccion('principal')">←</button>
     <h1 class="titulo-seccion">Mis Rutinas</h1>
     <div style="width:40px;"></div>
   </div>
@@ -476,7 +476,7 @@ body::before{display:none!important}
 <!-- SECCIÓN: REGULACIÓN -->
 <div class="seccion" id="seccion-regulacion">
   <div class="header-seccion violeta">
-    <button class="btn-header" onclick="irSeccion('principal')">← Atrás</button>
+    <button class="btn-header" onclick="irSeccion('principal')">←</button>
     <h1 class="titulo-seccion">Regulación Emocional</h1>
     <div style="width:40px;"></div>
   </div>
@@ -501,7 +501,7 @@ body::before{display:none!important}
 <!-- SECCIÓN: LOGROS -->
 <div class="seccion" id="seccion-logros">
   <div class="header-seccion amarillo">
-    <button class="btn-header" onclick="irSeccion('principal')">← Atrás</button>
+    <button class="btn-header" onclick="irSeccion('principal')">←</button>
     <h1 class="titulo-seccion" style="color:var(--negro);">Mis Logros</h1>
     <div style="width:40px;"></div>
   </div>
@@ -514,7 +514,7 @@ body::before{display:none!important}
 <!-- SECCIÓN: HISTORIAS SOCIALES -->
 <div class="seccion" id="seccion-historias">
   <div class="header-seccion" style="border-color:#FF6B9D;">
-    <button class="btn-header" onclick="irSeccion('principal')">← Atrás</button>
+    <button class="btn-header" onclick="irSeccion('principal')">←</button>
     <h1 class="titulo-seccion">Historias Sociales</h1>
     <div style="width:40px;"></div>
   </div>
@@ -992,10 +992,14 @@ async function renderBiblioteca(){
 
   grid.innerHTML='';
   for(var p of biblioteca){
-    var card=document.createElement('div');
-    card.className='picto-card';
-    card.innerHTML=await renderPictoCard(p);
-    grid.appendChild(card);
+    try{
+      var card=document.createElement('div');
+      card.className='picto-card';
+      card.innerHTML=await renderPictoCard(p);
+      grid.appendChild(card);
+    }catch(e){
+      console.warn('Error renderizando picto',p.id,e);
+    }
   }
 }
 
@@ -1038,18 +1042,40 @@ function borrarPicto(id){
   showToast('Pictograma eliminado');
 }
 
-function previsualizarImagen(input){
+function comprimirImagen(file,maxPx,quality){
+  maxPx=maxPx||1024;quality=quality||0.82;
+  return new Promise(function(resolve,reject){
+    var img=new Image();
+    var objUrl=URL.createObjectURL(file);
+    img.onload=function(){
+      var w=img.width,h=img.height;
+      if(w>maxPx||h>maxPx){
+        if(w>=h){h=Math.round(h*maxPx/w);w=maxPx;}
+        else{w=Math.round(w*maxPx/h);h=maxPx;}
+      }
+      var canvas=document.createElement('canvas');
+      canvas.width=w;canvas.height=h;
+      canvas.getContext('2d').drawImage(img,0,0,w,h);
+      URL.revokeObjectURL(objUrl);
+      resolve(canvas.toDataURL('image/jpeg',quality));
+    };
+    img.onerror=function(){URL.revokeObjectURL(objUrl);reject(new Error('No se pudo leer la imagen'));};
+    img.src=objUrl;
+  });
+}
+
+async function previsualizarImagen(input){
   var file=input.files[0];
   if(!file)return;
-  var reader=new FileReader();
-  reader.onload=e=>{
-    imagenBase64=e.target.result;
+  try{
+    imagenBase64=await comprimirImagen(file);
     var preview=document.getElementById('preview');
     preview.src=imagenBase64;
     preview.style.display='block';
     document.getElementById('btn-generar-wrap').style.display='block';
-  };
-  reader.readAsDataURL(file);
+  }catch(e){
+    showToast('No se pudo procesar la imagen');
+  }
 }
 
 async function generarPictograma(){
