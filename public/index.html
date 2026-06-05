@@ -296,6 +296,36 @@ input[type=range]::-moz-range-thumb{width:24px;height:24px;border-radius:50%;bac
 .ayuda-grid{grid-template-columns:repeat(2,1fr)}
 }
 
+/* Historias Sociales */
+.btn-main-historias{background:linear-gradient(135deg,#FF6B9D 0%,#FFA07A 100%);box-shadow:0 6px 20px rgba(255,107,157,.3);grid-column:1/-1}
+.btn-main-historias:hover{opacity:.9;transform:translateY(-4px)}
+.historia-panel{background:white;border-radius:var(--radio-lg);padding:1.5rem;margin-bottom:1rem;border:3px solid var(--gris-claro);text-align:center}
+.historia-panel-emoji{font-size:56px;display:block;margin-bottom:.75rem}
+.historia-panel-titulo{font-size:17px;font-weight:800;color:var(--negro);margin-bottom:8px}
+.historia-panel-texto{font-size:15px;color:var(--gris-oscuro);line-height:1.6}
+.historia-tipo-badge{display:inline-block;font-size:10px;font-weight:700;padding:3px 10px;border-radius:100px;text-transform:uppercase;letter-spacing:.08em;margin-bottom:12px}
+.historia-tipo-descriptivo{background:rgba(125,217,224,.2);color:var(--celeste-oscuro)}
+.historia-tipo-perspectiva{background:rgba(212,165,212,.2);color:var(--violeta-oscuro)}
+.historia-tipo-directivo{background:rgba(125,211,176,.2);color:var(--verde-oscuro)}
+.historia-tipo-afirmativo{background:rgba(244,216,118,.25);color:#8B6914}
+/* Freemium */
+.premium-modal{position:fixed;inset:0;background:rgba(0,0,0,.65);z-index:800;display:none;align-items:center;justify-content:center;padding:1.5rem}
+.premium-modal.active{display:flex}
+.premium-content{background:white;border-radius:var(--radio-lg);padding:2rem 1.5rem;width:100%;max-width:360px;text-align:center}
+.premium-estrella{font-size:56px;margin-bottom:.5rem}
+.premium-titulo{font-size:22px;font-weight:800;color:var(--negro);margin-bottom:8px}
+.premium-sub{font-size:14px;color:var(--gris-oscuro);margin-bottom:1.5rem;line-height:1.5}
+.premium-features{background:var(--cream);border-radius:var(--radio);padding:1rem 1.25rem;margin-bottom:1.5rem;text-align:left}
+.premium-feature{font-size:14px;color:var(--negro);padding:4px 0;font-weight:600}
+.premium-price{font-size:36px;font-weight:800;color:var(--verde);margin-bottom:4px}
+.premium-price-sub{font-size:12px;color:var(--gris-medio);margin-bottom:1.5rem}
+.btn-premium{background:linear-gradient(135deg,#FF6B9D,#FFA07A);color:white;border:none;width:100%;padding:16px;border-radius:var(--radio);font-family:"Fredoka",sans-serif;font-size:17px;font-weight:700;cursor:pointer;margin-bottom:10px;transition:all .15s;box-shadow:0 4px 16px rgba(255,107,157,.3)}
+.btn-premium:hover{transform:translateY(-2px);box-shadow:0 6px 20px rgba(255,107,157,.4)}
+.btn-premium-skip{background:none;border:2px solid var(--gris-claro);color:var(--gris-oscuro);width:100%;padding:12px;border-radius:var(--radio);font-family:"Fredoka",sans-serif;font-size:14px;font-weight:700;cursor:pointer;transition:all .15s}
+.btn-premium-skip:hover{border-color:var(--gris-medio)}
+.uso-badge{display:inline-flex;align-items:center;gap:6px;background:var(--cream);border:2px solid var(--gris-claro);border-radius:100px;padding:6px 14px;font-size:12px;font-weight:700;color:var(--gris-oscuro);margin-bottom:1rem}
+.uso-badge.advertencia{border-color:var(--amarillo);color:#8B6914;background:rgba(244,216,118,.15)}
+
 @media print{
 .navbar,.timer-fab,.btn-ayuda-fab,.btn-instalar-fab,.btn-header,.perfil-modal,.paso-overlay{display:none!important}
 body::before{display:none!important}
@@ -331,6 +361,10 @@ body::before{display:none!important}
     <button class="btn-main btn-main-logros" onclick="irSeccion('logros')" data-clickable>
       <span class="btn-main-icon">🏆</span>
       Logros
+    </button>
+    <button class="btn-main btn-main-historias" onclick="irSeccion('historias')" data-clickable>
+      <span class="btn-main-icon">📖</span>
+      Historias Sociales
     </button>
   </div>
 </div>
@@ -421,6 +455,7 @@ body::before{display:none!important}
       <input type="text" id="rutina-input" placeholder="Ej: llegada del jardín..." data-no-sound>
       <button class="btn btn-primary" id="btn-rutina" onclick="generarRutina()">Generar</button>
     </div>
+    <div class="loading" id="loading-rutina" style="display:none;"><div class="spinner"></div><span>Generando rutina...</span></div>
   </div>
 
   <div class="card" id="rutina-resultado" style="display:none;">
@@ -476,6 +511,42 @@ body::before{display:none!important}
   </div>
 </div>
 
+<!-- SECCIÓN: HISTORIAS SOCIALES -->
+<div class="seccion" id="seccion-historias">
+  <div class="header-seccion" style="border-color:#FF6B9D;">
+    <button class="btn-header" onclick="irSeccion('principal')">← Atrás</button>
+    <h1 class="titulo-seccion">Historias Sociales</h1>
+    <div style="width:40px;"></div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">Historias guardadas</div>
+    <div class="chips" id="historias-guardadas">
+      <div style="font-size:13px;color:var(--gris-medio);">Todavía no guardaste ninguna historia.</div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">Crear historia nueva</div>
+    <div id="uso-historias-badge" class="uso-badge" style="display:none;"></div>
+    <label class="field">¿Para qué situación?</label>
+    <input type="text" id="historia-input" placeholder="Ej: ir al dentista, primer día de escuela..." data-no-sound>
+    <div style="margin-top:1rem;">
+      <button class="btn btn-full" id="btn-historia" onclick="generarHistoria()" style="background:linear-gradient(135deg,#FF6B9D,#FFA07A);color:white;border:none;font-size:16px;padding:14px 24px;">📖 Generar historia</button>
+    </div>
+    <div class="loading" id="loading-historia" style="display:none;margin-top:1rem;"><div class="spinner"></div><span>Creando historia...</span></div>
+  </div>
+
+  <div class="card" id="historia-resultado" style="display:none;">
+    <div id="historia-titulo" style="font-size:18px;font-weight:800;color:var(--negro);margin-bottom:1rem;"></div>
+    <div id="historia-paneles"></div>
+    <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:1rem;">
+      <button class="btn btn-primary" onclick="iniciarHistoriaPasoAPaso()">▶ Leer paso a paso</button>
+      <button class="btn" onclick="guardarHistoria()">💾 Guardar</button>
+    </div>
+  </div>
+</div>
+
 <!-- NAVBAR -->
 <div class="navbar">
   <button class="nav-btn active" onclick="irSeccion('principal')" id="nav-principal">
@@ -509,6 +580,7 @@ body::before{display:none!important}
   </div>
   <div class="paso-picto-wrap" id="paso-picto-wrap"></div>
   <div class="paso-nombre" id="paso-nombre"></div>
+  <div id="paso-subtexto" style="color:rgba(255,255,255,.75);font-size:15px;text-align:center;padding:0 1.5rem;margin:-1rem 0 2rem;line-height:1.6;max-width:340px;"></div>
   <div class="paso-nav">
     <button class="paso-btn" id="paso-btn-ant" onclick="pasoAnterior()">← Anterior</button>
     <button class="paso-btn-hecho" onclick="marcarHecho()">✅ Lo hice</button>
@@ -619,6 +691,26 @@ body::before{display:none!important}
 
 <div class="toast" id="toast"></div>
 
+<!-- PREMIUM MODAL -->
+<div class="premium-modal" id="premium-modal">
+  <div class="premium-content">
+    <div class="premium-estrella">⭐</div>
+    <div class="premium-titulo">Plan Pro</div>
+    <div class="premium-sub">Alcanzaste el límite diario del plan gratuito. Con el Plan Pro tenés generaciones ilimitadas todos los días.</div>
+    <div class="premium-features">
+      <div class="premium-feature">✅ Pictogramas ilimitados por día</div>
+      <div class="premium-feature">✅ Rutinas ilimitadas por día</div>
+      <div class="premium-feature">✅ Historias sociales ilimitadas</div>
+      <div class="premium-feature">✅ Sin límites diarios</div>
+      <div class="premium-feature">✅ Nuevas funciones primero</div>
+    </div>
+    <div class="premium-price">$5 USD</div>
+    <div class="premium-price-sub">por mes · Cancelá cuando quieras</div>
+    <button class="btn-premium" onclick="irAPremium()">✨ Quiero el Plan Pro</button>
+    <button class="btn-premium-skip" onclick="cerrarPremium()">Continuar con el plan gratuito</button>
+  </div>
+</div>
+
 <script>
 // ============================================
 // SISTEMA DE PERFILES Y PERSISTENCIA
@@ -638,6 +730,7 @@ function getPerfildatos(tipo){
     rutinas:'[]',
     timer:'[]',
     logros:'[]',
+    historias:'[]',
     perfil:'{"nombre":"","genero":"neutro","emoji":"🐭"}',
     config_audio:'{"activados":true,"volumen":40,"boton":"suave","logro":"campanita","timer":"respiracion"}',
     config_frases:'{"paso":"¡Muy bien!","rutina":"¡Excelente!","regulacion":"Respirá tranquilo...","regulada":"¡Muy bien, te regulaste!"}'
@@ -762,9 +855,10 @@ var perfil=getPerfildatos('perfil');
 var logros=getPerfildatos('logros');
 var configAudio=getPerfildatos('config_audio');
 var configFrases=getPerfildatos('config_frases');
+var historiasGuardadas=getPerfildatos('historias');
 var modusBajoEstimulo=localStorage.getItem('pr_modo_bajo_estimulo')==='true';
 
-var imagenBase64=null,ultimoPicto=null,ultimaRutina=null;
+var imagenBase64=null,ultimoPicto=null,ultimaRutina=null,ultimaHistoria=null;
 var pasoActual=0,pasosActuales=[];
 var timerMinutos=1,timerTotal=60,timerRestante=60,timerInterval=null;
 var seccionActual='principal';
@@ -834,7 +928,7 @@ document.addEventListener('click',function(e){
 // ============================================
 
 function irSeccion(seccion){
-  if(['principal','biblioteca','generar','rutinas','regulacion','logros'].includes(seccion)){
+  if(['principal','biblioteca','generar','rutinas','regulacion','logros','historias'].includes(seccion)){
     document.querySelectorAll('.seccion').forEach(s=>s.classList.remove('active'));
     document.getElementById('pantalla-principal').classList.remove('active');
     if(seccion==='principal'){
@@ -847,6 +941,7 @@ function irSeccion(seccion){
       if(seccion==='rutinas')renderRutinasGuardadas();
       if(seccion==='logros')renderLogros();
       if(seccion==='regulacion')renderRegulacion();
+      if(seccion==='historias'){renderHistoriasGuardadas();actualizarBadgeUso('historia','uso-historias-badge');}
     }
     actualizarNav();
   }
@@ -958,6 +1053,7 @@ function previsualizarImagen(input){
 
 async function generarPictograma(){
   if(!imagenBase64)return;
+  if(checkLimite('picto')){abrirPremium();return;}
   var btn=document.getElementById('btn-generar');
   var loading=document.getElementById('loading-picto');
   var error=document.getElementById('error-picto');
@@ -975,6 +1071,7 @@ async function generarPictograma(){
     if(!res.ok||data.error)throw new Error(data.error||'Error');
 
     ultimoPicto=data;
+    incrementarUso('picto');
     document.getElementById('resultado-img').src=data.imageUrl;
     document.getElementById('resultado-nombre').textContent=data.nombre;
     document.getElementById('resultado-badge').textContent=data.categoria||'Pictograma';
@@ -1030,10 +1127,11 @@ function resetGenerar(){
 async function generarRutina(){
   var rutina=document.getElementById('rutina-input').value.trim();
   if(!rutina)return;
+  if(checkLimite('rutina')){abrirPremium();return;}
 
   var btn=document.getElementById('btn-rutina');
   var loading=document.getElementById('loading-rutina');
-  loading.style.display='flex';
+  if(loading)loading.style.display='flex';
   btn.disabled=true;
 
   try{
@@ -1046,6 +1144,7 @@ async function generarRutina(){
     if(!res.ok||data.error)throw new Error(data.error||'Error');
 
     ultimaRutina=data;
+    incrementarUso('rutina');
     document.getElementById('rutina-titulo').textContent=data.titulo;
     renderStrip(data.pasos);
     document.getElementById('rutina-resultado').style.display='block';
@@ -1055,7 +1154,7 @@ async function generarRutina(){
   }
 
   btn.disabled=false;
-  loading.style.display='none';
+  if(loading)loading.style.display='none';
 }
 
 function renderStrip(pasos){
@@ -1111,6 +1210,8 @@ function renderPasoActual(){
   document.getElementById('paso-counter').textContent=(pasoActual+1)+' / '+total;
   document.getElementById('paso-progress-bar').style.width=(((pasoActual+1)/total)*100)+'%';
   document.getElementById('paso-nombre').textContent=paso.nombre;
+  var sub=document.getElementById('paso-subtexto');
+  if(sub)sub.textContent=paso.subtexto||'';
 
   var wrap=document.getElementById('paso-picto-wrap');
   wrap.innerHTML='<div class="emoji-paso">'+paso.emoji+'</div>';
@@ -1283,7 +1384,8 @@ var LOGROS_DEF=[
   {id:'primer_picto',nombre:'Primer pictograma',desc:'Generaste tu primer pictograma',icon:'🖼️'},
   {id:'primera_rutina',nombre:'Primera rutina',desc:'Guardaste una rutina',icon:'📋'},
   {id:'primer_timer',nombre:'Primer timer',desc:'Usaste regulación',icon:'🧘'},
-  {id:'5_timers',nombre:'5 regulaciones',desc:'Usaste el timer 5 veces',icon:'💪'}
+  {id:'5_timers',nombre:'5 regulaciones',desc:'Usaste el timer 5 veces',icon:'💪'},
+  {id:'primera_historia',nombre:'Primera historia',desc:'Creaste una historia social',icon:'📖'}
 ];
 
 function renderLogros(){
@@ -1411,6 +1513,165 @@ async function seleccionarArasaac(url,nombre){
   }
 
   loading.style.display='none';
+}
+
+// ============================================
+// SISTEMA FREEMIUM
+// ============================================
+
+var LIMITES_GRATIS={picto:2,rutina:5,historia:3};
+
+function getUsageHoy(){
+  var hoy=new Date().toISOString().slice(0,10);
+  return JSON.parse(localStorage.getItem('pr_usage_'+hoy)||'{"picto":0,"rutina":0,"historia":0}');
+}
+
+function incrementarUso(tipo){
+  var hoy=new Date().toISOString().slice(0,10);
+  var uso=getUsageHoy();
+  uso[tipo]=(uso[tipo]||0)+1;
+  localStorage.setItem('pr_usage_'+hoy,JSON.stringify(uso));
+}
+
+function checkLimite(tipo){
+  var uso=getUsageHoy();
+  return(uso[tipo]||0)>=LIMITES_GRATIS[tipo];
+}
+
+function getUsoRestante(tipo){
+  var uso=getUsageHoy();
+  return Math.max(0,LIMITES_GRATIS[tipo]-(uso[tipo]||0));
+}
+
+function abrirPremium(){
+  document.getElementById('premium-modal').classList.add('active');
+}
+
+function cerrarPremium(){
+  document.getElementById('premium-modal').classList.remove('active');
+}
+
+function irAPremium(){
+  cerrarPremium();
+  showToast('💌 ¡Próximamente! Estamos preparando el Plan Pro.');
+}
+
+function actualizarBadgeUso(tipo,elementoId){
+  var el=document.getElementById(elementoId);
+  if(!el)return;
+  var restante=getUsoRestante(tipo);
+  var limite=LIMITES_GRATIS[tipo];
+  if(restante<=0){
+    el.style.display='flex';
+    el.className='uso-badge advertencia';
+    el.textContent='🔒 Límite diario alcanzado · Plan Pro para más';
+  }else if(restante===1){
+    el.style.display='flex';
+    el.className='uso-badge advertencia';
+    el.textContent='⚠️ Te queda 1 generación hoy';
+  }else{
+    el.style.display='flex';
+    el.className='uso-badge';
+    el.textContent='✨ '+restante+' de '+limite+' generaciones disponibles hoy';
+  }
+}
+
+// ============================================
+// HISTORIAS SOCIALES
+// ============================================
+
+var COLORES_TIPO_HISTORIA={
+  descriptivo:'var(--celeste)',
+  perspectiva:'var(--violeta)',
+  directivo:'var(--verde)',
+  afirmativo:'var(--amarillo)'
+};
+
+async function generarHistoria(){
+  var situacion=document.getElementById('historia-input').value.trim();
+  if(!situacion)return;
+
+  if(checkLimite('historia')){abrirPremium();return;}
+
+  var btn=document.getElementById('btn-historia');
+  var loading=document.getElementById('loading-historia');
+  loading.style.display='flex';
+  btn.disabled=true;
+
+  try{
+    var res=await fetch('/api/generar-historia',{
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({situacion:situacion,nombre:perfil.nombre||'',genero:perfil.genero||'neutro'})
+    });
+    var data=await res.json();
+    if(!res.ok||data.error)throw new Error(data.error||'Error');
+
+    ultimaHistoria=data;
+    incrementarUso('historia');
+    actualizarBadgeUso('historia','uso-historias-badge');
+    renderHistoria(data);
+    document.getElementById('historia-resultado').style.display='block';
+    reproducirSonido('boton');
+    verificarLogro('primera_historia','Primera historia','Creaste una historia social','📖');
+  }catch(e){
+    showToast('Error: '+e.message);
+  }
+
+  btn.disabled=false;
+  loading.style.display='none';
+}
+
+function renderHistoria(data){
+  document.getElementById('historia-titulo').textContent=data.titulo;
+  var NOMBRES_TIPO={descriptivo:'Descriptivo',perspectiva:'Perspectiva',directivo:'Qué hacer',afirmativo:'Mensaje positivo'};
+  var cont=document.getElementById('historia-paneles');
+  cont.innerHTML=data.paneles.map(p=>{
+    var tipoBadge=NOMBRES_TIPO[p.tipo]||p.tipo;
+    return'<div class="historia-panel"><span class="historia-tipo-badge historia-tipo-'+p.tipo+'">'+tipoBadge+'</span><span class="historia-panel-emoji">'+p.emoji+'</span><div class="historia-panel-titulo">'+p.titulo+'</div><div class="historia-panel-texto">'+p.texto+'</div></div>';
+  }).join('');
+}
+
+function renderHistoriasGuardadas(){
+  var cont=document.getElementById('historias-guardadas');
+  if(!historiasGuardadas.length){
+    cont.innerHTML='<div style="font-size:13px;color:var(--gris-medio);">Todavía no guardaste ninguna historia.</div>';
+    return;
+  }
+  cont.innerHTML=historiasGuardadas.map(h=>'<div class="chip" onclick="cargarHistoria(\''+h.id+'\')" style="cursor:pointer;">📖 '+h.titulo+'</div>').join('');
+}
+
+function cargarHistoria(id){
+  var historia=historiasGuardadas.find(h=>h.id==id);
+  if(!historia)return;
+  ultimaHistoria=historia;
+  renderHistoria(historia);
+  document.getElementById('historia-resultado').style.display='block';
+}
+
+function guardarHistoria(){
+  if(!ultimaHistoria)return;
+  var existe=historiasGuardadas.find(h=>h.titulo===ultimaHistoria.titulo);
+  if(!existe){
+    historiasGuardadas.unshift(Object.assign({},ultimaHistoria,{id:Date.now()}));
+    guardarPerfilDatos('historias',historiasGuardadas);
+  }
+  renderHistoriasGuardadas();
+  showToast('✅ Historia guardada');
+  reproducirSonido('boton');
+}
+
+function iniciarHistoriaPasoAPaso(){
+  if(!ultimaHistoria||!ultimaHistoria.paneles.length)return;
+  pasosActuales=ultimaHistoria.paneles.map(p=>({
+    nombre:p.titulo,
+    subtexto:p.texto,
+    emoji:p.emoji,
+    numero:p.numero
+  }));
+  pasoActual=0;
+  document.getElementById('paso-overlay').classList.add('active');
+  renderPasoActual();
 }
 
 // ============================================
