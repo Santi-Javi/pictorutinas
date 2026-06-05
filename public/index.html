@@ -706,8 +706,8 @@ body::before{display:none!important}
     </div>
     <div class="premium-price">$5 USD</div>
     <div class="premium-price-sub">por mes · Cancelá cuando quieras</div>
-    <button class="btn-premium" id="btn-pago-mp" onclick="pagarConMercadoPago()">💳 Pagar con MercadoPago</button>
-    <button class="btn-premium" id="btn-pago-stripe" onclick="pagarConStripe()" style="background:linear-gradient(135deg,#635bff,#a29cf0);box-shadow:0 4px 16px rgba(99,91,255,.3);">💳 Pagar con Stripe</button>
+    <button class="btn-premium" id="btn-pago-mp" onclick="pagarConMercadoPago()" style="display:none;">💳 Pagar con MercadoPago</button>
+    <button class="btn-premium" id="btn-pago-intl" onclick="pagarConIntl()" style="display:none;background:linear-gradient(135deg,#635bff,#a29cf0);box-shadow:0 4px 16px rgba(99,91,255,.3);">💳 Pagar con tarjeta (internacional)</button>
     <button class="btn-premium-skip" onclick="cerrarPremium()">Continuar con el plan gratuito</button>
   </div>
 </div>
@@ -1578,13 +1578,13 @@ async function pagarConMercadoPago(){
   }
 }
 
-function pagarConStripe(){
-  var stripeUrl=window._STRIPE_URL||'';
-  if(!stripeUrl){
-    showToast('💌 Stripe próximamente. Usá MercadoPago por ahora.');
+function pagarConIntl(){
+  var url=window._appConfig&&window._appConfig.intlUrl;
+  if(!url){
+    showToast('💌 Pago internacional próximamente.');
     return;
   }
-  window.location.href=stripeUrl;
+  window.location.href=url;
 }
 
 function actualizarBadgeUso(tipo,elementoId){
@@ -1750,6 +1750,21 @@ if('serviceWorker'in navigator){
 // ============================================
 
 if(modusBajoEstimulo)document.body.classList.add('modo-bajo-estimulo');
+
+// Config de pagos con geo-detección
+window._appConfig={showMp:true,showIntl:false,intlUrl:''};
+fetch('/api/config').then(r=>r.json()).then(cfg=>{
+  window._appConfig=cfg;
+  var btnMp=document.getElementById('btn-pago-mp');
+  var btnIntl=document.getElementById('btn-pago-intl');
+  if(btnMp)btnMp.style.display=cfg.showMp?'':'none';
+  if(btnIntl)btnIntl.style.display=(cfg.showIntl&&cfg.intlUrl)?'':'none';
+  // Si no hay ninguna opción disponible, mostrar MP como fallback
+  if(!cfg.showMp&&!cfg.showIntl&&btnMp)btnMp.style.display='';
+}).catch(()=>{
+  var btnMp=document.getElementById('btn-pago-mp');
+  if(btnMp)btnMp.style.display='';
+});
 
 // Manejo retorno de pago
 (function(){
