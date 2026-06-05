@@ -706,7 +706,8 @@ body::before{display:none!important}
     </div>
     <div class="premium-price">$5 USD</div>
     <div class="premium-price-sub">por mes · Cancelá cuando quieras</div>
-    <button class="btn-premium" onclick="irAPremium()">✨ Quiero el Plan Pro</button>
+    <button class="btn-premium" id="btn-pago-mp" onclick="pagarConMercadoPago()">💳 Pagar con MercadoPago</button>
+    <button class="btn-premium" id="btn-pago-stripe" onclick="pagarConStripe()" style="background:linear-gradient(135deg,#635bff,#a29cf0);box-shadow:0 4px 16px rgba(99,91,255,.3);">💳 Pagar con Stripe</button>
     <button class="btn-premium-skip" onclick="cerrarPremium()">Continuar con el plan gratuito</button>
   </div>
 </div>
@@ -1534,6 +1535,7 @@ function incrementarUso(tipo){
 }
 
 function checkLimite(tipo){
+  if(esPremium())return false;
   var uso=getUsageHoy();
   return(uso[tipo]||0)>=LIMITES_GRATIS[tipo];
 }
@@ -1551,9 +1553,38 @@ function cerrarPremium(){
   document.getElementById('premium-modal').classList.remove('active');
 }
 
-function irAPremium(){
-  cerrarPremium();
-  showToast('💌 ¡Próximamente! Estamos preparando el Plan Pro.');
+function esPremium(){
+  var hasta=localStorage.getItem('pr_premium_until');
+  if(!hasta)return false;
+  return new Date(hasta)>new Date();
+}
+
+async function pagarConMercadoPago(){
+  var btn=document.getElementById('btn-pago-mp');
+  btn.textContent='Cargando...';
+  btn.disabled=true;
+  try{
+    var res=await fetch('/api/crear-preferencia',{method:'POST'});
+    var data=await res.json();
+    if(data.init_point){
+      window.location.href=data.init_point;
+    }else{
+      throw new Error(data.error||'No se pudo iniciar el pago');
+    }
+  }catch(e){
+    showToast('Error: '+e.message);
+    btn.textContent='💳 Pagar con MercadoPago';
+    btn.disabled=false;
+  }
+}
+
+function pagarConStripe(){
+  var stripeUrl=window._STRIPE_URL||'';
+  if(!stripeUrl){
+    showToast('💌 Stripe próximamente. Usá MercadoPago por ahora.');
+    return;
+  }
+  window.location.href=stripeUrl;
 }
 
 function actualizarBadgeUso(tipo,elementoId){
@@ -1719,6 +1750,26 @@ if('serviceWorker'in navigator){
 // ============================================
 
 if(modusBajoEstimulo)document.body.classList.add('modo-bajo-estimulo');
+
+// Manejo retorno de pago
+(function(){
+  var params=new URLSearchParams(window.location.search);
+  var pago=params.get('pago');
+  if(pago==='ok'){
+    var hasta=new Date();
+    hasta.setDate(hasta.getDate()+30);
+    localStorage.setItem('pr_premium_until',hasta.toISOString());
+    setTimeout(()=>showToast('🎉 ¡Bienvenido al Plan Pro! 30 días sin límites.'),800);
+    history.replaceState({},'',window.location.pathname);
+  }else if(pago==='error'){
+    setTimeout(()=>showToast('❌ El pago no pudo procesarse. Intentá de nuevo.'),800);
+    history.replaceState({},'',window.location.pathname);
+  }else if(pago==='pendiente'){
+    setTimeout(()=>showToast('⏳ Pago pendiente de confirmación.'),800);
+    history.replaceState({},'',window.location.pathname);
+  }
+})();
+
 document.getElementById('frase-coco').textContent=perfil.nombre?'¡Hola, '+perfil.nombre+'!':'¿Qué queremos hacer hoy?';
 renderBiblioteca();
 renderRutinasGuardadas();
