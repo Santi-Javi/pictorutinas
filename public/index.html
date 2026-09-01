@@ -286,6 +286,16 @@ input[type=range]::-moz-range-thumb{width:24px;height:24px;border-radius:50%;bac
 .error{font-size:14px;color:#C41C3B;background:rgba(196,28,59,.1);border:2px solid rgba(196,28,59,.2);border-radius:var(--radio);padding:10px 12px;margin:1rem 0;display:none}
 .error.visible{display:block}
 
+body.auth-pending>*:not(#auth-screen),body.auth-locked>*:not(#auth-screen){display:none!important}
+.auth-screen{position:fixed;inset:0;z-index:1000;display:flex;align-items:center;justify-content:center;padding:1.5rem;background:var(--cream)}
+.auth-screen[hidden]{display:none}
+.auth-card{width:100%;max-width:420px;background:white;border-radius:var(--radio-lg);padding:2rem;box-shadow:0 18px 50px rgba(43,35,24,.14)}
+.auth-brand{text-align:center;margin-bottom:1.5rem}.auth-brand-icon{font-size:64px}.auth-brand h1{font-size:26px}.auth-brand p{color:var(--gris-oscuro);margin-top:6px}
+.auth-tabs{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:1.25rem}.auth-tab{padding:10px;border:0;border-radius:14px;background:var(--cream);font:600 14px "Fredoka",sans-serif;cursor:pointer}.auth-tab.active{background:var(--verde);color:white}
+.auth-form{display:grid;gap:12px}.auth-form input{font-family:"Fredoka",sans-serif;font-size:15px;padding:13px;border-radius:var(--radio);border:2px solid var(--gris-claro);width:100%}.auth-link{border:0;background:none;color:var(--verde-oscuro);font:600 13px "Fredoka",sans-serif;cursor:pointer}.auth-status{display:none;font-size:13px;line-height:1.4;padding:10px 12px;border-radius:14px}.auth-status.visible{display:block}.auth-status.error-state{color:#9f1239;background:#fff1f2}.auth-status.success-state{color:#166534;background:#f0fdf4}
+.auth-loading{display:flex;align-items:center;justify-content:center;gap:10px;color:var(--gris-oscuro)}
+.session-info{font-size:12px;color:var(--gris-oscuro);overflow-wrap:anywhere;margin-bottom:12px}
+
 .btn-reparar-imagen{font-size:11px;color:var(--verde);cursor:pointer;text-decoration:underline;margin-top:4px}
 
 @media(max-width:480px){
@@ -308,7 +318,26 @@ body::before{display:none!important}
 }
 </style>
 </head>
-<body>
+<body class="auth-pending">
+
+<div class="auth-screen" id="auth-screen" aria-live="polite">
+  <div class="auth-card">
+    <div class="auth-brand"><div class="auth-brand-icon">🐭</div><h1>Mi Mundo en Pictos</h1><p id="auth-subtitle">Ingresá para ver tus rutinas</p></div>
+    <div class="auth-loading" id="auth-loading"><div class="spinner"></div>Comprobando tu sesión…</div>
+    <div id="auth-content" hidden>
+      <div class="auth-tabs" id="auth-tabs"><button class="auth-tab active" type="button" onclick="mostrarAuth('login')">Ingresar</button><button class="auth-tab" type="button" onclick="mostrarAuth('signup')">Crear cuenta</button></div>
+      <form class="auth-form" id="auth-form" onsubmit="enviarAuth(event)">
+        <input id="auth-name" type="text" autocomplete="name" placeholder="Nombre" hidden>
+        <input id="auth-email" type="email" autocomplete="email" placeholder="Correo electrónico" required>
+        <input id="auth-password" type="password" autocomplete="current-password" placeholder="Contraseña (mínimo 8 caracteres)" minlength="8" required>
+        <input id="auth-password-confirm" type="password" autocomplete="new-password" placeholder="Repetí la contraseña" minlength="8" hidden>
+        <button class="btn btn-primary btn-full" id="auth-submit" type="submit">Ingresar</button>
+        <button class="auth-link" id="forgot-link" type="button" onclick="recuperarClave()">Olvidé mi contraseña</button>
+        <div class="auth-status" id="auth-status"></div>
+      </form>
+    </div>
+  </div>
+</div>
 
 <!-- PANTALLA PRINCIPAL -->
 <div class="pantalla-principal active" id="pantalla-principal">
@@ -565,6 +594,7 @@ body::before{display:none!important}
     
     <div class="perfil-section">
       <div class="perfil-section-title">Datos personales</div>
+      <div class="session-info" id="session-email"></div>
       <label class="field">Nombre</label>
       <input type="text" id="perfil-nombre" placeholder="Ej: Camilo" data-no-sound>
       <label class="field">Género</label>
@@ -600,6 +630,7 @@ body::before{display:none!important}
     </div>
 
     <button class="btn btn-primary btn-full" onclick="guardarPerfil()">✅ Guardar</button>
+    <button class="btn btn-full" onclick="cerrarSesion()" style="margin-top:10px;color:#9f1239">Cerrar sesión</button>
   </div>
 </div>
 
@@ -619,7 +650,89 @@ body::before{display:none!important}
 
 <div class="toast" id="toast"></div>
 
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
+const SUPABASE_URL='https://poxkckdlqqvhtxkwlzlt.supabase.co';
+const SUPABASE_PUBLISHABLE_KEY='sb_publishable_xHAh7_hHdEKqqbB2smswIQ_hdBPqbim';
+const supabaseClient=window.supabase.createClient(SUPABASE_URL,SUPABASE_PUBLISHABLE_KEY);
+var authMode='login',authUser=null;
+
+function setAuthStatus(message,type){
+  var el=document.getElementById('auth-status');
+  el.textContent=message||'';
+  el.className='auth-status'+(message?' visible '+(type==='error'?'error-state':'success-state'):'');
+}
+function mostrarAuth(mode){
+  authMode=mode;
+  var signup=mode==='signup',recovery=mode==='recovery';
+  document.getElementById('auth-tabs').hidden=recovery;
+  document.getElementById('auth-name').hidden=!signup;
+  document.getElementById('auth-password-confirm').hidden=!(signup||recovery);
+  document.getElementById('auth-password').autocomplete=signup||recovery?'new-password':'current-password';
+  document.getElementById('forgot-link').hidden=signup||recovery;
+  document.getElementById('auth-submit').textContent=recovery?'Guardar contraseña':signup?'Crear cuenta':'Ingresar';
+  document.getElementById('auth-subtitle').textContent=recovery?'Elegí una contraseña nueva':signup?'Creá tu cuenta familiar':'Ingresá para ver tus rutinas';
+  document.querySelectorAll('.auth-tab').forEach((b,i)=>b.classList.toggle('active',(signup&&i===1)||(!signup&&i===0)));
+  setAuthStatus('',null);
+}
+function traducirErrorAuth(error){
+  var m=(error&&error.message||'').toLowerCase();
+  if(m.includes('invalid login'))return 'El correo o la contraseña no son correctos.';
+  if(m.includes('already registered')||m.includes('already been registered'))return 'Ya existe una cuenta con ese correo.';
+  if(m.includes('password'))return 'La contraseña debe tener al menos 8 caracteres.';
+  if(m.includes('rate limit'))return 'Demasiados intentos. Esperá unos minutos y volvé a probar.';
+  return error&&error.message?error.message:'No pudimos completar la operación.';
+}
+async function enviarAuth(event){
+  event.preventDefault();
+  var email=document.getElementById('auth-email').value.trim();
+  var password=document.getElementById('auth-password').value;
+  var confirm=document.getElementById('auth-password-confirm').value;
+  var button=document.getElementById('auth-submit');
+  if((authMode==='signup'||authMode==='recovery')&&password!==confirm){setAuthStatus('Las contraseñas no coinciden.','error');return}
+  button.disabled=true;setAuthStatus('',null);
+  try{
+    if(authMode==='signup'){
+      var name=document.getElementById('auth-name').value.trim();
+      var result=await supabaseClient.auth.signUp({email:email,password:password,options:{data:{display_name:name,account_type:'familiar'},emailRedirectTo:location.origin+location.pathname}});
+      if(result.error)throw result.error;
+      if(!result.data.session)setAuthStatus('Cuenta creada. Revisá tu correo para confirmarla.','success');
+    }else if(authMode==='recovery'){
+      var updated=await supabaseClient.auth.updateUser({password:password});
+      if(updated.error)throw updated.error;
+      setAuthStatus('Contraseña actualizada. Ya podés usar la app.','success');
+      history.replaceState(null,'',location.pathname);
+    }else{
+      var signed=await supabaseClient.auth.signInWithPassword({email:email,password:password});
+      if(signed.error)throw signed.error;
+    }
+  }catch(error){setAuthStatus(traducirErrorAuth(error),'error')}finally{button.disabled=false}
+}
+async function recuperarClave(){
+  var email=document.getElementById('auth-email').value.trim();
+  if(!email){setAuthStatus('Escribí primero tu correo electrónico.','error');return}
+  var result=await supabaseClient.auth.resetPasswordForEmail(email,{redirectTo:location.origin+location.pathname});
+  setAuthStatus(result.error?traducirErrorAuth(result.error):'Te enviamos un enlace para recuperar la contraseña.',result.error?'error':'success');
+}
+async function cerrarSesion(){await supabaseClient.auth.signOut();cerrarPerfil()}
+function aplicarEstadoAuth(user){
+  authUser=user||null;
+  document.body.classList.remove('auth-pending');
+  document.body.classList.toggle('auth-locked',!authUser);
+  document.getElementById('auth-screen').hidden=!!authUser;
+  document.getElementById('auth-loading').hidden=true;
+  document.getElementById('auth-content').hidden=!!authUser;
+  document.getElementById('session-email').textContent=authUser?'Sesión: '+(authUser.email||'usuario') : '';
+  if(authUser){var route=location.hash.replace('#/','');if(route&&route!=='login')irSeccion(route);}
+}
+async function iniciarAuth(){
+  var current=await supabaseClient.auth.getUser();
+  aplicarEstadoAuth(current.data&&current.data.user);
+  supabaseClient.auth.onAuthStateChange((event,session)=>{
+    if(event==='PASSWORD_RECOVERY'){aplicarEstadoAuth(null);mostrarAuth('recovery');return}
+    aplicarEstadoAuth(session&&session.user);
+  });
+}
 // ============================================
 // SISTEMA DE PERFILES Y PERSISTENCIA
 // ============================================
@@ -834,6 +947,7 @@ document.addEventListener('click',function(e){
 // ============================================
 
 function irSeccion(seccion){
+  if(!authUser){location.hash='#/login';aplicarEstadoAuth(null);return}
   if(['principal','biblioteca','generar','rutinas','regulacion','logros'].includes(seccion)){
     document.querySelectorAll('.seccion').forEach(s=>s.classList.remove('active'));
     document.getElementById('pantalla-principal').classList.remove('active');
@@ -849,6 +963,7 @@ function irSeccion(seccion){
       if(seccion==='regulacion')renderRegulacion();
     }
     actualizarNav();
+    history.replaceState(null,'','#/'+seccion);
   }
 }
 
@@ -966,9 +1081,10 @@ async function generarPictograma(){
   loading.style.display='flex';
 
   try{
+    var session=(await supabaseClient.auth.getSession()).data.session;
     var res=await fetch('/api/generar-picto',{
       method:'POST',
-      headers:{'Content-Type':'application/json'},
+      headers:{'Content-Type':'application/json','Authorization':'Bearer '+session.access_token},
       body:JSON.stringify({imagen:imagenBase64})
     });
     var data=await res.json();
@@ -1037,9 +1153,10 @@ async function generarRutina(){
   btn.disabled=true;
 
   try{
+    var session=(await supabaseClient.auth.getSession()).data.session;
     var res=await fetch('/api/generar-rutina',{
       method:'POST',
-      headers:{'Content-Type':'application/json'},
+      headers:{'Content-Type':'application/json','Authorization':'Bearer '+session.access_token},
       body:JSON.stringify({rutina:rutina})
     });
     var data=await res.json();
@@ -1463,6 +1580,7 @@ renderBiblioteca();
 renderRutinasGuardadas();
 renderLogros();
 renderRegulacion();
+iniciarAuth();
 </script>
 </body>
 </html>

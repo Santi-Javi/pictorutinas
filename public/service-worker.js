@@ -1,4 +1,4 @@
-const CACHE_NAME = 'pictorutinas-v1';
+const CACHE_NAME = 'pictorutinas-v2-auth';
 const urlsToCache = [
   '/',
   '/index.html',
@@ -39,25 +39,9 @@ self.addEventListener('fetch', (event) => {
   const { request } = event;
   const url = new URL(request.url);
 
-  // Para API calls, intentar red primero
+  // Las respuestas privadas de API nunca se guardan en caché.
   if (url.pathname.startsWith('/api/')) {
-    event.respondWith(
-      fetch(request)
-        .then((response) => {
-          if (response.ok) {
-            const responseToCache = response.clone();
-            caches.open(CACHE_NAME).then((cache) => {
-              cache.put(request, responseToCache);
-            });
-          }
-          return response;
-        })
-        .catch(() => {
-          return caches.match(request).then((response) => {
-            return response || new Response('Error de conexión', { status: 503 });
-          });
-        })
-    );
+    event.respondWith(fetch(request).catch(() => new Response('Error de conexión', { status: 503 })));
     return;
   }
 

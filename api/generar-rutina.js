@@ -1,9 +1,12 @@
 export default async function handler(req, res) {
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
-  res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
+  res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
   if (req.method === 'OPTIONS') return res.status(200).end();
   if (req.method !== 'POST') return res.status(405).json({ error: 'Método no permitido' });
+
+  const auth = await validarUsuario(req);
+  if (!auth.ok) return res.status(401).json({ error: 'Iniciá sesión para usar esta función' });
 
   const { rutina } = req.body;
   if (!rutina) return res.status(400).json({ error: 'Falta el nombre de la rutina' });
@@ -42,6 +45,17 @@ Respondé ÚNICAMENTE con un JSON válido con esta estructura exacta:
       "emoji": "un emoji que represente el paso"
     }
   ]
+}
+
+async function validarUsuario(req) {
+  const token = (req.headers.authorization || '').replace(/^Bearer\s+/i, '');
+  if (!token) return { ok: false };
+  const url = process.env.SUPABASE_URL || 'https://poxkckdlqqvhtxkwlzlt.supabase.co';
+  const key = process.env.SUPABASE_PUBLISHABLE_KEY || 'sb_publishable_xHAh7_hHdEKqqbB2smswIQ_hdBPqbim';
+  try {
+    const response = await fetch(`${url}/auth/v1/user`, { headers: { Authorization: `Bearer ${token}`, apikey: key } });
+    return { ok: response.ok, user: response.ok ? await response.json() : null };
+  } catch { return { ok: false }; }
 }
 Reglas:
 - Entre 3 y 7 pasos por rutina
