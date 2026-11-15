@@ -1,89 +1,31 @@
-const CACHE_NAME = 'pictorutinas-v1';
-const urlsToCache = [
-  '/',
-  '/index.html',
-  '/manifest.webmanifest'
-];
+const CACHE = 'mi-mundo-v2';
+const BASE = ['/', '/manifest.webmanifest'];
 
-// Instalar service worker
-self.addEventListener('install', (event) => {
-  event.waitUntil(
-    caches.open(CACHE_NAME).then((cache) => {
-      return cache.addAll(urlsToCache);
-    }).catch(() => {
-      // Si falla, continuar de todas formas
-      console.log('Cache inicial completado (parcial)');
-    })
-  );
+self.addEventListener('install', (e) => {
+  e.waitUntil(caches.open(CACHE).then((c) => c.addAll(BASE)).catch(() => {}));
   self.skipWaiting();
 });
-
-// Activar service worker
-self.addEventListener('activate', (event) => {
-  event.waitUntil(
-    caches.keys().then((cacheNames) => {
-      return Promise.all(
-        cacheNames.map((cacheName) => {
-          if (cacheName !== CACHE_NAME) {
-            return caches.delete(cacheName);
-          }
-        })
-      );
-    })
-  );
+self.addEventListener('activate', (e) => {
+  e.waitUntil(caches.keys().then((ks) => Promise.all(ks.filter((k) => k !== CACHE).map((k) => caches.delete(k)))));
   self.clients.claim();
 });
-
-// Estrategia: Network first, fallback to cache
-self.addEventListener('fetch', (event) => {
-  const { request } = event;
-  const url = new URL(request.url);
-
-  // Para API calls, intentar red primero
-  if (url.pathname.startsWith('/api/')) {
-    event.respondWith(
-      fetch(request)
-        .then((response) => {
-          if (response.ok) {
-            const responseToCache = response.clone();
-            caches.open(CACHE_NAME).then((cache) => {
-              cache.put(request, responseToCache);
-            });
-          }
-          return response;
-        })
-        .catch(() => {
-          return caches.match(request).then((response) => {
-            return response || new Response('Error de conexión', { status: 503 });
-          });
-        })
-    );
+self.addEventListener('fetch', (e) => {
+  const r = e.request;
+  if (r.method !== 'GET') return;
+  const u = new URL(r.url);
+  if (u.pathname.startsWith('/api/')) return;               // la IA siempre por red
+  // Pictogramas ARASAAC: primero caché (no cambian), así funcionan sin internet
+  if (u.hostname === 'static.arasaac.org') {
+    e.respondWith(caches.match(r).then((hit) => hit || fetch(r).then((res) => {
+      if (res.ok || res.type === 'opaque') { const cp = res.clone(); caches.open(CACHE).then((c) => c.put(r, cp)); }
+      return res;
+    }).catch(() => new Response('', { status: 504 }))));
     return;
   }
-
-  // Para archivos estáticos, usar cache primero
-  event.respondWith(
-    caches.match(request).then((response) => {
-      if (response) {
-        return response;
-      }
-      return fetch(request).then((response) => {
-        if (!response || response.status !== 200 || response.type === 'error') {
-          return response;
-        }
-        const responseToCache = response.clone();
-        caches.open(CACHE_NAME).then((cache) => {
-          cache.put(request, responseToCache);
-        });
-        return response;
-      });
-    })
-  );
-});
-
-// Mensaje de actualización
-self.addEventListener('message', (event) => {
-  if (event.data && event.data.type === 'SKIP_WAITING') {
-    self.skipWaiting();
-  }
+  if (u.origin !== location.origin) return;
+  // Resto: primero red (siempre la versión nueva), caché si no hay internet
+  e.respondWith(fetch(r).then((res) => {
+    if (res.ok) { const cp = res.clone(); caches.open(CACHE).then((c) => c.put(r, cp)); }
+    return res;
+  }).catch(() => caches.match(r).then((hit) => hit || caches.match('/'))));
 });
